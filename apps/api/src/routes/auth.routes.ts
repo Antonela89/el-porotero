@@ -1,10 +1,11 @@
 import { Router } from 'express';
-import { register } from '@/controllers/index.js';
+import { register, login } from '@/controllers/index.js';
 import { validateResource,  hashPassword } from '@/middlewares/index.js';
-import { UserZodSchema } from '@el-porotero/shared';
+import { UserZodSchema, LoginZodSchema } from '@el-porotero/shared';
 
 const authRouter = Router();
 
 authRouter.post('/register', validateResource(UserZodSchema), hashPassword, register);
+authRouter.post('/login', validateResource(LoginZodSchema), login);
 
 export default authRouter;
