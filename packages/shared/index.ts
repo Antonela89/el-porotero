@@ -46,3 +46,11 @@ export const MatchZodSchema = z.object({
 	status: z.enum(['active', 'finished']).default('active'),
 	dealerIndex: z.number().default(0),
 });
+
+// --- LOGIN ---
+export const LoginZodSchema = z.object({
+	email: z.email('Email inválido'),
+	password: z.string().min(1, 'La contraseña es requerida'),
+});
+
+export type LoginDTO = z.infer<typeof LoginZodSchema>;
