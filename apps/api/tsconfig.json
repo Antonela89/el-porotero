@@ -2,17 +2,17 @@
     "extends": "../../tsconfig.json",
     "compilerOptions": {
         "outDir": "./dist",
-        "rootDir": "./src",
+        // "rootDir": "./src",
         "module": "NodeNext",
-        "moduleResolution": "NodeNext"
-    },
-    "paths": {
-        "@/*": [
-            "./src/*"
-        ],
-        "@shared/*": [
-            "../../packages/shared/*"
-        ]
+        "moduleResolution": "NodeNext",
+        "paths": {
+            "@/*": [
+                "./src/*"
+            ],
+            "@shared/*": [
+                "../../packages/shared/*"
+            ]
+        },
     },
     "include": [
         "src/**/*"
