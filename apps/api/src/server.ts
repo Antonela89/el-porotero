@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
-import { connectDB } from './config/db';
+import { connectDB } from './config/db.js';
+import authRouter from './routes/auth.routes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -16,6 +17,9 @@ connectDB();
 app.get('/', (req, res) => {
 	res.send('API de El Porotero Online');
 });
+
+// Rutas
+app.use('/api/auth', authRouter);
 
 app.listen(PORT, () => {
 	console.log(`Servidor corriendo en http://localhost:${PORT}`);
