@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { UserDTO } from '@el-porotero/shared'; 
+import { UserDTO } from '@el-porotero/shared';
 const userSchema = new Schema<UserDTO>(
 	{
 		username: { type: String, required: true, unique: true },
