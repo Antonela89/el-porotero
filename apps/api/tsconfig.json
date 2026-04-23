@@ -6,12 +6,15 @@
         "module": "NodeNext",
         "moduleResolution": "NodeNext"
     },
+    "paths": {
+        "@/*": [
+            "./src/*"
+        ],
+        "@shared/*": [
+            "../../packages/shared/*"
+        ]
+    },
     "include": [
         "src/**/*"
-    ],
-    "references": [
-        {
-            "path": "../../packages/shared"
-        }
     ]
 }

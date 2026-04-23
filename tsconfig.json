@@ -10,6 +10,10 @@
         "declaration": true,
         "composite": true,
         "paths": {
+            "@/*": [
+                "./apps/api/src/*",
+                "./apps/web/src/*"
+            ],
             "@el-porotero/shared": [
                 "./packages/shared/index.ts"
             ]
