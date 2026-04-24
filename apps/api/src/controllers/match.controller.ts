@@ -142,3 +142,153 @@ export const addRound = async (req: Request, res: Response) => {
 		}
 	}
 };
+
+export const updateRound = async (req: Request, res: Response) => {
+	try {
+		const roundNumberStr = req.params.roundNumber as string;
+		const { matchId } = req.params;
+		const { scores: newScores } = req.body; // Los nuevos puntos corregidos
+
+		const match = await MatchModel.findById(matchId);
+		if (!match)
+			return res.status(404).json({ message: 'Partida no encontrada' });
+
+		// 1. Encontrar la ronda a editar
+		const roundIndex = match.rounds.findIndex(
+			(r) => r.roundNumber === parseInt(roundNumberStr,10),
+		);
+		if (roundIndex === -1)
+			return res.status(404).json({ message: 'Ronda no encontrada' });
+
+		// 2. Actualizar los datos de esa ronda
+		match.rounds[roundIndex].scores = newScores;
+
+		// 3. RECALCULAR PUNTAJES TOTALES
+		// Reseteamos a todos al puntaje inicial de la config
+		match.players.forEach((p) => {
+			p.score = match.config.startingScore;
+			p.isOut = false;
+		});
+
+		// Sumamos (o restamos) todas las rondas de nuevo
+		match.rounds.forEach((round) => {
+			round.scores.forEach((s) => {
+				const player = match.players.find(
+					(p) => p.name === s.playerName,
+				);
+				if (player) {
+					if (match.config.isDescending) {
+						player.score -= s.pointsAdded;
+					} else {
+						player.score += s.pointsAdded;
+						// Bonus de corte si existía en esa ronda
+						if (s.details?.isCorteMinus10) player.score -= 10;
+					}
+
+					// Verificar eliminación (Loba)
+					if (
+						match.config.limitScore &&
+						player.score >= match.config.limitScore
+					) {
+						player.isOut = true;
+					}
+				}
+			});
+		});
+
+		await match.save();
+		res.json({
+			message: 'Ronda actualizada y puntajes recalculados',
+			match,
+		});
+	} catch (error: any) {
+		res.status(500).json({
+			message: 'Error al actualizar la ronda',
+			error: error.message,
+		});
+	}
+};
+
+// Obtener todas las partidas del usuario logueado
+export const getUserMatches = async (req: Request, res: Response) => {
+	try {
+		const userId = (req as any).user.userId;
+
+		// Buscamos partidas donde el usuario sea el admin O esté en la lista de jugadores
+		// Usamos .sort({ createdAt: -1 }) para que las más nuevas aparezcan primero
+		const matches = await MatchModel.find({
+			$or: [{ adminId: userId }, { 'players.userId': userId }],
+		}).sort({ createdAt: -1 });
+
+		res.json(matches);
+	} catch (error) {
+		res.status(500).json({
+			message: 'Error al obtener el historial',
+			error,
+		});
+	}
+};
+
+// Obtener el detalle de una partida específica
+export const getMatchById = async (req: Request, res: Response) => {
+	try {
+		const { matchId } = req.params;
+		const match = await MatchModel.findById(matchId).populate(
+			'adminId',
+			'username',
+		);
+
+		if (!match) {
+			return res.status(404).json({ message: 'Partida no encontrada' });
+		}
+
+		res.json(match);
+	} catch (error) {
+		res.status(500).json({ message: 'Error al obtener la partida', error });
+	}
+};
+
+export const updateMatchStatus = async (req: Request, res: Response) => {
+	try {
+		const { matchId } = req.params;
+		const { status, winner } = req.body;
+
+		const match = await MatchModel.findByIdAndUpdate(
+			matchId,
+			{ status, winner },
+			{ new: true },
+		);
+
+		res.json(match);
+	} catch (error) {
+		res.status(500).json({ message: 'Error al actualizar partida', error });
+	}
+};
+
+// Eliminar una partida (Punto 4 del TP: DELETE)
+export const deleteMatch = async (req: Request, res: Response) => {
+	try {
+		const { matchId } = req.params;
+		const userId = (req as any).user.userId;
+
+		// Solo el admin de la partida debería poder borrarla
+		const match = await MatchModel.findOneAndDelete({
+			_id: matchId,
+			adminId: userId,
+		});
+
+		if (!match) {
+			return res.status(404).json({
+				message:
+					'Partida no encontrada o no tenés permisos para borrarla',
+			});
+		}
+
+		res.json({ message: 'Partida eliminada correctamente' });
+	} catch (error) {
+		res.status(500).json({
+			message: 'Error al eliminar la partida',
+			error,
+		});
+	}
+};
