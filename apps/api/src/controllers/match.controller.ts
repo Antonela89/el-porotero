@@ -123,6 +123,22 @@ export const addRound = async (req: Request, res: Response) => {
 		if (instantWinner) {
 			match.status = 'finished';
 			match.winner = instantWinner;
+		} else {
+			// Verificación de victoria normal
+			if (match.config.isDescending) {
+				const winnerPlayer = match.players.find((p) => p.score === 0);
+				if (winnerPlayer) {
+					match.status = 'finished';
+					match.winner = winnerPlayer.name;
+				}
+			} else {
+				// En juegos como Loba, gana el que tiene menos puntos cuando los demás perdieron
+				const playersAlive = match.players.filter((p) => !p.isOut);
+				if (playersAlive.length === 1) {
+					match.status = 'finished';
+					match.winner = playersAlive[0].name;
+				}
+			}
 		}
 
 		// Rotar el repartidor (Dealer)
@@ -153,17 +169,17 @@ export const updateRound = async (req: Request, res: Response) => {
 		if (!match)
 			return res.status(404).json({ message: 'Partida no encontrada' });
 
-		// 1. Encontrar la ronda a editar
+		// Encontrar la ronda a editar
 		const roundIndex = match.rounds.findIndex(
-			(r) => r.roundNumber === parseInt(roundNumberStr,10),
+			(r) => r.roundNumber === parseInt(roundNumberStr, 10),
 		);
 		if (roundIndex === -1)
 			return res.status(404).json({ message: 'Ronda no encontrada' });
 
-		// 2. Actualizar los datos de esa ronda
+		// Actualizar los datos de esa ronda
 		match.rounds[roundIndex].scores = newScores;
 
-		// 3. RECALCULAR PUNTAJES TOTALES
+		// RECALCULAR PUNTAJES TOTALES
 		// Reseteamos a todos al puntaje inicial de la config
 		match.players.forEach((p) => {
 			p.score = match.config.startingScore;
