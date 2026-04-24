@@ -47,6 +47,20 @@ export const MatchZodSchema = z.object({
 	dealerIndex: z.number().default(0),
 });
 
+// --- Detalles de Juegos ---
+export interface RoundScoreDetail {
+	playerName: string;
+	pointsAdded: number;
+	details?: {
+		isCorteMinus10?: boolean; // Loba/Chinchón
+		bazas?: number; // Mosca
+		paso?: boolean; // Mosca
+		escobas?: number; // Escoba
+		hasSevenOfGold?: boolean; // Escoba
+		// ... más según necesites
+	};
+}
+
 // --- LOGIN ---
 export const LoginZodSchema = z.object({
 	email: z.email('Email inválido'),
