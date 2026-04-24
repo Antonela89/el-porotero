@@ -10,14 +10,13 @@ export const processAccumulativeRules = (
 	scores.forEach((s) => {
 		const player = match.players.find((p: any) => p.name === s.playerName);
 		if (player && !player.isOut) {
-			let pointsToApply = s.pointsAdded;
-
-			// Bonus de -10 (Corte)
-			if (s.details?.isCorteMinus10) {
-				pointsToApply -= 10;
+			if (s.details?.isCerrar) {
+				player.score += 0;
+			} else if (s.details?.isCorteMinus10) {
+				player.score -= 10;
+			} else {
+				player.score += s.pointsAdded;
 			}
-
-			player.score += pointsToApply;
 
 			// Verificación de eliminación dinámica
 			if (player.score >= limit) {
@@ -31,36 +30,57 @@ export const processAccumulativeRules = (
 export const processMoscaRules = (match: any, scores: RoundScoreDetail[]) => {
 	let instantWinner = null;
 
+	const totalBazas = scores.reduce(
+		(acc, s) => acc + (s.details?.bazas || 0),
+		0,
+	);
+
+	if (totalBazas !== 5) {
+		throw new Error(
+			'La sumatoria de bazas en la Mosca debe ser exactamente 5.',
+		);
+	}
+
+	const totalPlayers = match.players.length;
+	console.log(totalPlayers);
+
+	const sombreroIndex = (match.currentDealerIndex + 1) % match.players.length;
+	const sombreroPlayer = match.players[sombreroIndex];
+
 	scores.forEach((s) => {
 		const player = match.players.find((p: any) => p.name === s.playerName);
-		if (player) {
-			const bazas = s.details?.bazas || 0;
-			const paso = s.details?.paso || false;
+		if (!player) return;
 
-			// 1. Regla de Oro: 5 bazas y los demás 0
-			if (bazas === 5) {
-				const othersHaveZero = scores.every(
-					(other) =>
-						other.playerName === s.playerName ||
-						(other.details?.bazas || 0) === 0,
-				);
-				if (othersHaveZero) instantWinner = s.playerName;
-			}
-
-			// 2. Aplicación de puntos según reglas de la Mosca
-			if (paso) {
-				// Penalización por pasar con 5 o menos
-				if (player.score <= 5) player.score += 1;
-			} else {
-				if (bazas === 0) {
-					player.score += 5; // Castigo por no hacer bazas
-				} else {
-					player.score -= bazas; // Resta cantidad de bazas (Descendente)
-				}
-			}
-
-			if (player.score <= 0) player.score = 0;
+		if (player.name === sombreroPlayer.name) {
+			return;
 		}
+
+		const bazas = s.details?.bazas || 0;
+		const paso = s.details?.paso || false;
+
+		// Regla de Oro: 5 bazas y los demás 0
+		if (bazas === 5) {
+			const othersHaveZero = scores.every(
+				(other) =>
+					other.playerName === s.playerName ||
+					(other.details?.bazas || 0) === 0,
+			);
+			if (othersHaveZero) instantWinner = s.playerName;
+		}
+
+		// Aplicación de puntos según reglas de la Mosca
+		if (paso) {
+			// Penalización por pasar con 5 o menos
+			if (player.score <= 5) player.score += 1;
+		} else {
+			if (bazas === 0) {
+				player.score += 5; // Castigo por no hacer bazas
+			} else {
+				player.score -= bazas; // Resta cantidad de bazas (Descendente)
+			}
+		}
+
+		if (player.score <= 0) player.score = 0;
 	});
 
 	return instantWinner;
