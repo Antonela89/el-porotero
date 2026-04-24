@@ -86,6 +86,7 @@ const matchSchema = new Schema<IMatch>(
 		players: [playerSchema],
 
 		rounds: { type: [roundSchema], default: [] },
+		winner: { type: String, default: null },
 	},
 	{ timestamps: true },
 );
