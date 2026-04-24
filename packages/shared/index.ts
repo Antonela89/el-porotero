@@ -76,6 +76,7 @@ export interface RoundScoreDetail {
 	details?: {
 		// Loba/Chinchón
 		isCorteMinus10?: boolean;
+		isCerrar: boolean;
 
 		// Mosca
 		bazas?: number;
