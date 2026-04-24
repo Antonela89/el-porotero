@@ -1,4 +1,5 @@
 import { Schema, model, Types, Document } from 'mongoose';
+import { IMatchConfig, IRound } from '@el-porotero/shared';
 
 // Interfaz del Jugador (Subdocumento)
 interface IPlayer {
@@ -11,15 +12,24 @@ interface IPlayer {
 
 // Interfaz de la partida (Subdocumento)
 interface IMatch extends Document {
-	gameType: string;
+	gameType:
+		| 'Loba'
+		| 'Truco'
+		| 'Chinchon'
+		| 'Escoba'
+		| 'Barsiga'
+		| 'Mosca'
+		| 'Burako';
 	status: 'active' | 'finished';
 	adminId: Types.ObjectId;
 	players: Types.DocumentArray<IPlayer & Types.Subdocument>; // Esto habilita los métodos de subdocumentos
-	rounds: any[]; // Podés tipar esto más adelante
+	rounds: IRound[];
+	config: IMatchConfig;
 	currentDealerIndex: number;
-	winner: String;
+	winner?: string;
 }
 
+// --- Esquema de Jugador ---
 const playerSchema = new Schema<IPlayer>({
 	name: { type: String, required: true },
 	// position: Number,
@@ -29,9 +39,23 @@ const playerSchema = new Schema<IPlayer>({
 	isOut: { type: Boolean, default: false },
 });
 
+// --- Esquema de Ronda ---
+const roundSchema = new Schema<IRound>({
+	roundNumber: Number,
+	dealerIndex: Number,
+	scores: [
+		{
+			playerName: String,
+			pointsAdded: Number,
+			details: Schema.Types.Mixed,
+		},
+	],
+	timestamp: { type: Date, default: Date.now },
+});
+
+// --- Esquema de Juego ---
 const matchSchema = new Schema<IMatch>(
 	{
-		// gameId: { type: Schema.Types.ObjectId, ref: 'Game', required: true },
 		gameType: {
 			type: String,
 			enum: [
@@ -53,22 +77,15 @@ const matchSchema = new Schema<IMatch>(
 		adminId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 		currentDealerIndex: { type: Number, default: 0 },
 
-		players: [playerSchema]
+		config: {
+			limitScore: Number,
+			startingScore: { type: Number, default: 0 },
+			isDescending: { type: Boolean, default: false },
+		},
 
-		// rounds: [
-		// 	{
-		// 		roundNumber: Number,
-		// 		dealerIndex: Number,
-		// 		scores: [
-		// 			{
-		// 				playerName: String, // Usamos nombre por si es invitado
-		// 				pointsAdded: Number,
-		// 				details: Schema.Types.Mixed, // Para la flexibilidad de cada juego
-		// 			},
-		// 		],
-		// 		timestamp: { type: Date, default: Date.now },
-		// 	},
-		// ],
+		players: [playerSchema],
+
+		rounds: { type: [roundSchema], default: [] },
 	},
 	{ timestamps: true },
 );
