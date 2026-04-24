@@ -1,5 +1,27 @@
 import { z } from 'zod';
 
+// --- Interfaces ---
+export interface IRoundScore {
+	playerName: string;
+	pointsAdded: number;
+	details?: any; // Bazas, escobas, etc.
+}
+
+export interface IRound {
+	roundNumber: number;
+	dealerIndex: number;
+	scores: IRoundScore[];
+	timestamp: Date;
+}
+
+// Configuración inicial de la partida
+export interface IMatchConfig {
+	limitScore?: number; // 100 o 101 para Loba
+	startingScore: number; // 0 para la mayoría, 15 para Mosca
+	isDescending: boolean; // true para Mosca (resta), false para el resto
+}
+
+// --- Esquemas ---
 // --- USUARIO ---
 export const UserZodSchema = z.object({
 	username: z.string().min(3, 'Mínimo 3 caracteres'),
@@ -52,12 +74,26 @@ export interface RoundScoreDetail {
 	playerName: string;
 	pointsAdded: number;
 	details?: {
-		isCorteMinus10?: boolean; // Loba/Chinchón
-		bazas?: number; // Mosca
+		// Loba/Chinchón
+		isCorteMinus10?: boolean;
+
+		// Mosca
+		bazas?: number;
 		paso?: boolean; // Mosca
-		escobas?: number; // Escoba
-		hasSevenOfGold?: boolean; // Escoba
-		// ... más según necesites
+
+		// Escoba/ Barsiga
+		escobas?: number;
+		velos?: number;
+		hasOros?: boolean;
+		hasSetenta?: boolean;
+		hasCartas?: boolean;
+		cantos?: number;
+
+		// Burako
+		canastasPuras?: number; // 200 pts c/u
+		canastasImpuras?: number; // 100 pts c/u
+		tomoMuerto?: boolean; // Si no lo tomó, restar 100
+		cierre?: boolean;
 	};
 }
 
