@@ -60,12 +60,8 @@ export const processMoscaRules = (match: any, scores: RoundScoreDetail[]) => {
 
 		// Regla de Oro: 5 bazas y los demás 0
 		if (bazas === 5) {
-			const othersHaveZero = scores.every(
-				(other) =>
-					other.playerName === s.playerName ||
-					(other.details?.bazas || 0) === 0,
-			);
-			if (othersHaveZero) instantWinner = s.playerName;
+			instantWinner = s.playerName;
+			console.log(`🎯 ¡MOSCA! ${s.playerName} hizo las 5 bazas.`);
 		}
 
 		// Aplicación de puntos según reglas de la Mosca

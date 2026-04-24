@@ -123,6 +123,7 @@ export const addRound = async (req: Request, res: Response) => {
 		if (instantWinner) {
 			match.status = 'finished';
 			match.winner = instantWinner;
+			console.log('🏁 Partida finalizada. Ganador:', instantWinner);
 		} else {
 			// Verificación de victoria normal
 			if (match.config.isDescending) {
