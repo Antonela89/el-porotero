@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { MatchModel } from '@/models/Match.js';
+import * as GameRules from '@/services/gameRules.services.js';
 
 export const createMatch = async (req: Request, res: Response) => {
 	try {
@@ -29,24 +30,34 @@ export const addRound = async (req: Request, res: Response) => {
 		if (!match)
 			return res.status(404).json({ message: 'Partida no encontrada' });
 
-		const nextRoundNumber = match.rounds.length + 1;
 		match.rounds.push({
-			roundNumber: nextRoundNumber,
+			roundNumber: match.rounds.length + 1,
 			dealerIndex: match.currentDealerIndex,
 			scores,
 		});
 
-		scores.forEach((s: any) => {
-			const player = match.players.find((p) => p.name === s.playerName);
-			if (player) {
-				player.score += s.pointsAdded;
+		let instantWinner = null;
 
-				// Ejemplo Loba: Si llega a 101 queda fuera (simplificado)
-				if (match.gameType === 'Loba' && player.score > 101) {
-					player.isOut = true;
-				}
-			}
-		});
+		switch (match.gameType) {
+			case 'Loba':
+				GameRules.processLobaRules(match.players, scores);
+				break;
+			case 'Mosca':
+				instantWinner = GameRules.processMoscaRules(
+					match.players,
+					scores,
+				);
+				break;
+			// case 'Escoba': ...
+		}
+
+		if (instantWinner) {
+			match.status = 'finished';
+			match.winner = instantWinner;
+		} else {
+			// Chequeo de victoria por puntaje (ej: alguien llegó a 0 en Mosca o quedó último en Loba)
+			// ... lógica de fin de juego ...
+		}
 
 		// Rotar el repartidor (Dealer)
 		match.currentDealerIndex =
