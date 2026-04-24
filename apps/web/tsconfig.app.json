@@ -1,0 +1,26 @@
+{
+  "extends": "../../tsconfig.json", // Hereda la base del monorepo
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "composite": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "types": [
+      "vite/client"
+    ],
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@el-porotero/shared": [
+        "../../packages/shared/index.ts"
+      ]
+    }
+  },
+  "include": [
+    "src",
+    "src/vite-env.d.ts"
+  ]
+}
