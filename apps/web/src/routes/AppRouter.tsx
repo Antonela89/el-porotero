@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthForm, ProtectedRoute } from '@/components';
 import { AuthLayout } from '@/layout/AuthLayout';
-import { DashboardPage } from '@/pages';
+import { DashboardPage, NewMatchPage } from '@/pages';
 
 export const AppRouter = () => {
     return (
@@ -18,12 +18,13 @@ export const AppRouter = () => {
                 {/* Rutas Protegidas */}
                 <Route element={<ProtectedRoute />}>
                     <Route path="/" element={<DashboardPage />} />
+                    <Route path="/new-match" element={<NewMatchPage />} />
                     <Route path="/match/:id" element={<div>Pantalla de Partida</div>} />
                 </Route>
 
                 {/* Fallback */}
                 <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
+            </Routes>n
         </BrowserRouter>
     );
 };

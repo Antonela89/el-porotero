@@ -85,4 +85,5 @@ const CardMatch = ({ match, onDelete, onEdit }: MatchCardProps) => {
         </article>
     );
 };
+
 export default CardMatch

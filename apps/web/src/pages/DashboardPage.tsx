@@ -3,10 +3,12 @@ import { useAuth } from '@/context';
 import api from '@/api/axios';
 import { IMatch } from '@el-porotero/shared';
 import { LogOut, Plus, Clock } from 'lucide-react';
-import CardMatch from '@/components/CardMatch';
+import  CardMatch  from '@/components';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export const DashboardPage = () => {
+    const navigate = useNavigate();
     const { user, logout } = useAuth();
     const [matches, setMatches] = useState<IMatch[]>([]);
 
@@ -62,7 +64,7 @@ export const DashboardPage = () => {
 
             {/* Acción Principal */}
             <section className="max-w-4xl mx-auto w-full">
-                <button className="btn-primary w-full flex items-center justify-center gap-2 text-xl py-6 shadow-lg shadow-primary/10">
+                <button onClick={() => navigate('/new-match')} className="btn-primary w-full flex items-center justify-center gap-2 text-xl py-6 shadow-lg shadow-primary/10">
                     <Plus size={28} /> Nueva Partida
                 </button>
             </section>
