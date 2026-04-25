@@ -1,0 +1,40 @@
+ /* Contenedor principal de la página (centrado) */
+.auth-page {
+    @apply min-h-screen flex items-center justify-center bg-background p-4;
+}
+
+ /* La tarjeta del formulario */
+.auth-card {
+    @apply w-full max-w-md bg-surface p-8 rounded-3xl shadow-2xl border border-white/5 flex flex-col gap-6;
+}
+
+ /* Títulos */
+.auth-title {
+    @apply text-3xl font-display font-bold text-primary text-center;
+}
+
+ /* Grupos de Input */
+.form-group {
+    @apply flex flex-col gap-2;
+}
+
+.form-label {
+    @apply text-sm font-semibold text-text-muted ml-1;
+}
+
+.form-input {
+    @apply w-full bg-background border border-white/10 p-4 rounded-xl text-text-main outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20;
+}
+
+ /* Botón de acción */
+.btn-auth {
+    @apply w-full bg-primary text-background font-bold py-4 rounded-xl transition-all hover:bg-primary-dark active:scale-95 disabled:opacity-50 disabled:pointer-events-none;
+}
+
+.auth-link {
+    @apply text-sm text-center text-text-muted mt-2;
+
+    & span {
+        @apply text-secondary font-semibold hover:underline cursor-pointer;
+    }
+}

@@ -1,0 +1,55 @@
+@theme {
+    /* --- PALETA DE COLORES "BODEGÓN NOCTURNO" --- */
+    /* Fondo principal (Accesible/No cansa la vista) */
+    --color-background: #121826;
+
+    /* Superficies de tarjetas y modales */
+    --color-surface: #1f2937;
+
+    /* Amarillo Poroto (Acción principal/Dealer) */
+    --color-primary: #fde047;
+    --color-primary-dark: #eab308;
+
+    /* Índigo (Botones secundarios/Navegación) */
+    --color-secondary: #6366f1;
+
+    /* Naranja (Alertas/Jugador fuera) */
+    --color-warning: #fb923c;
+
+    /* Blanco Humo (Texto principal) */
+    --color-text-main: #f9fafb;
+    --color-text-muted: #9ca3af;
+
+    /* --- TIPOGRAFÍA --- */
+    --font-display: "Space Grotesk", sans-serif;
+    --font-body: "Inter", sans-serif;
+}
+
+/* --- ESTILOS BASE --- */
+@layer base {
+    body {
+        @apply bg-background text-text-main font-body antialiased;
+    }
+
+    h1,
+    h2,
+    h3,
+    .score-number {
+        @apply font-display font-bold;
+    }
+}
+
+/* --- UTILIDADES REUTILIZABLES --- */
+@layer components {
+    .btn-primary {
+        @apply bg-primary text-background px-6 py-3 rounded-xl font-bold transition-all hover:scale-105 active:scale-95 disabled:opacity-50;
+    }
+
+    .card-player {
+        @apply bg-surface border border-white/5 p-4 rounded-2xl shadow-lg;
+    }
+
+    .input-field {
+        @apply bg-background border border-white/10 p-3 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all;
+    }
+}
