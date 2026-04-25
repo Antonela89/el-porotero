@@ -1,5 +1,5 @@
 @import "tailwindcss";
 
 /* Importación de modulos */
-@import "./theme.css";
-@import "./auth.css";
+@import "./styles/theme.css";
+@import "./styles/auth.css";
