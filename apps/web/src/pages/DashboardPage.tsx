@@ -64,7 +64,7 @@ export const DashboardPage = () => {
 
             {/* Acción Principal */}
             <section className="max-w-4xl mx-auto w-full">
-                <button onClick={() => navigate('/new-match')} className="btn-primary w-full flex items-center justify-center gap-2 text-xl py-6 shadow-lg shadow-primary/10">
+                <button onClick={() => navigate('/new-match')} className="btn-primary w-full flex items-center justify-center gap-2 text-xl py-6">
                     <Plus size={28} /> Nueva Partida
                 </button>
             </section>

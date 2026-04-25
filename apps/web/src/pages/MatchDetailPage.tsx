@@ -42,14 +42,27 @@ export const MatchDetailPage = () => {
 
     const allPlayerNames = match.players.map(p => p.name);
 
+    // Juegos donde llegar al límite significa PERDER
+    const isLoseOnLimit = ['Loba', 'Chinchon'].includes(match.gameType);
+
+    // Juegos donde llegar al límite significa GANAR
+    // const isWinOnLimit = ['Escoba', 'Barsiga', 'Burako', 'Truco'].includes(match.gameType);
+
+    // Caso especial Mosca: se gana al llegar a 0
+    const isMosca = match.gameType === 'Mosca';
+
+    const limitLabel = isLoseOnLimit ? 'Para Salir' : 'Para Ganar';
+    const limitColorClass = isLoseOnLimit ? 'text-orange-400' : 'text-emerald-400';
+    const limitBgClass = isLoseOnLimit ? 'bg-orange-400/5' : 'bg-emerald-400/5';
+
     return (
         <div className="match-layout">
             {/* HEADER COMPACTO */}
-            <header className="flex items-center justify-between">
+            <header className="flex items-center justify-between mb-4">
                 <button onClick={() => navigate('/')} className="p-3 bg-surface rounded-full text-text-muted">
                     <ArrowLeft size={20} />
                 </button>
-                <div className="flex flex-col items-center">
+                <div className="flex flex-col items-center gap-2">
                     <div className="flex items-center gap-2 text-primary font-display font-bold uppercase tracking-widest">
                         {gameInfo.icon}
                         <span>{match.gameType}</span>
@@ -108,20 +121,34 @@ export const MatchDetailPage = () => {
                                     </td>
                                 ))}
                             </tr>
+
+                            {/* FILA DINÁMICA DE DISTANCIA AL LÍMITE */}
+                            {(match.config.limitScore || isMosca) && match.status === 'active' && (
+                                <tr className={`${limitBgClass} font-bold border-t border-white/10`}>
+                                    <td className={`p-5 ${limitColorClass} text-[10px] uppercase tracking-widest sticky left-0 bg-surface z-10`}>
+                                        {limitLabel}
+                                    </td>
+                                    {match.players.map(player => {
+                                        // Calculamos cuánto falta
+                                        let distance = 0;
+                                        if (isMosca) {
+                                            distance = player.score; // En la Mosca falta lo que tenés para llegar a 0
+                                        } else if (match.config.limitScore) {
+                                            distance = match.config.limitScore - player.score;
+                                        }
+
+                                        return (
+                                            <td key={player.name} className={`p-5 text-2xl font-display ${limitColorClass} ${player.isOut ? 'opacity-10' : ''}`}>
+                                                {distance}
+                                            </td>
+                                        );
+                                    })}
+                                </tr>
+                            )}
                         </tbody>
                     </table>
                 </div>
 
-                {/* Margen de aviso para Loba (Debajo de la tabla) */}
-                {match.gameType === 'Loba' && match.status === 'active' && (
-                    <div className="flex flex-wrap gap-2 justify-center">
-                        {match.players.filter(p => !p.isOut).map(p => (
-                            <span key={p.name} className="text-[10px] bg-background border border-white/5 px-3 py-1 rounded-full text-text-muted">
-                                {p.name}: <b className="text-warning">{match.config.limitScore! - p.score}</b> para salir
-                            </span>
-                        ))}
-                    </div>
-                )}
 
             </main>
 

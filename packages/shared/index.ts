@@ -15,6 +15,7 @@ export interface IRound {
 }
 
 export interface IRoundDetails {
+	pointsAdded: number;
 	isCorteMinus10?: boolean;
 	isCerrar?: boolean;
 	bazas?: number;

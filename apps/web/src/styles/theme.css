@@ -38,3 +38,18 @@
         @apply font-display font-bold;
     }
 }
+
+/* --- COMPONENTES --- */
+@layer components {
+    .btn-primary {
+        @apply bg-primary text-background font-bold rounded-2xl flex items-center justify-center gap-2 text-xl py-4;
+    }
+
+    .btn-secondary {
+        @apply bg-secondary text-background font-semibold rounded-lg px-4 py-2;
+    }
+
+    .card {
+        @apply bg-surface rounded-lg shadow-md p-6;
+    }
+}

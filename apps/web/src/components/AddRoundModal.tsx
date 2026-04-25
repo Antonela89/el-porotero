@@ -100,21 +100,30 @@ export const AddRoundModal = ({ isOpen, onClose, match, onSuccess }: Props) => {
                                                 </button>
                                             </div>
                                         ) : (
-                                            <div className="flex flex-1 items-center gap-3">
+                                            <div className="flex flex-1 items-center gap-2">
                                                 <input
                                                     type="number"
                                                     placeholder="Puntos"
-                                                    className="form-input py-2"
+                                                    className="form-input py-2 flex-1"
+                                                    value={s.pointsAdded === 0 && (s.details.isCerrar || s.details.isCorteMinus10) ? "" : s.pointsAdded}
                                                     onChange={(e) => handleUpdateScore(i, { pointsAdded: parseInt(e.target.value) || 0 })}
                                                 />
-                                                {match.gameType === 'Loba' && (
+
+                                                <div className="flex gap-1">
                                                     <button
-                                                        onClick={() => handleUpdateDetails(i, { isCerrar: !s.details.isCerrar })}
-                                                        className={`px-3 py-2 rounded-lg text-xs font-bold ${s.details.isCerrar ? 'bg-primary text-background' : 'bg-surface'}`}
+                                                        onClick={() => handleUpdateDetails(i, { isCerrar: !s.details.isCerrar, isCorteMinus10: false, pointsAdded: 0 })}
+                                                        className={`px-3 py-2 rounded-lg text-[10px] font-bold transition-all ${s.details.isCerrar ? 'bg-primary text-background' : 'bg-surface text-text-muted'}`}
                                                     >
                                                         CERRÓ
                                                     </button>
-                                                )}
+
+                                                    <button
+                                                        onClick={() => handleUpdateDetails(i, { isCorteMinus10: !s.details.isCorteMinus10, isCerrar: false, pointsAdded: 0 })}
+                                                        className={`px-3 py-2 rounded-lg text-[10px] font-bold transition-all ${s.details.isCorteMinus10 ? 'bg-secondary text-white' : 'bg-surface text-text-muted'}`}
+                                                    >
+                                                        -10
+                                                    </button>
+                                                </div>
                                             </div>
                                         )}
                                     </div>
