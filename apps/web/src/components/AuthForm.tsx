@@ -16,7 +16,7 @@ export const AuthForm = ({ mode }: AuthFormProps) => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const endpoint = mode === 'login' ? 'api/auth/login' : 'api/auth/register';
+            const endpoint = mode === 'login' ? 'auth/login' : 'auth/register';
             const { data } = await api.post(endpoint, formData);
 
             if (mode === 'login') {
