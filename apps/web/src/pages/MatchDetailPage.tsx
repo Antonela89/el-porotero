@@ -6,6 +6,7 @@ import api from '@/api/axios';
 import { ArrowLeft, Trophy, Crown, Plus, RotateCcw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AddRoundModal } from '@/components';
+import { getShortName } from '@/utils/formatters';
 
 export const MatchDetailPage = () => {
     const { id } = useParams<{ id: string }>();
@@ -39,6 +40,8 @@ export const MatchDetailPage = () => {
 
     const gameInfo = GAMES_MAP[match.gameType];
 
+    const allPlayerNames = match.players.map(p => p.name);
+
     return (
         <div className="match-layout">
             {/* HEADER COMPACTO */}
@@ -60,40 +63,66 @@ export const MatchDetailPage = () => {
 
             {/* MARCADOR PRINCIPAL (LA MESA) */}
             <main className="scoreboard-grid">
-                <AnimatePresence>
-                    {match.players.map((player, index) => {
-                        const isDealer = index === match.currentDealerIndex;
-                        return (
-                            <motion.div
-                                key={player.name}
-                                layout
-                                className={`player-score-card ${isDealer ? 'is-dealer' : ''} ${player.isOut ? 'is-out' : ''}`}
-                            >
-                                {isDealer && (
-                                    <div className="dealer-badge">
-                                        <Crown size={16} fill="currentColor" />
-                                    </div>
-                                )}
+                <div className="w-full overflow-x-auto custom-scrollbar bg-surface rounded-4xl border border-white/5 shadow-2xl">
+                    <table className="w-full text-center border-collapse">
+                        <thead>
+                            <tr className="border-b border-white/10">
+                                <th className="p-4 text-[10px] text-text-muted uppercase tracking-widest sticky left-0 bg-surface z-10">Ronda</th>
+                                <AnimatePresence>
+                                    {match.players.map((player, index) => (
+                                        <th key={player.name} className={`p-4 min-w-20 ${index === match.currentDealerIndex ? 'text-primary' : 'text-text-main'}`}>
+                                            <div className="flex flex-col items-center gap-1">
+                                                {index === match.currentDealerIndex && <Crown size={12} fill="currentColor" />}
+                                                <span className="text-lg font-display tracking-tighter">
+                                                    {getShortName(player.name, allPlayerNames)}
+                                                </span>
+                                                <span className="text-[9px] opacity-50 uppercase">{player.name}</span>
+                                            </div>
+                                        </th>
+                                    ))}
+                                </AnimatePresence>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {/* HISTORIAL DE RONDAS */}
+                            {match.rounds.map((round) => (
+                                <tr key={round.roundNumber} className="border-b border-white/5 hover:bg-white/2 transition-colors">
+                                    <td className="p-3 text-sm text-text-muted font-mono sticky left-0 bg-surface">{round.roundNumber}</td>
+                                    {match.players.map(player => {
+                                        const roundScore = round.scores.find(s => s.playerName === player.name);
+                                        return (
+                                            <td key={player.name} className="p-3 font-mono text-sm">
+                                                {roundScore?.pointsAdded || 0}
+                                            </td>
+                                        );
+                                    })}
+                                </tr>
+                            ))}
 
-                                <span className="font-bold text-sm truncate w-full text-center">
-                                    {player.name}
-                                </span>
+                            {/* FILA DE TOTALES (DESTACADA) */}
+                            <tr className="bg-primary/5 font-bold">
+                                <td className="p-5 text-primary text-xs uppercase tracking-widest sticky left-0 bg-surface">Total</td>
+                                {match.players.map(player => (
+                                    <td key={player.name} className={`p-5 text-2xl font-display ${player.isOut ? 'text-warning opacity-50' : 'text-primary'}`}>
+                                        {player.score}
+                                    </td>
+                                ))}
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-                                <div className="score-value">
-                                    {player.score}
-                                </div>
+                {/* Margen de aviso para Loba (Debajo de la tabla) */}
+                {match.gameType === 'Loba' && match.status === 'active' && (
+                    <div className="flex flex-wrap gap-2 justify-center">
+                        {match.players.filter(p => !p.isOut).map(p => (
+                            <span key={p.name} className="text-[10px] bg-background border border-white/5 px-3 py-1 rounded-full text-text-muted">
+                                {p.name}: <b className="text-warning">{match.config.limitScore! - p.score}</b> para salir
+                            </span>
+                        ))}
+                    </div>
+                )}
 
-                                <span className="score-label">Puntos</span>
-
-                                {match.gameType === 'Loba' && !player.isOut && (
-                                    <div className="text-[9px] text-warning font-bold mt-1">
-                                        Margen: {match.config.limitScore! - player.score}
-                                    </div>
-                                )}
-                            </motion.div>
-                        );
-                    })}
-                </AnimatePresence>
             </main>
 
             {/* RESUMEN DE GANADOR (SI TERMINÓ) */}

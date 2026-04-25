@@ -38,18 +38,3 @@
         @apply font-display font-bold;
     }
 }
-
-/* --- UTILIDADES REUTILIZABLES --- */
-@layer components {
-    .btn-primary {
-        @apply bg-primary text-background px-6 py-3 rounded-xl font-bold transition-all hover:scale-105 active:scale-95 disabled:opacity-50;
-    }
-
-    .card-player {
-        @apply bg-surface border border-white/5 p-4 rounded-2xl shadow-lg;
-    }
-
-    .input-field {
-        @apply bg-background border border-white/10 p-3 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all;
-    }
-}

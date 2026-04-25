@@ -28,7 +28,7 @@
 
 /*Anotador*/
 .match-layout {
-    @apply min-h-screen bg-background p-4 flex flex-col gap-6;
+    @apply min-h-screen bg-background p-6 flex flex-col gap-6;
 }
 
 .scoreboard-grid {
@@ -57,4 +57,18 @@
 
 .score-label {
     @apply text-[10px] uppercase tracking-widest text-text-muted font-bold;
+}
+
+/* Scrollbar estética para mobile */
+.custom-scrollbar::-webkit-scrollbar {
+    height: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-primary/20 rounded-full;
+}
+
+/* Sticky column para que no se pierda el número de ronda al scrollear */
+.sticky-left {
+    @apply sticky left-0 bg-surface shadow-[4px_0_10px_rgba(0, 0, 0, 0.3)];
 }
