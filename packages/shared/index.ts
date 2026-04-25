@@ -21,6 +21,24 @@ export interface IMatchConfig {
 	isDescending: boolean; // true para Mosca (resta), false para el resto
 }
 
+export interface IPlayer {
+	_id?: string; // En el front es opcional y es string
+	name: string;
+	score: number;
+	team: 'A' | 'B' | 'None';
+	isOut: boolean;
+}
+
+export interface IMatch {
+	_id: string;
+	gameType: string;
+	status: 'active' | 'finished';
+	players: IPlayer[];
+	winner?: string;
+	createdAt: string;
+	// ... otros campos que necesites mostrar
+}
+
 // --- Esquemas ---
 // --- USUARIO ---
 export const UserZodSchema = z.object({
