@@ -24,3 +24,37 @@
 .player-input-row {
     @apply flex gap-2 items-center bg-surface p-2 rounded-2xl border border-white/5;
 }
+
+
+/*Anotador*/
+.match-layout {
+    @apply min-h-screen bg-background p-4 flex flex-col gap-6;
+}
+
+.scoreboard-grid {
+    @apply grid grid-cols-2 gap-4 auto-rows-fr;
+}
+
+.player-score-card {
+    @apply bg-surface border-2 border-transparent p-5 rounded-[2.5rem] flex flex-col items-center justify-center gap-2 transition-all relative;
+}
+
+.player-score-card.is-dealer {
+    @apply border-primary/40 shadow-[0_0_15px_rgba(253, 224, 71, 0.1)];
+}
+
+.player-score-card.is-out {
+    @apply opacity-30 grayscale;
+}
+
+.dealer-badge {
+    @apply absolute -top-2 -right-2 bg-primary text-background p-2 rounded-full shadow-lg;
+}
+
+.score-value {
+    @apply text-5xl font-display font-bold text-text-main;
+}
+
+.score-label {
+    @apply text-[10px] uppercase tracking-widest text-text-muted font-bold;
+}

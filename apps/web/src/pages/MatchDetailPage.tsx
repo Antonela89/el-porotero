@@ -1,0 +1,136 @@
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { IMatch } from '@el-porotero/shared';
+import { GAMES_MAP } from '@/constants/games';
+import api from '@/api/axios';
+import { ArrowLeft, Trophy, Crown, Plus, RotateCcw } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { AddRoundModal } from '@/components';
+
+export const MatchDetailPage = () => {
+    const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
+    const [match, setMatch] = useState<IMatch | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+
+    useEffect(() => {
+        const loadInitialData = async () => {
+            try {
+                const { data } = await api.get<IMatch>(`/matches/${id}`);
+                setMatch(data);
+            } catch (error) {
+                console.error("Error al cargar la partida", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (id) loadInitialData();
+    }, [id]); // Solo se ejecuta si cambia el ID de la URL
+
+    // Esta función la llamará el Modal de Puntos
+    const handleUpdateMatch = (updatedMatch: IMatch) => {
+        setMatch(updatedMatch);
+    };
+
+    if (loading || !match) return <div className="match-layout flex items-center justify-center">Cargando partida...</div>;
+
+    const gameInfo = GAMES_MAP[match.gameType];
+
+    return (
+        <div className="match-layout">
+            {/* HEADER COMPACTO */}
+            <header className="flex items-center justify-between">
+                <button onClick={() => navigate('/')} className="p-3 bg-surface rounded-full text-text-muted">
+                    <ArrowLeft size={20} />
+                </button>
+                <div className="flex flex-col items-center">
+                    <div className="flex items-center gap-2 text-primary font-display font-bold uppercase tracking-widest">
+                        {gameInfo.icon}
+                        <span>{match.gameType}</span>
+                    </div>
+                    <span className="text-[10px] text-text-muted">Límite: {match.config.limitScore} pts</span>
+                </div>
+                <button onClick={() => setMatch(null)} className="p-3 bg-surface rounded-full text-text-muted">
+                    <RotateCcw size={20} />
+                </button>
+            </header>
+
+            {/* MARCADOR PRINCIPAL (LA MESA) */}
+            <main className="scoreboard-grid">
+                <AnimatePresence>
+                    {match.players.map((player, index) => {
+                        const isDealer = index === match.currentDealerIndex;
+                        return (
+                            <motion.div
+                                key={player.name}
+                                layout
+                                className={`player-score-card ${isDealer ? 'is-dealer' : ''} ${player.isOut ? 'is-out' : ''}`}
+                            >
+                                {isDealer && (
+                                    <div className="dealer-badge">
+                                        <Crown size={16} fill="currentColor" />
+                                    </div>
+                                )}
+
+                                <span className="font-bold text-sm truncate w-full text-center">
+                                    {player.name}
+                                </span>
+
+                                <div className="score-value">
+                                    {player.score}
+                                </div>
+
+                                <span className="score-label">Puntos</span>
+
+                                {match.gameType === 'Loba' && !player.isOut && (
+                                    <div className="text-[9px] text-warning font-bold mt-1">
+                                        Margen: {match.config.limitScore! - player.score}
+                                    </div>
+                                )}
+                            </motion.div>
+                        );
+                    })}
+                </AnimatePresence>
+            </main>
+
+            {/* RESUMEN DE GANADOR (SI TERMINÓ) */}
+            {match.status === 'finished' && (
+                <motion.div
+                    initial={{ y: 50, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    className="bg-primary text-background p-6 rounded-3xl flex flex-col items-center gap-2 shadow-2xl"
+                >
+                    <Trophy size={48} />
+                    <h2 className="text-2xl font-display font-bold uppercase">¡Ganador {match.winner}!</h2>
+                    <button
+                        onClick={() => navigate('/match/new')}
+                        className="mt-2 bg-background text-primary px-6 py-2 rounded-full font-bold text-sm"
+                    >
+                        Nueva Revancha
+                    </button>
+                </motion.div>
+            )}
+
+            {/* BOTÓN FLOTANTE PARA ANOTAR RONDA */}
+            {match.status === 'active' && (
+                <button
+                    className="fixed bottom-8 right-8 w-16 h-16 bg-primary text-background rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-transform"
+                    onClick={() => setIsModalOpen(true)}
+                >
+                    <Plus size={32} strokeWidth={3} />
+                </button>
+            )}
+
+            {/* EL MODAL */}
+            <AddRoundModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                match={match}
+                onSuccess={handleUpdateMatch}
+            />
+        </div>
+    );
+};

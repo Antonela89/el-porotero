@@ -56,7 +56,7 @@ export const NewMatchPage = () => {
                 </button>
             </header>
 
-            {/* 1. SELECCIÓN DE JUEGO (Ahora compacto) */}
+            {/* 1. SELECCIÓN DE JUEGO (compacto) */}
             <section className="mb-6">
                 <label className="text-[10px] uppercase tracking-[0.2em] text-text-muted font-bold mb-2 block ml-1">
                     Juego Seleccionado
@@ -70,7 +70,7 @@ export const NewMatchPage = () => {
             </section>
 
             {/* 2. CONFIGURACIÓN EXTRA (Si es Loba) */}
-            {gameType === 'Loba' && (
+            {gameType === 'Loba' || gameType === 'Chinchon' && (
                 <section className="mb-8 animate-in fade-in slide-in-from-top-2">
                     <div className="flex gap-2">
                         {[100, 101].map(val => (
@@ -95,7 +95,7 @@ export const NewMatchPage = () => {
                 {/* Lista con scroll si hay muchos */}
                 <div className="flex flex-col gap-3 mb-6 max-h-75 overflow-y-auto pr-2 custom-scrollbar">
                     {players.map((p, i) => (
-                        <div key={i} className="player-input-row justify-between px-4 py-3 bg-surface/50 border-white/5 border">
+                        <div key={i} className="player-input-row flex justify-between px-4 py-3 bg-surface/50 border-white/5 border">
                             <div className="flex items-center gap-4">
                                 <div className="w-8 h-8 rounded-full bg-background flex items-center justify-center text-primary font-bold text-sm">
                                     {i + 1}

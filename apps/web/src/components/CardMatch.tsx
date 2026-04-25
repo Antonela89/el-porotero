@@ -9,7 +9,7 @@ interface MatchCardProps {
 }
 
 
-const CardMatch = ({ match, onDelete, onEdit }: MatchCardProps) => {
+export const CardMatch = ({ match, onDelete, onEdit }: MatchCardProps) => {
     const navigate = useNavigate();
 
     const date = new Date(match.createdAt).toLocaleDateString('es-AR', {
@@ -85,5 +85,3 @@ const CardMatch = ({ match, onDelete, onEdit }: MatchCardProps) => {
         </article>
     );
 };
-
-export default CardMatch

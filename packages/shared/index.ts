@@ -14,6 +14,23 @@ export interface IRound {
 	timestamp: Date;
 }
 
+export interface IRoundDetails {
+	isCorteMinus10?: boolean;
+	isCerrar?: boolean;
+	bazas?: number;
+	paso?: boolean;
+	escobas?: number;
+	velos?: number;
+	hasOros?: boolean;
+	hasSetenta?: boolean;
+	hasCartas?: boolean;
+	cantos?: number;
+	canastasPuras?: number; // 200 pts c/u
+	canastasImpuras?: number; // 100 pts c/u
+	tomoMuerto?: boolean; // Si no lo tomó, restar 100
+	cierre?: boolean;
+}
+
 // Configuración inicial de la partida
 export interface IMatchConfig {
 	limitScore?: number; // 100 o 101 para Loba
@@ -36,7 +53,9 @@ export interface IMatch {
 	players: IPlayer[];
 	winner?: string;
 	createdAt: string;
-	// ... otros campos que necesites mostrar
+	config: IMatchConfig;
+	currentDealerIndex: number;
+	rounds: IRound[];
 }
 
 // --- Esquemas ---

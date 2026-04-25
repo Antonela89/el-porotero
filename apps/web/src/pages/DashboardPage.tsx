@@ -3,7 +3,7 @@ import { useAuth } from '@/context';
 import api from '@/api/axios';
 import { IMatch } from '@el-porotero/shared';
 import { LogOut, Plus, Clock } from 'lucide-react';
-import  CardMatch  from '@/components';
+import { CardMatch } from '@/components';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
