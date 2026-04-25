@@ -49,6 +49,22 @@ export const DashboardPage = () => {
         // abrir un modal para cambiar el nombre de los jugadores y el estado del juego
     };
 
+    const groupMatchesByDate = (matches: IMatch[]) => {
+        const groups: Record<string, IMatch[]> = {};
+
+        matches.forEach(match => {
+            const date = new Date(match.createdAt).toLocaleDateString('es-AR', {
+                day: '2-digit', month: 'long', year: 'numeric'
+            });
+            if (!groups[date]) groups[date] = [];
+            groups[date].push(match);
+        });
+
+        return groups;
+    };
+
+    const groupedMatches = groupMatchesByDate(matches);
+
     return (
         <div className="dashboard-container">
             {/* Header con Logout */}
@@ -80,16 +96,25 @@ export const DashboardPage = () => {
                         No hay partidas anotadas todavía.
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {matches.map((match) => (
-                            <CardMatch
-                                key={match._id}
-                                match={match}
-                                onDelete={handleDeleteMatch}
-                                onEdit={handleEditMatch}
-                            />
+                    <section className="flex flex-col gap-8">
+                        {Object.entries(groupedMatches).map(([date, matchesInDate]) => (
+                            <div key={date} className="flex flex-col gap-4">
+                                <h2 className="text-xs font-bold uppercase tracking-[0.3em] text-text-muted border-l-2 border-primary pl-3 ml-1">
+                                    {date}
+                                </h2>
+                                <div className="match-grid">
+                                    {matchesInDate.map(match => (
+                                        <CardMatch
+                                            key={match._id}
+                                            match={match}
+                                            onDelete={handleDeleteMatch}
+                                            onEdit={handleEditMatch}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
                         ))}
-                    </div>
+                    </section>
                 )}
             </main>
         </div>

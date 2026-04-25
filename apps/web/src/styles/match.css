@@ -25,6 +25,23 @@
     @apply flex gap-2 items-center bg-surface p-2 rounded-2xl border border-white/5;
 }
 
+.match-card {
+    @apply bg-surface border border-white/5 p-6 rounded-4xl shadow-xl;
+}
+
+/* Colores para las acciones */
+.text-orange-400 {
+    color: #fb923c;
+}
+
+.text-emerald-400 {
+    color: #34d399;
+}
+
+/* Botón de entrada principal */
+.bg-indigo-500 {
+    background-color: #6366f1;
+}
 
 /*Anotador*/
 .match-layout {

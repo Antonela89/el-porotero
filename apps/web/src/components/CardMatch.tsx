@@ -1,6 +1,7 @@
 import { IMatch } from '@el-porotero/shared';
-import { Trophy, Users, Calendar, ChevronRight, Trash2, Edit3 } from 'lucide-react';
+import { Trophy, Users, ChevronRight, Trash2, Edit3 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 interface MatchCardProps {
     match: IMatch;
@@ -11,11 +12,6 @@ interface MatchCardProps {
 
 export const CardMatch = ({ match, onDelete, onEdit }: MatchCardProps) => {
     const navigate = useNavigate();
-
-    const date = new Date(match.createdAt).toLocaleDateString('es-AR', {
-        day: '2-digit',
-        month: 'short',
-    });
 
     // Manejador para borrar
     const handleDelete = (e: React.MouseEvent) => {
@@ -32,56 +28,60 @@ export const CardMatch = ({ match, onDelete, onEdit }: MatchCardProps) => {
     };
 
     return (
-        <article
-            onClick={() => navigate(`/match/${match._id}`)}
-            className="match-card group flex items-center gap-4 transition-all"
+        <motion.article
+            whileTap={{ scale: 0.98 }}
+            className="match-card flex flex-col gap-4"
         >
-            {/* Indicador lateral de estado */}
-            <div className={`w-1.5 h-12 rounded-full ${match.status === 'active' ? 'bg-primary' : 'bg-text-muted/30'
-                }`} />
-
-            <div className="flex-1">
-                <div className="flex justify-between items-start mb-1">
-                    <h3 className="text-lg font-bold text-text-main group-hover:text-primary transition-colors">
+            <div className="flex justify-between items-start">
+                <div>
+                    <h3 className="text-xl font-display font-bold text-primary uppercase">
                         {match.gameType}
                     </h3>
-                    <span className="text-[10px] text-text-muted flex items-center gap-1 uppercase tracking-widest">
-                        <Calendar size={12} /> {date}
-                    </span>
-                </div>
-
-                <div className="flex items-center gap-4 text-sm text-text-muted">
-                    <div className="flex items-center gap-1">
-                        <Users size={14} />
-                        <span>{match.players.length}</span>
+                    <div className="flex items-center gap-3 text-text-muted text-sm mt-1">
+                        <span className="flex items-center gap-1"><Users size={14} /> {match.players.length}</span>
+                        {match.winner && (
+                            <span className="text-emerald-400 font-bold flex items-center gap-1">
+                                <Trophy size={14} /> {match.winner}
+                            </span>
+                        )}
                     </div>
-                    {match.winner && (
-                        <div className="flex items-center gap-1 text-primary/80">
-                            <Trophy size={14} />
-                            <span className="font-semibold">{match.winner}</span>
-                        </div>
-                    )}
                 </div>
+
+                {/* ESTADO */}
+                <span className={`text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider ${match.status === 'active' ? 'bg-primary/10 text-primary' : 'bg-white/5 text-text-muted'
+                    }`}>
+                    {match.status === 'active' ? 'En Juego' : 'Cerrada'}
+                </span>
             </div>
 
-            {/* BOTONES DE ACCIÓN */}
-            <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button
-                    onClick={handleEdit}
-                    className="p-2 hover:bg-white/10 rounded-lg text-text-muted hover:text-primary transition-colors"
-                    title="Editar partida"
+            {/* BARRA DE ACCIONES SIEMPRE VISIBLE */}
+            <div className="flex items-center justify-between border-t border-white/5 pt-3 mt-auto">
+                <div className="flex gap-2">
+                    <motion.button
+                        whileTap={{ scale: 0.9 }}
+                        onClick={(e) => handleEdit(e)}
+                        className="p-3 bg-surface border border-white/10 rounded-xl text-primary hover:bg-primary/10 transition-colors"
+                    >
+                        <Edit3 size={18} />
+                    </motion.button>
+
+                    <motion.button
+                        whileTap={{ scale: 0.9 }}
+                        onClick={(e) => handleDelete(e)}
+                        className="p-3 bg-surface border border-white/10 rounded-xl text-orange-400 hover:bg-orange-400/10 transition-colors"
+                    >
+                        <Trash2 size={18} />
+                    </motion.button>
+                </div>
+
+                <motion.button
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => navigate(`/match/${match._id}`)}
+                    className="flex items-center gap-2 px-4 py-3 bg-indigo-500 text-white rounded-xl font-bold text-sm shadow-lg shadow-indigo-500/20 active:bg-indigo-600"
                 >
-                    <Edit3 size={18} />
-                </button>
-                <button
-                    onClick={handleDelete}
-                    className="p-2 hover:bg-white/10 rounded-lg text-text-muted hover:text-warning transition-colors"
-                    title="Eliminar partida"
-                >
-                    <Trash2 size={18} />
-                </button>
-                <ChevronRight className="text-text-muted self-center ml-1" />
+                    Continuar <ChevronRight size={18} />
+                </motion.button>
             </div>
-        </article>
+        </motion.article>
     );
 };
