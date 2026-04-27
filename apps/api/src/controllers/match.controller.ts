@@ -62,25 +62,7 @@ export const addRound = async (req: Request, res: Response) => {
 			return res.status(404).json({ message: 'Partida no encontrada' });
 		}
 
-		// Iteramos con seguridad
-		for (const s of scores) {
-			const player = match.players.find((p) => p.name === s.playerName);
-
-			if (!player) {
-				return res.status(400).json({
-					message: `El jugador ${s.playerName} no pertenece a esta mesa.`,
-				});
-			}
-		}
-
-		match.rounds.push({
-			roundNumber: match.rounds.length + 1,
-			dealerIndex: match.currentDealerIndex,
-			scores,
-			timestamp: new Date(),
-		});
-
-		let instantWinner = null;
+		let instantWinner: string | null = null;
 
 		switch (match.gameType) {
 			case 'Loba':
@@ -97,6 +79,24 @@ export const addRound = async (req: Request, res: Response) => {
 			case 'Burako':
 				GameRules.processBurakoRules(match, scores);
 				break;
+		}
+
+		match.rounds.push({
+			roundNumber: match.rounds.length + 1,
+			dealerIndex: match.currentDealerIndex,
+			scores,
+			timestamp: new Date(),
+		});
+
+		// Iteramos con seguridad
+		for (const s of scores) {
+			const player = match.players.find((p) => p.name === s.playerName);
+
+			if (!player) {
+				return res.status(400).json({
+					message: `El jugador ${s.playerName} no pertenece a esta mesa.`,
+				});
+			}
 		}
 
 		// Lógica genérica de fin de juego por puntaje

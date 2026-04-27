@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { IMatch } from '@el-porotero/shared';
 import { GAMES_MAP } from '@/constants/games';
 import api from '@/api/axios';
-import { ArrowLeft, Trophy, Crown, Plus, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Trophy, Crown, Plus, RotateCcw, HatGlasses } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AddRoundModal } from '@/components';
 import { getShortName } from '@/utils/formatters';
@@ -39,6 +39,7 @@ export const MatchDetailPage = () => {
     if (loading || !match) return <div className="match-layout flex items-center justify-center">Cargando partida...</div>;
 
     const gameInfo = GAMES_MAP[match.gameType];
+    const gameLimit = GAMES_MAP[match.gameType]?.defaultLimit || 0;
 
     const allPlayerNames = match.players.map(p => p.name);
 
@@ -50,6 +51,9 @@ export const MatchDetailPage = () => {
 
     // Caso especial Mosca: se gana al llegar a 0
     const isMosca = match.gameType === 'Mosca';
+    const sombreroIndex = (isMosca && match.players.length === 5)
+        ? (match.currentDealerIndex + 1) % match.players.length
+        : -1;
 
     const limitLabel = isLoseOnLimit ? 'Para Salir' : 'Para Ganar';
     const limitColorClass = isLoseOnLimit ? 'text-orange-400' : 'text-emerald-400';
@@ -67,7 +71,7 @@ export const MatchDetailPage = () => {
                         {gameInfo.icon}
                         <span>{match.gameType}</span>
                     </div>
-                    <span className="text-[10px] text-text-muted">Límite: {match.config.limitScore} pts</span>
+                    <span className="text-[10px] text-text-muted">Límite: {gameLimit} pts</span>
                 </div>
                 <button onClick={() => setMatch(null)} className="p-3 bg-surface rounded-full text-text-muted">
                     <RotateCcw size={20} />
@@ -82,21 +86,30 @@ export const MatchDetailPage = () => {
                             <tr className="border-b border-white/10">
                                 <th className="p-4 text-[10px] text-text-muted uppercase tracking-widest sticky left-0 bg-surface z-10">Ronda</th>
                                 <AnimatePresence>
-                                    {match.players.map((player, index) => (
-                                        <th key={player.name} className={`p-4 min-w-20 ${index === match.currentDealerIndex ? 'text-primary' : 'text-text-main'}`}>
-                                            <div className="flex flex-col items-center gap-1">
-                                                {index === match.currentDealerIndex && <Crown size={12} fill="currentColor" />}
-                                                <span className="text-lg font-display tracking-tighter">
-                                                    {getShortName(player.name, allPlayerNames)}
-                                                </span>
-                                                <span className="text-[9px] opacity-50 uppercase">{player.name}</span>
-                                            </div>
-                                        </th>
-                                    ))}
+                                    {match.players.map((player, index) => {
+                                        const isDealer = index === match.currentDealerIndex;
+                                        const isSombrero = index === sombreroIndex;
+
+                                        return (
+                                            <th key={player.name} className={`p-4 min-w-20 ${index === match.currentDealerIndex ? 'text-primary' : 'text-text-main'}`}>
+                                                <div className="flex flex-col items-center gap-1">
+                                                    <div className="h-4 flex items-center gap-1"> {/* Contenedor de iconos fijo */}
+                                                        {isDealer && <Crown size={14} className="text-primary" fill="currentColor" />}
+                                                        {isSombrero && <HatGlasses size={14} className="text-purple-400" />}
+                                                    </div>
+                                                    <span className={`text-lg font-display ${isDealer ? 'text-primary' : isSombrero ? 'text-purple-400' : 'text-text-main'}`}>
+                                                        {getShortName(player.name, allPlayerNames)}
+                                                    </span>
+                                                    <span className="text-[9px] opacity-50 uppercase tracking-tighter">{player.name}</span>
+                                                </div>
+                                            </th>
+                                        )
+                                    })}
                                 </AnimatePresence>
                             </tr>
                         </thead>
                         <tbody>
+
                             {/* HISTORIAL DE RONDAS */}
                             {match.rounds.map((round) => (
                                 <tr key={round.roundNumber} className="border-b border-white/5 hover:bg-white/2 transition-colors">
@@ -105,7 +118,7 @@ export const MatchDetailPage = () => {
                                         const roundScore = round.scores.find(s => s.playerName === player.name);
                                         return (
                                             <td key={player.name} className="p-3 font-mono text-sm">
-                                                {roundScore?.pointsAdded || 0}
+                                                {roundScore ? roundScore.pointsAdded : 0}
                                             </td>
                                         );
                                     })}
@@ -123,7 +136,7 @@ export const MatchDetailPage = () => {
                             </tr>
 
                             {/* FILA DINÁMICA DE DISTANCIA AL LÍMITE */}
-                            {(match.config.limitScore || isMosca) && match.status === 'active' && (
+                            {match.config.limitScore && !isMosca && match.status === 'active' && (
                                 <tr className={`${limitBgClass} font-bold border-t border-white/10`}>
                                     <td className={`p-5 ${limitColorClass} text-[10px] uppercase tracking-widest sticky left-0 bg-surface z-10`}>
                                         {limitLabel}
@@ -162,7 +175,7 @@ export const MatchDetailPage = () => {
                     <Trophy size={48} />
                     <h2 className="text-2xl font-display font-bold uppercase">¡Ganador {match.winner}!</h2>
                     <button
-                        onClick={() => navigate('/match/new')}
+                        onClick={() => navigate('/new-match')}
                         className="mt-2 bg-background text-primary px-6 py-2 rounded-full font-bold text-sm"
                     >
                         Nueva Revancha

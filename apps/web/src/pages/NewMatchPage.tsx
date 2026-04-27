@@ -20,6 +20,11 @@ export const NewMatchPage = () => {
         setPlayerName('');
     };
 
+    // Limite de jugadores: Mosca máximo 5, el resto máximo 6
+    const isMosca = gameType === 'Mosca';
+    const canAddMorePlayers = isMosca ? players.length < 5 : players.length < 6;
+
+
     const removePlayer = (index: number) => {
         setPlayers(players.filter((_, i) => i !== index));
     };
@@ -113,16 +118,26 @@ export const NewMatchPage = () => {
                 <div className="player-input-row border-primary/20 ring-2 ring-primary/5 flex justify-between">
                     <input
                         type="text"
-                        placeholder="Sumar jugador..."
+                        placeholder={canAddMorePlayers ? "Sumar jugador..." : "Límite de jugadores alcanzado"}
+                        disabled={!canAddMorePlayers} // Bloquear el input
                         className="bg-transparent flex-1 outline-none px-3 py-2 text-text-main"
                         value={playerName}
                         onChange={(e) => setPlayerName(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && addPlayer()}
                     />
-                    <button onClick={addPlayer} className="bg-primary text-background p-3 rounded-xl hover:bg-primary-dark transition-colors shadow-lg shadow-primary/20">
+                    <button onClick={addPlayer} className="bg-primary text-background p-3 rounded-xl hover:bg-primary-dark transition-colors shadow-lg shadow-primary/20"
+                        disabled={!canAddMorePlayers || !playerName.trim()}> 
                         <UserPlus size={20} />
                     </button>
                 </div>
+
+                {/* Aviso visual */}
+                {isMosca && players.length === 5 && (
+                    <p className="text-[10px] text-warning mt-2 ml-1 animate-pulse font-bold uppercase">
+                        ⚠️ La Mosca se juega con máximo 5 jugadores (Regla del Sombrero activa)
+                    </p>
+                )}
+
             </section>
 
             <button

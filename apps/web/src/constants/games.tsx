@@ -3,7 +3,7 @@ import {
     Flower2,
     Coins,
     Layers,
-    Ghost,
+    Bug,
     LayoutGrid,
     Dice5
 } from 'lucide-react';
@@ -50,7 +50,7 @@ export const GAMES: GameDefinition[] = [
         id: 'Mosca',
         name: 'Mosca',
         description: 'Juego de bazas descendente. Arrancás con 15, llegás a 0.',
-        icon: <Ghost size={24} />,
+        icon: <Bug size={24} />,
         color: 'text-purple-400',
         defaultLimit: 0,
         isDescending: true
