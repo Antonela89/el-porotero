@@ -1,15 +1,13 @@
 import { useEffect, useState } from 'react';
-import { useAuth } from '@/context';
 import api from '@/api/axios';
 import { IMatch } from '@el-porotero/shared';
-import { LogOut, Plus, Clock } from 'lucide-react';
+import { Plus, Clock } from 'lucide-react';
 import { CardMatch } from '@/components';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 export const DashboardPage = () => {
     const navigate = useNavigate();
-    const { user, logout } = useAuth();
     const [matches, setMatches] = useState<IMatch[]>([]);
 
     useEffect(() => {
@@ -67,15 +65,13 @@ export const DashboardPage = () => {
 
     return (
         <div className="dashboard-container">
-            {/* Header con Logout */}
+            {/* Header*/}
             <header className="dashboard-header">
-                <div>
-                    <h1 className="text-3xl text-primary font-display">Hola, {user?.username} 👋</h1>
-                    <p className="text-text-muted italic">¿Qué vamos a jugar hoy?</p>
-                </div>
-                <button onClick={logout} className="p-2 text-text-muted hover:text-warning transition-colors">
-                    <LogOut size={24} />
-                </button>
+                <p className="text-text-muted italic text-center">
+                    <span className='font-semibold'>Hola!, </span>
+                    <br />
+                    ¿Qué vamos a jugar hoy?
+                </p>
             </header>
 
             {/* Acción Principal */}

@@ -36,6 +36,21 @@ export const MatchDetailPage = () => {
         setMatch(updatedMatch);
     };
 
+    const handleRevancha = (match: IMatch) => {
+        // Mandamos solo los nombres y el equipo, reseteando puntos y estado
+        const playersForRematch = match.players.map(p => ({
+            name: p.name,
+            team: p.team
+        }));
+
+        navigate('/new-match', {
+            state: {
+                gameType: match.gameType,
+                players: playersForRematch
+            }
+        });
+    };
+
     if (loading || !match) return <div className="match-layout flex items-center justify-center">Cargando partida...</div>;
 
     const gameInfo = GAMES_MAP[match.gameType];
@@ -129,7 +144,8 @@ export const MatchDetailPage = () => {
                             <tr className="bg-primary/5 font-bold">
                                 <td className="p-5 text-primary text-xs uppercase tracking-widest sticky left-0 bg-surface">Total</td>
                                 {match.players.map(player => (
-                                    <td key={player.name} className={`p-5 text-2xl font-display ${player.isOut ? 'text-warning opacity-50' : 'text-primary'}`}>
+                                    <td key={player.name} className={`p-5 text-2xl font-display ${player.name === match.winner ? 'text-primary animate-bounce' : 'text-text-main'}
+        ${player.isOut ? 'opacity-20' : ''}`}>
                                         {player.score}
                                     </td>
                                 ))}
@@ -175,7 +191,7 @@ export const MatchDetailPage = () => {
                     <Trophy size={48} />
                     <h2 className="text-2xl font-display font-bold uppercase">¡Ganador {match.winner}!</h2>
                     <button
-                        onClick={() => navigate('/new-match')}
+                        onClick={() => handleRevancha(match)}
                         className="mt-2 bg-background text-primary px-6 py-2 rounded-full font-bold text-sm"
                     >
                         Nueva Revancha
