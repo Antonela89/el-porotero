@@ -308,3 +308,49 @@ export const deleteMatch = async (req: Request, res: Response) => {
 		});
 	}
 };
+
+export const deleteRound = async (req: Request, res: Response) => {
+	try {
+		const { matchId } = req.params;
+		const roundNumberStr = req.params.roundNumber as string;
+		const match = await MatchModel.findById(matchId);
+		if (!match)
+			return res.status(404).json({ message: 'Partida no encontrada' });
+
+		// Quitar la ronda del array
+		match.rounds = match.rounds.filter(
+			(r) => r.roundNumber !== parseInt(roundNumberStr, 10),
+		);
+
+		// RE-CALCULAR TODO DESDE CERO
+		// Reseteamos a todos
+		match.players.forEach((p) => {
+			p.score = match.config.startingScore;
+			p.isOut = false;
+		});
+
+		// Volvemos a sumar las rondas restantes
+		match.rounds.forEach((round, idx) => {
+			round.roundNumber = idx + 1; // Re-numeramos las rondas por si borraron una del medio
+			round.scores.forEach((s) => {
+				const player = match.players.find(
+					(p) => p.name === s.playerName,
+				);
+				if (player) {
+					player.score += s.pointsAdded;
+					if (
+						match.config.limitScore &&
+						player.score >= match.config.limitScore
+					) {
+						player.isOut = true;
+					}
+				}
+			});
+		});
+
+		await match.save();
+		res.json(match);
+	} catch (error) {
+		res.status(500).json({ message: 'Error al borrar ronda' });
+	}
+};
