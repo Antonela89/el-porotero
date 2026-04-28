@@ -99,17 +99,17 @@ export const NewMatchPage = () => {
 
     return (
         <div className="dashboard-container h-dvh bg-background overflow-hidden max-w-lg mx-auto">
-            <header className="p-6 flex items-center justify-between border-b border-white/5 bg-background/80 backdrop-blur-md z-10">
+            <header className="pb-6 flex items-center justify-between border-b border-white/5 bg-background/80 backdrop-blur-md z-10">
                 <h1 className="text-2xl font-display font-bold">Nueva Mesa</h1>
                 <button onClick={() => navigate('/')} className="p-2 bg-surface rounded-full text-text-muted hover:text-white transition-colors">
                     <X size={20} />
                 </button>
             </header>
 
-            <main className="flex-1 overflow-y-auto p-6 flex flex-col gap-8 custom-scrollbar">
+            <main className="flex-1 overflow-y-auto flex flex-col gap-2 custom-scrollbar">
 
                 {/* 1. SELECCIÓN DE JUEGO (compacto) */}
-                <section className="mb-6">
+                <section>
                     <label className="text-[10px] uppercase tracking-[0.2em] text-text-muted font-bold mb-2 block ml-1">
                         Juego Seleccionado
                     </label>
@@ -145,7 +145,7 @@ export const NewMatchPage = () => {
                     </label>
 
                     {/* Lista con scroll si hay muchos */}
-                    <div className="flex flex-col gap-3 mb-6 max-h-75 overflow-y-auto pr-2 custom-scrollbar">
+                    <div className="flex flex-col max-h-75 overflow-y-auto custom-scrollbar">
                         {players.length === 0 ? (
                             <div className="py-8 border-2 border-dashed border-white/5 rounded-3xl flex flex-col items-center justify-center text-text-muted opacity-40">
                                 <Users size={32} className="mb-2" />
@@ -154,7 +154,7 @@ export const NewMatchPage = () => {
                         ) : (
                             // 3. Solo si hay jugadores, mapeamos las filas
                             players.map((p, i) => (
-                                <div key={i} className="player-input-row justify-between px-4 py-3 bg-surface/50 border-white/5 border">
+                                <div key={i} className="player-input-row flex justify-between p-3 bg-surface/50 border-white/5 border">
                                     <div className="flex items-center gap-4 flex-1">
                                         <div className="w-6 h-6 rounded-full bg-background flex items-center justify-center text-primary font-bold text-[10px]">
                                             {i + 1}
@@ -191,12 +191,12 @@ export const NewMatchPage = () => {
                     </div>
 
                     {/* Input de agregado siempre visible */}
-                    <div className="player-input-row border-primary/20 ring-2 ring-primary/5 flex justify-between">
+                    <div className="player-input-row border-primary/20 ring-2 p-2 ring-primary/5 flex justify-between">
                         <input
                             type="text"
                             placeholder={canAddMorePlayers ? "Sumar jugador..." : "Límite de jugadores alcanzado"}
                             disabled={!canAddMorePlayers} // Bloquear el input
-                            className="bg-transparent flex-1 outline-none px-3 py-2 text-text-main"
+                            className="bg-transparent flex-1 outline-none py-2 text-text-main"
                             value={playerName}
                             onChange={(e) => setPlayerName(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && addPlayer()}
@@ -218,7 +218,7 @@ export const NewMatchPage = () => {
 
                 </section>
             </main>
-            <footer className="p-6 bg-surface/50 border-t border-white/5 flex flex-col gap-4 shadow-[0_-10px_30px_rgba(0,0,0,0.3)]">
+            <footer>
                 <button
                     onClick={handleStart}
                     disabled={players.length < 2}
