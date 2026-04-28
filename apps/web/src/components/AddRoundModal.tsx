@@ -2,6 +2,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { useState } from 'react';
 import { IMatch, IRoundScore, IRoundDetails } from '@el-porotero/shared';
 import { useMoscaLogic } from '@/hooks/useMoscaLogic';
+import { MoscaInputRow, AccumulativeInputRow } from './Score-Inputs';
 import api from '@/api/axios';
 import axios from 'axios';
 import { X, Save, AlertCircle, HatGlasses } from 'lucide-react';
@@ -17,7 +18,7 @@ interface Props {
 export const AddRoundModal = ({ isOpen, onClose, match, onSuccess }: Props) => {
     const { validateRound, sombreroIndex } = useMoscaLogic(match);
 
-    // Inicializamos el estado con los jugadores de la partida
+    // Estado inicial de los jugadores de la partida
     const [scores, setScores] = useState<IRoundScore[]>(
         match.players.map(p => ({
             playerName: p.name,
@@ -26,22 +27,60 @@ export const AddRoundModal = ({ isOpen, onClose, match, onSuccess }: Props) => {
         }))
     );
 
+    // Estado para manejar la carga al guardar la ronda
     const [loading, setLoading] = useState(false);
 
-    // Validación para la Mosca: la suma de bazas debe ser 5
-    const { isValid, totalBazas } = validateRound(scores);
-    const isFormValid = match.gameType === 'Mosca' ? isValid : true;
+    // Lógica de exclusividad (Un solo ganador de ronda)
+    const winnersCount = scores.filter(s => s.details.isCerrar || s.details.isCorteMinus10).length;
 
-    const handleUpdateScore = (index: number, fields: Partial<IRoundScore>) => {
-        const newScores = [...scores];
-        newScores[index] = { ...newScores[index], ...fields };
-        setScores(newScores);
-    };
+    const nonWinnersValid = scores.every(s => {
+        const player = match.players.find(p => p.name === s.playerName);
+        if (player?.isOut) return true; // Si está fuera, no cuenta
 
-    const handleUpdateDetails = (index: number, detailFields: Partial<IRoundDetails>) => {
-        const newScores = [...scores];
-        newScores[index].details = { ...newScores[index].details, ...detailFields };
-        setScores(newScores);
+        const isWinner = s.details.isCerrar || s.details.isCorteMinus10;
+        if (isWinner) return true; // El ganador está ok con 0 puntos
+
+        return s.pointsAdded > 0; // El resto DEBE tener más de 0
+    });
+
+    const { isValid: isMoscaValid, totalBazas } = validateRound(scores);
+
+    const isLobaRuleMet = winnersCount === 1 && nonWinnersValid;
+
+    const isFormValid = match.gameType === 'Loba' || match.gameType === 'Chinchon'
+        ? isLobaRuleMet
+        : (match.gameType === 'Mosca' ? isMoscaValid : true);
+
+    type UpdatePayload = Partial<IRoundScore> & Partial<IRoundDetails>;
+
+    const updateScoreState = (index: number, payload: UpdatePayload) => {
+        setScores(prev => {
+            const next = [...prev];
+            const currentDetails = next[index].details || {};
+
+            const EXCLUSIVE_KEYS: (keyof IRoundDetails)[] = ['isCerrar', 'isCorteMinus10'];
+            const isActivatingExclusive = Object.entries(payload).some(
+                ([key, value]) => EXCLUSIVE_KEYS.includes(key as keyof IRoundDetails) && value === true
+            );
+
+            if (isActivatingExclusive) {
+                next.forEach((s, idx) => {
+                    if (idx !== index) {
+                        s.details = { ...s.details, isCerrar: false, isCorteMinus10: false };
+                    }
+                });
+            }
+
+            // Actualizamos pointsAdded si viene en el payload, si no, mantenemos el anterior
+            if (payload.pointsAdded !== undefined) {
+                next[index].pointsAdded = payload.pointsAdded;
+            }
+
+            // Actualizamos los detalles
+            next[index].details = { ...currentDetails, ...payload };
+
+            return next;
+        });
     };
 
     const handleSubmit = async () => {
@@ -83,6 +122,7 @@ export const AddRoundModal = ({ isOpen, onClose, match, onSuccess }: Props) => {
 
                     <div className="flex flex-col gap-4 mb-8">
                         {scores.map((s, i) => {
+                            // MOSCA
                             const isSombrero = i === sombreroIndex;
                             const isDealer = i === match.currentDealerIndex;
                             const player = match.players[i];
@@ -98,86 +138,31 @@ export const AddRoundModal = ({ isOpen, onClose, match, onSuccess }: Props) => {
                                         </span>
                                     )}
 
-                                    {!isSombrero ? (
+                                    {!isSombrero && (
                                         <div className="flex items-center gap-4">
-                                            {/* INPUT DINÁMICO SEGÚN JUEGO */}
                                             {match.gameType === 'Mosca' ? (
-                                                <div className="flex flex-1 items-center gap-2">
-                                                    <label className="text-xs text-text-muted">Bazas:</label>
-                                                    <input
-                                                        type="text"
-                                                        inputMode="numeric"
-                                                        pattern="[0-9]*"
-                                                        className="form-input bg-background border border-white/10 py-2 text-center w-12 rounded-lg outline-none focus:border-primary" // w-12 lo hace más angosto
-                                                        value={s.details.bazas === 0 && !s.details.paso ? "" : s.details.bazas}
-                                                        disabled={s.details.paso}
-                                                        onChange={(e) => {
-                                                            const val = e.target.value.replace(/\D/g, "");
-                                                            handleUpdateDetails(i, { bazas: parseInt(val) || 0 })
-                                                        }}
-                                                    />
-
-                                                    {/* REGLA: El Dealer no ve el botón de PASO */}
-                                                    {!isDealer && (
-                                                        <button
-                                                            onClick={() => handleUpdateDetails(i, { paso: !s.details.paso, bazas: 0 })}
-                                                            className={`flex-1 p-2 rounded-lg text-[10px] font-bold transition-all ${s.details.paso ? 'bg-warning text-background' : 'bg-surface text-text-muted'}`}
-                                                        >
-                                                            {s.details.paso ? 'PASÓ' : '¿PASA?'}
-                                                        </button>
-                                                    )}
-
-                                                    {isDealer && (
-                                                        <span className="text-[9px] text-primary/50 font-bold uppercase ml-auto">
-                                                            Debe jugar
-                                                        </span>
-                                                    )}
-                                                </div>
+                                                <MoscaInputRow
+                                                    score={s}
+                                                    isDealer={isDealer}
+                                                    onUpdateDetails={(d: Partial<IRoundDetails>) => updateScoreState(i, d)}
+                                                />
                                             ) : (
-                                                <div className="flex flex-1 items-center gap-2">
-                                                    <input
-                                                        type="text"
-                                                        inputMode="numeric"
-                                                        pattern="[0-9]*"
-                                                        placeholder="Puntos"
-                                                        className="form-input bg-background border border-white/10 py-2 text-center w-12 rounded-lg outline-none focus:border-primary" // w-12 lo hace más angosto
-                                                        value={s.pointsAdded === 0 && (s.details.isCerrar || s.details.isCorteMinus10) ? "" : s.pointsAdded}
-                                                        onChange={(e) => {
-                                                            const val = e.target.value.replace(/\D/g, "");
-                                                            handleUpdateScore(i, { pointsAdded: parseInt(val) || 0 });
-                                                        }}
-                                                    />
-
-                                                    <div className="flex gap-1">
-                                                        <button
-                                                            onClick={() => handleUpdateDetails(i, { isCerrar: !s.details.isCerrar, isCorteMinus10: false, pointsAdded: 0 })}
-                                                            className={`px-3 py-2 rounded-lg text-[10px] font-bold transition-all ${s.details.isCerrar ? 'bg-primary text-background' : 'bg-surface text-text-muted'}`}
-                                                        >
-                                                            CERRÓ
-                                                        </button>
-
-                                                        <button
-                                                            onClick={() => handleUpdateDetails(i, { isCorteMinus10: !s.details.isCorteMinus10, isCerrar: false, pointsAdded: 0 })}
-                                                            className={`px-3 py-2 rounded-lg text-[10px] font-bold transition-all ${s.details.isCorteMinus10 ? 'bg-secondary text-white' : 'bg-surface text-text-muted'}`}
-                                                        >
-                                                            -10
-                                                        </button>
-                                                    </div>
-                                                </div>
+                                                <AccumulativeInputRow
+                                                    score={s}
+                                                    disableExclusives={match.gameType === 'Loba' && winnersCount > 0 && !s.details?.isCerrar && !s.details?.isCorteMinus10}
+                                                    onUpdateScore={(f: Partial<IRoundDetails>) => updateScoreState(i, f)}
+                                                    onUpdateDetails={(d: Partial<IRoundDetails>) => updateScoreState(i, d)}
+                                                />
                                             )}
-                                        </div>) : (
-                                        <p className="text-[10px] italic text-text-muted text-center py-2">
-                                            Esta ronda no juega, mantiene sus {player.score} puntos.
-                                        </p>
+                                        </div>
                                     )}
                                 </div>
                             );
                         })}
-
                     </div>
 
                     {/* VALIDACIÓN VISUAL PARA MOSCA */}
-                    {match.gameType === 'Mosca' && !isValid && (
+                    {match.gameType === 'Mosca' && !isMoscaValid && (
                         <div className="flex items-center gap-2 text-warning text-xs mb-4 justify-center animate-pulse">
                             <AlertCircle size={14} /> Sumatoria de bazas debe ser 5 (llevas {totalBazas})
                         </div>
@@ -188,11 +173,13 @@ export const AddRoundModal = ({ isOpen, onClose, match, onSuccess }: Props) => {
                         disabled={loading || !isFormValid}
                         className="btn-primary w-full py-4 flex items-center justify-center gap-2"
                     >
-                        <Save size={20} /> {loading ? 'Guardando...' : 'Guardar Ronda'}
+                        <Save size={20} />
+                        {loading ? 'Guardando...' : !isFormValid ? 'Faltan datos' : 'Confirmar Ronda'}
+
                     </button>
 
                 </Dialog.Content>
             </Dialog.Portal>
-        </Dialog.Root>
+        </Dialog.Root >
     );
 };

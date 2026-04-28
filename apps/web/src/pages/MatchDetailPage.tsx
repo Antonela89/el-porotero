@@ -7,6 +7,7 @@ import { ArrowLeft, Trophy, Crown, Plus, RotateCcw, HatGlasses } from 'lucide-re
 import { motion, AnimatePresence } from 'framer-motion';
 import { AddRoundModal } from '@/components';
 import { getShortName } from '@/utils/formatters';
+import { useLobaLogic } from '@/hooks/useLobaLogic';
 
 export const MatchDetailPage = () => {
     const { id } = useParams<{ id: string }>();
@@ -14,7 +15,7 @@ export const MatchDetailPage = () => {
     const [match, setMatch] = useState<IMatch | null>(null);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
+    const { getReengageScore } = useLobaLogic(match || ({} as IMatch));
 
     useEffect(() => {
         const loadInitialData = async () => {
@@ -34,6 +35,28 @@ export const MatchDetailPage = () => {
     // Esta función la llamará el Modal de Puntos
     const handleUpdateMatch = (updatedMatch: IMatch) => {
         setMatch(updatedMatch);
+    };
+
+    const handleReengage = async (playerName: string) => {
+        const newScore = getReengageScore();
+
+        if (window.confirm(`¿Re-enganchar a ${playerName} con ${newScore} puntos?`)) {
+            try {
+                // Mandamos una ronda especial de "re-enganche"
+                const { data } = await api.post(`/matches/${match?._id}/round`, {
+                    scores: match?.players.map(p => ({
+                        playerName: p.name,
+                        pointsAdded: p.name === playerName ? (newScore - p.score) : 0,
+                        details: p.name === playerName ? { isReengage: true } : {}
+                    }))
+                });
+                setMatch(data);
+            } catch (error) {
+                alert("Error al re-enganchar");
+                console.log(error);
+
+            }
+        }
     };
 
     const handleRevancha = (match: IMatch) => {
@@ -86,7 +109,7 @@ export const MatchDetailPage = () => {
                         {gameInfo.icon}
                         <span>{match.gameType}</span>
                     </div>
-                    <span className="text-[10px] text-text-muted">Límite: {gameLimit} pts</span>
+                    <span className="text-[10px] text-text-muted"><span>{isMosca ? 'Objetivo: 0 pts' : `Límite: ${gameLimit} pts`}</span></span>
                 </div>
                 <button onClick={() => setMatch(null)} className="p-3 bg-surface rounded-full text-text-muted">
                     <RotateCcw size={20} />
@@ -146,7 +169,24 @@ export const MatchDetailPage = () => {
                                 {match.players.map(player => (
                                     <td key={player.name} className={`p-5 text-2xl font-display ${player.name === match.winner ? 'text-primary animate-bounce' : 'text-text-main'}
         ${player.isOut ? 'opacity-20' : ''}`}>
-                                        {player.score}
+                                        <div className="flex flex-col items-center">
+                                            <span className={player.name === match.winner ? 'text-primary animate-bounce' : player.isOut ? 'text-text-muted opacity-20' : 'text-text-main'}>
+                                                {player.score}
+
+                                                {match.rounds.some(r => r.scores.find(s => s.playerName === player.name)?.details?.isReengage) &&
+                                                    <span className="text-secondary text-sm ml-1">*</span>
+                                                }
+                                            </span>
+
+                                            {player.isOut && match.status === 'active' && (
+                                                <button
+                                                    onClick={() => handleReengage(player.name)}
+                                                    className="text-[9px] bg-secondary text-white px-2 py-1 rounded-full animate-pulse mt-2"
+                                                >
+                                                    RE-ENGANCHE
+                                                </button>
+                                            )}
+                                        </div>
                                     </td>
                                 ))}
                             </tr>

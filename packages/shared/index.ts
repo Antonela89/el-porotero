@@ -29,7 +29,6 @@ export interface IRoundDetails {
 	canastasPuras?: number; // 200 pts c/u
 	canastasImpuras?: number; // 100 pts c/u
 	tomoMuerto?: boolean; // Si no lo tomó, restar 100
-	cierre?: boolean;
 }
 
 // Configuración inicial de la partida
