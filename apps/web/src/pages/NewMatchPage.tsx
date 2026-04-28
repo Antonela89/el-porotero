@@ -106,7 +106,7 @@ export const NewMatchPage = () => {
                 </button>
             </header>
 
-            <main className="flex-1 overflow-y-auto flex flex-col gap-2 custom-scrollbar">
+            <main className="flex-1 overflow-y-auto flex flex-col gap-2">
 
                 {/* 1. SELECCIÓN DE JUEGO (compacto) */}
                 <section>
@@ -139,13 +139,13 @@ export const NewMatchPage = () => {
                 )}
 
                 {/* 3. JUGADORES (Sección Principal) */}
-                <section className="flex-1 overflow-hidden flex flex-col mb-8">
+                <section className="flex-1 overflow-hidden flex flex-col mb-8 custom-scrollbar animate-in fade-in slide-in-from-bottom-2">
                     <label className="text-[10px] uppercase tracking-[0.2em] text-text-muted font-bold mb-4 block ml-1">
                         Jugadores (Orden de Mesa)
                     </label>
 
                     {/* Lista con scroll si hay muchos */}
-                    <div className="flex flex-col max-h-75 overflow-y-auto custom-scrollbar">
+                    <div className="flex flex-col max-h-75 mb-3 overflow-y-auto custom-scrollbar">
                         {players.length === 0 ? (
                             <div className="py-8 border-2 border-dashed border-white/5 rounded-3xl flex flex-col items-center justify-center text-text-muted opacity-40">
                                 <Users size={32} className="mb-2" />
@@ -213,12 +213,9 @@ export const NewMatchPage = () => {
                             ⚠️ La Mosca se juega con máximo 5 jugadores (Regla del Sombrero activa)
                         </p>
                     )}
-
-
-
                 </section>
             </main>
-            <footer>
+            <footer className='fixed bottom-6 left-1/2 transform -translate-x-1/2 w-full max-w-lg px-4'>
                 <button
                     onClick={handleStart}
                     disabled={players.length < 2}

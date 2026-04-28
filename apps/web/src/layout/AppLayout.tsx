@@ -21,7 +21,7 @@ export const AppLayout = ({ children }: { children: ReactNode }) => {
             </header>
 
             {/* Contenedor de Contenido con Márgenes y Padding */}
-            <main className="flex-1 w-full max-w-5xl mx-auto px-6 py-8">
+            <main className="flex-1 w-full h-dvh max-w-5xl mx-auto px-6 py-8">
                 {children}
             </main>
         </div>

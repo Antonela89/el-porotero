@@ -27,8 +27,17 @@
 
 /* --- ESTILOS BASE --- */
 @layer base {
+
+    html,
+    body,
+    #root {
+        @apply h-full w-full overflow-hidden;
+        margin: 0;
+        padding: 0;
+    }
+
     body {
-        @apply bg-background text-text-main font-body antialiased;
+        @apply bg-background text-text-main font-body antialiased min-h-screen flex flex-col;
     }
 
     h1,
