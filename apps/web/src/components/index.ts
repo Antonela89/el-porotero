@@ -1,5 +1,16 @@
 export * from './AuthForm';
 export * from './ProtectedRoute';
 export * from './CardMatch';
-export * from './AddRoundModal';
+export * from './MatchRoundModal';
 export * from './GameSelector';
+// export * from './MatchRoundDetails';
+export * from './UI/MatchHeader';
+export * from './UI/IconButton';
+export * from './UI/LoadingSpinner';
+export * from './UI/ErrorMessage';
+export * from './UI/NotFound';
+export * from './UI/MatchScoreboard';
+export * from './UI/WinnerDisplay';
+export * from './UI/ConfirmDialog';
+// export * from './UI/Modal';
+// export * from './UI/Tooltip';

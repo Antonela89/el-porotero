@@ -197,7 +197,7 @@ export const NewMatchPage = () => {
                             placeholder={canAddMorePlayers ? "Sumar jugador..." : "Límite de jugadores alcanzado"}
                             disabled={!canAddMorePlayers} // Bloquear el input
                             className="bg-transparent flex-1 outline-none py-2 text-text-main"
-                            value={playerName}
+                            value={playerName.toUpperCase()}
                             onChange={(e) => setPlayerName(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && addPlayer()}
                         />
