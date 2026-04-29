@@ -52,7 +52,6 @@ export const createMatch = async (req: Request, res: Response) => {
 	}
 };
 
-
 // Obtener todas las partidas del usuario logueado
 export const getUserMatches = async (req: Request, res: Response) => {
 	try {
@@ -93,20 +92,44 @@ export const getMatchById = async (req: Request, res: Response) => {
 };
 
 // Actualizar el estado de un juego (ej: marcar como finalizada o asignar ganador)
-export const updateMatchStatus = async (req: Request, res: Response) => {
+export const updateMatch = async (req: Request, res: Response) => {
 	try {
 		const { matchId } = req.params;
-		const { status, winner } = req.body;
+		const { players, status, winner } = req.body;
 
-		const match = await MatchModel.findByIdAndUpdate(
-			matchId,
-			{ status, winner },
-			{ new: true },
-		);
+		const match = await MatchModel.findById(matchId);
+		if (!match)
+			return res.status(404).json({ message: 'Partida no encontrada' });
 
+		// Si cambiaron los nombres de los jugadores, actualizar
+		// las referencias en el historial de rondas para no romper la tabla.
+		if (players) {
+			match.players.forEach((oldPlayer, index) => {
+				const newName = players[index]?.name;
+				if (newName && oldPlayer.name !== newName) {
+					// Actualizar el nombre en cada ronda del historial
+					match.rounds.forEach((round) => {
+						round.scores.forEach((s) => {
+							if (s.playerName === oldPlayer.name) {
+								s.playerName = newName;
+							}
+						});
+					});
+					oldPlayer.name = newName;
+				}
+			});
+		}
+
+		if (status) match.status = status;
+		if (winner) match.winner = winner;
+
+		await match.save();
 		res.json(match);
 	} catch (error) {
-		res.status(500).json({ message: 'Error al actualizar partida', error });
+		res.status(500).json({
+			message: 'Error al actualizar la partida',
+			error,
+		});
 	}
 };
 
