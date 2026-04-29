@@ -68,7 +68,7 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
         });
     };
 
-    // 3. VALIDACIONES DE REGLAS DE NEGOCIO
+    //VALIDACIONES DE REGLAS DE NEGOCIO
 
     // Lógica Loba/Chinchon: Exactamente 1 ganador y el resto > 0 puntos
     const validateLoba = () => {
@@ -96,15 +96,17 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
             ? validateLoba()
             : true;
 
-    // 4. ENVÍO DE DATOS
+    // ENVÍO DE DATOS
     const handleSubmit = async () => {
         setLoading(true);
         try {
-            const url = isEditMode ? `/matches/${match._id}/rounds/${roundToEdit}` : `/matches/${match._id}/round`;
+            const url = isEditMode ? `/matches/${match._id}/round/${roundToEdit}` : `/matches/${match._id}/round`;
             const method = isEditMode ? 'patch' : 'post';
             const { data } = await api[method](url, { scores });
 
-            onSuccess(data);
+            const updatedMatch = isEditMode ? data.match : data;
+
+            onSuccess(updatedMatch);
             onClose();
         } catch (err: unknown) {
             let msg = "Error al guardar";

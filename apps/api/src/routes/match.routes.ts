@@ -7,6 +7,7 @@ import {
 	getMatchById,
 	deleteMatch,
     updateMatchStatus,
+	deleteRound
 } from '@/controllers/index.js';
 import { protect } from '@/middlewares/index.js';
 
@@ -19,7 +20,8 @@ matchRouter.get('/:matchId', getMatchById); // GET /api/matches/:id
 matchRouter.put('/:matchId',  updateMatchStatus)
 matchRouter.post('/', createMatch); // POST /api/matches
 matchRouter.post('/:matchId/round', addRound); // POST /api/matches/:id/round
-matchRouter.patch('/:matchId/rounds/:roundNumber', updateRound); //PATCH  /api/matches/:id/round/:id
+matchRouter.patch('/:matchId/round/:roundNumber', updateRound); //PATCH  /api/matches/:id/round/:id
+matchRouter.delete('/:matchId/round/:roundNumber', deleteRound) // DELETE /api/matches/:id/round/:roundId
 matchRouter.delete('/:matchId', deleteMatch); // DELETE /api/matches/:id
 
 export default matchRouter;

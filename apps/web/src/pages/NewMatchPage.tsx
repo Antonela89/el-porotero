@@ -163,7 +163,7 @@ export const NewMatchPage = () => {
                                             <input
                                                 className="bg-background border border-primary/30 rounded px-2 py-1 text-sm outline-none flex-1"
                                                 value={tempEditName}
-                                                onChange={(e) => setTempEditName(e.target.value)}
+                                                onChange={(e) => setTempEditName(e.target.value.toUpperCase())}
                                                 autoFocus
                                                 onKeyDown={(e) => e.key === 'Enter' && saveEdit(i)}
                                             />
@@ -197,8 +197,8 @@ export const NewMatchPage = () => {
                             placeholder={canAddMorePlayers ? "Sumar jugador..." : "Límite de jugadores alcanzado"}
                             disabled={!canAddMorePlayers} // Bloquear el input
                             className="bg-transparent flex-1 outline-none py-2 text-text-main"
-                            value={playerName.toUpperCase()}
-                            onChange={(e) => setPlayerName(e.target.value)}
+                            value={playerName}
+                            onChange={(e) => setPlayerName(e.target.value.toUpperCase())}
                             onKeyDown={(e) => e.key === 'Enter' && addPlayer()}
                         />
                         <button onClick={addPlayer} className="bg-primary text-background p-3 rounded-xl hover:bg-primary-dark transition-colors shadow-lg shadow-primary/20"

@@ -58,7 +58,7 @@ export const useMatch = (matchId: string | undefined) => {
 	}, [matchId, trigger]); // Se dispara cuando cambia el ID o cuando tocamos el botón de refresh
 
 	const setMatch = (newData: IMatch) => {
-		setState((prev) => ({ ...prev, data: newData }));
+		setState((prev) => ({ ...prev, data: newData, loading: false }));
 	};
 
 	return {

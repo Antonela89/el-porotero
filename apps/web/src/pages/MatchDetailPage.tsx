@@ -57,6 +57,7 @@ export const MatchDetailPage = () => {
         try {
             const { data } = await api.delete(`/matches/${id}/round/${roundToDelete}`);
             setMatch(data); // Actualizamos la tabla con el recalculo del back
+            setRoundToDelete(null);
         } catch (err) {
             console.error("Error al borrar", err);
         }
@@ -100,13 +101,13 @@ export const MatchDetailPage = () => {
     };
 
     const gameInfo = match?.gameType ? GAMES_MAP[match.gameType] : null;
-    
+
     if (loading || !match || !gameInfo) return <div className="match-layout flex items-center justify-center">Cargando partida...</div>;
     // CAMBIAR CUANDO ESTE EL SPINNER
     // if (loading || !match || !gameInfo) {
-        // return <LoadingSpinner />; 
+    // return <LoadingSpinner />; 
     // }
-    
+
     const gameLimit = gameInfo.defaultLimit || 0;
 
     return (

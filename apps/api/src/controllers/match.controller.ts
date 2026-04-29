@@ -3,6 +3,52 @@ import { MatchModel } from '@/models/Match.js';
 import * as GameRules from '@/services/gameRules.services.js';
 import { IMatchConfig } from '@el-porotero/shared';
 
+// Función  Auxiliar
+const recalculateMatchScores = (match: any) => {
+	// 1. Resetear a todos los jugadores al estado inicial
+	match.players.forEach((p: any) => {
+		p.score = match.config.startingScore;
+		p.isOut = false;
+	});
+
+	// 2. Volver a procesar cada ronda guardada en el historial
+	match.rounds.forEach((round: any) => {
+		round.scores.forEach((roundScore: any) => {
+			const player = match.players.find(
+				(p: any) => p.name === roundScore.playerName,
+			);
+			if (player) {
+				// Aplicar lógica según el tipo de juego
+				if (match.config.isDescending) {
+					player.score -= roundScore.pointsAdded;
+				} else {
+					// En Loba/Chinchón, el pointsAdded ya viene con el -10 si se cortó
+					player.score += roundScore.pointsAdded;
+				}
+
+				// Verificar si quedó fuera
+				if (
+					match.config.limitScore &&
+					player.score >= match.config.limitScore
+				) {
+					player.isOut = true;
+				}
+			}
+		});
+	});
+
+	// 3. Verificar si hay un ganador final
+	const playersAlive = match.players.filter((p: any) => !p.isOut);
+	if (playersAlive.length === 1 && match.rounds.length > 0) {
+		match.status = 'finished';
+		match.winner = playersAlive[0].name;
+	} else {
+		match.status = 'active';
+		match.winner = null;
+	}
+};
+
+// Crear un juego nuevo
 export const createMatch = async (req: Request, res: Response) => {
 	try {
 		const { gameType, players, limitScore } = req.body;
@@ -52,6 +98,7 @@ export const createMatch = async (req: Request, res: Response) => {
 	}
 };
 
+// Agregar una ronda a una partida existente
 export const addRound = async (req: Request, res: Response) => {
 	try {
 		const { matchId } = req.params;
@@ -159,6 +206,7 @@ export const addRound = async (req: Request, res: Response) => {
 	}
 };
 
+// Editar una ronda existente (corregir puntos ingresados)
 export const updateRound = async (req: Request, res: Response) => {
 	try {
 		const roundNumberStr = req.params.roundNumber as string;
@@ -179,38 +227,8 @@ export const updateRound = async (req: Request, res: Response) => {
 		// Actualizar los datos de esa ronda
 		match.rounds[roundIndex].scores = newScores;
 
-		// RECALCULAR PUNTAJES TOTALES
-		// Reseteamos a todos al puntaje inicial de la config
-		match.players.forEach((p) => {
-			p.score = match.config.startingScore;
-			p.isOut = false;
-		});
-
-		// Sumamos (o restamos) todas las rondas de nuevo
-		match.rounds.forEach((round) => {
-			round.scores.forEach((s) => {
-				const player = match.players.find(
-					(p) => p.name === s.playerName,
-				);
-				if (player) {
-					if (match.config.isDescending) {
-						player.score -= s.pointsAdded;
-					} else {
-						player.score += s.pointsAdded;
-						// Bonus de corte si existía en esa ronda
-						if (s.details?.isCorteMinus10) player.score -= 10;
-					}
-
-					// Verificar eliminación (Loba)
-					if (
-						match.config.limitScore &&
-						player.score >= match.config.limitScore
-					) {
-						player.isOut = true;
-					}
-				}
-			});
-		});
+		// RE-CALCULAR TODO DESDE CERO
+		recalculateMatchScores(match);
 
 		await match.save();
 		res.json({
@@ -264,6 +282,7 @@ export const getMatchById = async (req: Request, res: Response) => {
 	}
 };
 
+// Actualizar el estado de la partida (ej: marcar como finalizada o asignar ganador)
 export const updateMatchStatus = async (req: Request, res: Response) => {
 	try {
 		const { matchId } = req.params;
@@ -281,7 +300,7 @@ export const updateMatchStatus = async (req: Request, res: Response) => {
 	}
 };
 
-// Eliminar una partida (Punto 4 del TP: DELETE)
+// Eliminar un Juego
 export const deleteMatch = async (req: Request, res: Response) => {
 	try {
 		const { matchId } = req.params;
@@ -309,6 +328,7 @@ export const deleteMatch = async (req: Request, res: Response) => {
 	}
 };
 
+// Eliminar una ronda específica de la partida
 export const deleteRound = async (req: Request, res: Response) => {
 	try {
 		const { matchId } = req.params;
@@ -322,31 +342,10 @@ export const deleteRound = async (req: Request, res: Response) => {
 			(r) => r.roundNumber !== parseInt(roundNumberStr, 10),
 		);
 
-		// RE-CALCULAR TODO DESDE CERO
-		// Reseteamos a todos
-		match.players.forEach((p) => {
-			p.score = match.config.startingScore;
-			p.isOut = false;
-		});
+		match.rounds.forEach((r, i) => (r.roundNumber = i + 1));
 
-		// Volvemos a sumar las rondas restantes
-		match.rounds.forEach((round, idx) => {
-			round.roundNumber = idx + 1; // Re-numeramos las rondas por si borraron una del medio
-			round.scores.forEach((s) => {
-				const player = match.players.find(
-					(p) => p.name === s.playerName,
-				);
-				if (player) {
-					player.score += s.pointsAdded;
-					if (
-						match.config.limitScore &&
-						player.score >= match.config.limitScore
-					) {
-						player.isOut = true;
-					}
-				}
-			});
-		});
+		// RE-CALCULAR TODO DESDE CERO
+		recalculateMatchScores(match);
 
 		await match.save();
 		res.json(match);
