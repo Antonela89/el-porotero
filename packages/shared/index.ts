@@ -49,7 +49,7 @@ export interface IPlayer {
 export interface IMatch {
 	_id: string;
 	gameType: string;
-	status: 'active' | 'finished';
+	status: 'active' | 'finished' | 'cancelled';
 	players: IPlayer[];
 	winner?: string;
 	createdAt: string;
@@ -102,7 +102,7 @@ export const RoundSchema = z.object({
 export const MatchZodSchema = z.object({
 	gameId: z.string(),
 	players: z.array(MatchPlayerSchema),
-	status: z.enum(['active', 'finished']).default('active'),
+	status: z.enum(['active', 'finished', 'cancelled']).default('active'),
 	dealerIndex: z.number().default(0),
 });
 
