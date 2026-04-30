@@ -119,7 +119,36 @@ export const processBurakoRules = (match: any, scores: RoundScoreDetail[]) => {
 				}
 			}
 
+			s.pointsAdded = totalRonda;
 			player.score += totalRonda;
 		}
+	});
+};
+
+// Lógica para procesar puntos de equipo (Truco, Burako, etc.)
+export const processTeamRules = (match: any, scores: RoundScoreDetail[]) => {
+	// procesar las reglas específicas de cada juego (Burako o Truco)
+	if (match.gameType === 'Burako') {
+		processBurakoRules(match, scores);
+		return; // processBurakoRules ya actualiza los scores individuales
+	}
+
+	// Si es un juego de equipo genérico (como Truco o Burako ya procesado),
+	// nos aseguramos de que el total del equipo sea consistente.
+	const teams = ['A', 'B'];
+
+	teams.forEach((teamId) => {
+		// Obtener los nombres de los jugadores de este equipo
+		const teamPlayersNames = match.players
+			.filter((p: any) => p.team === teamId)
+			.map((p: any) => p.name);
+
+		// Sumar cuánto hizo el equipo en esta ronda
+		const teamRoundTotal = scores
+			.filter((s) => teamPlayersNames.includes(s.playerName))
+			.reduce((acc, s) => acc + (s.pointsAdded || 0), 0);
+
+		// Opcional: Podrías guardar este total en un campo match.teamScores
+		// o simplemente dejar que la UI lo sume al leer los jugadores.
 	});
 };

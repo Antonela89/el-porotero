@@ -2,7 +2,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { useState } from 'react';
 import { IMatch, IRoundScore, IRoundDetails } from '@el-porotero/shared';
 import { useMoscaLogic } from '@/hooks/useMoscaLogic';
-import { MoscaInputRow, AccumulativeInputRow } from './Score-Inputs';
+import { MoscaInputRow, AccumulativeInputRow, BurakoInputRow } from './Score-Inputs';
 import api from '@/api/axios';
 import axios from 'axios';
 import { X, Save, AlertCircle, HatGlasses } from 'lucide-react';
@@ -96,6 +96,10 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
             ? validateLoba()
             : true;
 
+    const anyoneClosed = scores.some(s =>
+        s.details?.isCerrar || s.details?.isCorteMinus10 || s.details?.hizoBatida
+    );
+
     // ENVÍO DE DATOS
     const handleSubmit = async () => {
         setLoading(true);
@@ -140,8 +144,16 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
                             if (player.isOut) return null; // No anotamos a los que ya perdieron
 
                             return (
-                                <div key={s.playerName} className="bg-background/50 p-4 rounded-2xl border border-white/5">
-                                    <p className="font-bold text-sm mb-3 text-primary">{s.playerName}</p>
+                                <div key={s.playerName} className={`bg-background/50 p-4 rounded-2xl border border-white/5"
+                                    ${player?.team === 'A' ? 'border-l-4 border-l-indigo-500' : ''}
+                                    ${player?.team === 'B' ? 'border-l-4 border-l-rose-500' : ''} ...`}>
+                                    <div className="flex justify-between items-center mb-3">
+                                        <p className="font-bold text-sm mb-3 text-primary">{s.playerName}
+                                            <span className={`ml-2 text-[9px] px-2 py-0.5 rounded-full ${player?.team === 'A' ? 'bg-indigo-500/20 text-indigo-300' : 'bg-rose-500/20 text-rose-300'}`}>
+                                                EQ {player?.team}
+                                            </span>
+                                        </p>
+                                    </div>
 
                                     {isSombrero && (
                                         <span className="flex items-center gap-1 text-[10px] bg-primary text-background px-2 py-0.5 rounded-full font-bold animate-pulse">
@@ -151,7 +163,14 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
 
                                     {!isSombrero && (
                                         <div className="flex items-center gap-4">
-                                            {match.gameType === 'Mosca' ? (
+                                            {match.gameType === 'Burako' ? (
+                                                <BurakoInputRow
+                                                    score={s}
+                                                    disableExclusives={anyoneClosed}
+                                                    onUpdateScore={(f) => updateScoreState(i, f)}
+                                                    onUpdateDetails={(d) => updateScoreState(i, d)}
+                                                />
+                                            ) : match.gameType === 'Mosca' ? (
                                                 <MoscaInputRow
                                                     score={s}
                                                     isDealer={isDealer}
@@ -160,11 +179,12 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
                                             ) : (
                                                 <AccumulativeInputRow
                                                     score={s}
-                                                    disableExclusives={validateLoba() && !(s.details?.isCerrar || s.details?.isCorteMinus10)}
+                                                    disableExclusives={validateLoba() && !anyoneClosed}
                                                     onUpdateScore={(f: Partial<IRoundDetails>) => updateScoreState(i, f)}
                                                     onUpdateDetails={(d: Partial<IRoundDetails>) => updateScoreState(i, d)}
                                                 />
-                                            )}
+                                            )
+                                            }
                                         </div>
                                     )}
                                 </div>
@@ -173,11 +193,13 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
                     </div>
 
                     {/* VALIDACIÓN VISUAL PARA MOSCA */}
-                    {match.gameType === 'Mosca' && !isMoscaValid && (
-                        <div className="flex items-center gap-2 text-warning text-xs mb-4 justify-center animate-pulse">
-                            <AlertCircle size={14} /> Sumatoria de bazas debe ser 5 (llevas {totalBazas})
-                        </div>
-                    )}
+                    {
+                        match.gameType === 'Mosca' && !isMoscaValid && (
+                            <div className="flex items-center gap-2 text-warning text-xs mb-4 justify-center animate-pulse">
+                                <AlertCircle size={14} /> Sumatoria de bazas debe ser 5 (llevas {totalBazas})
+                            </div>
+                        )
+                    }
 
                     <button
                         onClick={handleSubmit}

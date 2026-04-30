@@ -33,7 +33,7 @@ export interface IRoundDetails {
 
 // Configuración inicial de la partida
 export interface IMatchConfig {
-	limitScore?: number; // 100 o 101 para Loba
+	limitScore: number; // 100 o 101 para Loba
 	startingScore: number; // 0 para la mayoría, 15 para Mosca
 	isDescending: boolean; // true para Mosca (resta), false para el resto
 }

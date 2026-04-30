@@ -1,7 +1,7 @@
 import { Crown, HatGlasses, Trash2, Edit2 } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { getShortName } from '@/utils/formatters';
-import { IMatch } from '@el-porotero/shared';
+import { IMatch, IRoundScore, IRound } from '@el-porotero/shared';
 
 interface MatchScoreboardProps {
     match: IMatch;
@@ -20,6 +20,26 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage 
 
     // Caso especial Mosca: se gana al llegar a 0
 
+    const isTeamGame = ['Truco', 'Burako'].includes(match.gameType);
+
+    // Identificamos quiénes son de cada equipo (usando el campo 'team' que ya tenemos)
+    const teamAPlayers = match.players.filter(p => p.team === 'A').map(p => p.name);
+    const teamBPlayers = match.players.filter(p => p.team === 'B').map(p => p.name);
+
+    // Helper para sumar puntos de una ronda por equipo
+    const sumTeamRound = (round: IRound, teamNames: string[]) => {
+        return round.scores
+            .filter((s: IRoundScore) => teamNames.includes(s.playerName))
+            .reduce((acc: number, s: IRoundScore) => acc + (s.pointsAdded || 0), 0);
+    };
+
+    // Helper para el total histórico
+    const getTeamTotal = (teamNames: string[]) => {
+        return match.players
+            .filter(p => teamNames.includes(p.name))
+            .reduce((acc, p) => acc + p.score, 0);
+    };
+
     const isMosca = match.gameType === 'Mosca';
     const sombreroIndex = (isMosca && match.players.length === 5)
         ? (match.currentDealerIndex + 1) % match.players.length
@@ -37,25 +57,36 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage 
                         <tr className="border-b border-white/10">
                             <th className="p-4 text-[10px] text-text-muted uppercase tracking-widest sticky left-0 bg-surface z-10">Ronda</th>
                             <AnimatePresence>
-                                {match.players.map((player, index) => {
-                                    const isDealer = index === match.currentDealerIndex;
-                                    const isSombrero = index === sombreroIndex;
 
-                                    return (
-                                        <th key={player.name} className={`p-4 min-w-20 ${index === match.currentDealerIndex ? 'text-primary' : 'text-text-main'}`}>
-                                            <div className="flex flex-col items-center gap-1">
-                                                <div className="h-4 flex items-center gap-1"> {/* Contenedor de iconos fijo */}
-                                                    {isDealer && <Crown size={14} className="text-primary" fill="currentColor" />}
-                                                    {isSombrero && <HatGlasses size={14} className="text-purple-400" />}
+
+                                {isTeamGame ? (
+                                    // CABECERA MODO EQUIPOS
+                                    <>
+                                        <th className="p-4 text-indigo-400 font-display">EQUIPO A</th>
+                                        <th className="p-4 text-rose-400 font-display">EQUIPO B</th>
+                                    </>
+                                ) : (
+                                    // CABECERA INDIVIDUAL 
+                                    match.players.map((player, index) => {
+                                        const isDealer = index === match.currentDealerIndex;
+                                        const isSombrero = index === sombreroIndex;
+
+                                        return (
+                                            <th key={player.name} className={`p-4 min-w-20 ${index === match.currentDealerIndex ? 'text-primary' : 'text-text-main'}`} >
+                                                <div className="flex flex-col items-center gap-1">
+                                                    <div className="h-4 flex items-center gap-1"> {/* Contenedor de iconos fijo */}
+                                                        {isDealer && <Crown size={14} className="text-primary" fill="currentColor" />}
+                                                        {isSombrero && <HatGlasses size={14} className="text-purple-400" />}
+                                                    </div>
+                                                    <span className={`text-lg font-display ${isDealer ? 'text-primary' : isSombrero ? 'text-purple-400' : 'text-text-main'}`}>
+                                                        {getShortName(player.name, allPlayerNames)}
+                                                    </span>
+                                                    <span className="text-[9px] opacity-50 uppercase tracking-tighter">{player.name}</span>
                                                 </div>
-                                                <span className={`text-lg font-display ${isDealer ? 'text-primary' : isSombrero ? 'text-purple-400' : 'text-text-main'}`}>
-                                                    {getShortName(player.name, allPlayerNames)}
-                                                </span>
-                                                <span className="text-[9px] opacity-50 uppercase tracking-tighter">{player.name}</span>
-                                            </div>
-                                        </th>
-                                    )
-                                })}
+                                            </th>
+                                        )
+                                    })
+                                )}
                             </AnimatePresence>
                         </tr>
                     </thead>
@@ -82,42 +113,60 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage 
 
                                     </div>
                                 </td>
-                                {match.players.map(player => {
-                                    const roundScore = round.scores.find(s => s.playerName === player.name);
-                                    return (
-                                        <td key={player.name} className="p-3 font-mono text-sm">
-                                            {roundScore ? roundScore.pointsAdded : 0}
-                                        </td>
-                                    );
-                                })}
+                                {isTeamGame ? (
+                                    // PUNTOS POR EQUIPO
+                                    <>
+                                        <td className="p-3 font-mono text-indigo-300">{sumTeamRound(round, teamAPlayers)}</td>
+                                        <td className="p-3 font-mono text-rose-300">{sumTeamRound(round, teamBPlayers)}</td>
+                                    </>
+                                ) : (
+                                    // PUNTOS POR JUGADOR
+                                    match.players.map(player => {
+                                        const roundScore = round.scores.find(s => s.playerName === player.name);
+                                        return (
+                                            <td key={player.name} className="p-3 font-mono text-sm">
+                                                {roundScore ? roundScore.pointsAdded : 0}
+                                            </td>
+                                        );
+                                    })
+                                )}
                             </tr>
                         ))}
 
                         {/* FILA DE TOTALES (DESTACADA) */}
                         <tr className="bg-primary/5 font-bold">
                             <td className="p-5 text-primary text-xs uppercase tracking-widest sticky left-0 bg-surface">Total</td>
-                            {match.players.map(player => (
-                                <td key={player.name} className={`p-5 text-2xl font-display ${player.name === match.winner ? 'text-primary animate-bounce' : 'text-text-main'} ${player.isOut ? 'opacity-20' : ''}`}>
-                                    <div className="flex flex-col items-center">
-                                        <span className={player.name === match.winner ? 'text-primary animate-bounce' : player.isOut ? 'text-text-muted opacity-20' : 'text-text-main'}>
-                                            {player.score}
+                            {
+                                isTeamGame ? (
+                                    <>
+                                        <td className="p-5 text-3xl font-display text-indigo-400">{getTeamTotal(teamAPlayers)}</td>
+                                        <td className="p-5 text-3xl font-display text-rose-400">{getTeamTotal(teamBPlayers)}</td>
+                                    </>
+                                ) : (
+                                    match.players.map(player => (
+                                        <td key={player.name} className={`p-5 text-2xl font-display ${player.name === match.winner ? 'text-primary animate-bounce' : 'text-text-main'} ${player.isOut ? 'opacity-20' : ''}`}>
+                                            <div className="flex flex-col items-center">
+                                                <span className={player.name === match.winner ? 'text-primary animate-bounce' : player.isOut ? 'text-text-muted opacity-20' : 'text-text-main'}>
+                                                    {player.score}
 
-                                            {match.rounds.some(r => r.scores.find(s => s.playerName === player.name)?.details?.isReengage) &&
-                                                <span className="text-secondary text-sm ml-1">*</span>
-                                            }
-                                        </span>
+                                                    {match.rounds.some(r => r.scores.find(s => s.playerName === player.name)?.details?.isReengage) &&
+                                                        <span className="text-secondary text-sm ml-1">*</span>
+                                                    }
+                                                </span>
 
-                                        {player.isOut && match.status === 'active' && (
-                                            <button
-                                                onClick={() => onReengage(player.name)}
-                                                className="text-[9px] bg-secondary text-white px-2 py-1 rounded-full animate-pulse mt-2"
-                                            >
-                                                RE-ENGANCHE
-                                            </button>
-                                        )}
-                                    </div>
-                                </td>
-                            ))}
+                                                {player.isOut && match.status === 'active' && (
+                                                    <button
+                                                        onClick={() => onReengage(player.name)}
+                                                        className="text-[9px] bg-secondary text-white px-2 py-1 rounded-full animate-pulse mt-2"
+                                                    >
+                                                        RE-ENGANCHE
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </td>
+                                    ))
+                                )
+                            }
                         </tr>
 
                         {/* FILA DINÁMICA DE DISTANCIA AL LÍMITE */}
@@ -146,6 +195,6 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage 
                     </tbody>
                 </table>
             </div>
-        </main>
+        </main >
     )
 }
