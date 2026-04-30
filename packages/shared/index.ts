@@ -46,6 +46,11 @@ export interface IPlayer {
 	isOut: boolean;
 }
 
+export interface ITeamScore {
+	teamName: 'A' | 'B';
+	score: number;
+}
+
 export interface IMatch {
 	_id: string;
 	gameType: string;
@@ -56,6 +61,8 @@ export interface IMatch {
 	config: IMatchConfig;
 	currentDealerIndex: number;
 	rounds: IRound[];
+	isTeamGame: boolean; 
+	teamScores?: ITeamScore[];
 }
 
 // --- Esquemas ---
