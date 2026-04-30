@@ -15,9 +15,9 @@ export interface IRound {
 }
 
 export interface IRoundDetails {
-	pointsAdded: number;
 	isCorteMinus10?: boolean;
 	isCerrar?: boolean;
+	isReengage?: boolean;
 	bazas?: number;
 	paso?: boolean;
 	escobas?: number;
@@ -61,7 +61,7 @@ export interface IMatch {
 	config: IMatchConfig;
 	currentDealerIndex: number;
 	rounds: IRound[];
-	isTeamGame: boolean; 
+	isTeamGame: boolean;
 	teamScores?: ITeamScore[];
 }
 

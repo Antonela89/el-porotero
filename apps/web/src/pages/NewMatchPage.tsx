@@ -30,6 +30,7 @@ export const NewMatchPage = () => {
     const [editingIndex, setEditingIndex] = useState<number | null>(null);
     const [tempEditName, setTempEditName] = useState('');
     const [limitScore, setLimitScore] = useState(100);
+    const [selectedTeam, setSelectedTeam] = useState<'A' | 'B' | 'None'>('A');
 
 
     const addPlayer = () => {
@@ -44,7 +45,7 @@ export const NewMatchPage = () => {
 
         const newPlayer: IPlayer = {
             name: trimmedName,
-            team: 'None',
+            team: ['Burako', 'Truco'].includes(gameType) ? selectedTeam : 'None',
             score: 0,
             isOut: false
         };
@@ -108,7 +109,7 @@ export const NewMatchPage = () => {
 
             <main className="flex-1 overflow-y-auto flex flex-col gap-2">
 
-                {/* 1. SELECCIÓN DE JUEGO (compacto) */}
+                {/* SELECCIÓN DE JUEGO (compacto) */}
                 <section>
                     <label className="text-[10px] uppercase tracking-[0.2em] text-text-muted font-bold mb-2 block ml-1">
                         Juego Seleccionado
@@ -121,7 +122,7 @@ export const NewMatchPage = () => {
                     </p>
                 </section>
 
-                {/* 2. CONFIGURACIÓN EXTRA (Si es Loba) */}
+                {/* CONFIGURACIÓN EXTRA (Si es Loba) */}
                 {gameType === 'Loba' || gameType === 'Chinchon' && (
                     <section className="mb-8 animate-in fade-in slide-in-from-top-2">
                         <div className="flex gap-2">
@@ -138,7 +139,7 @@ export const NewMatchPage = () => {
                     </section>
                 )}
 
-                {/* 3. JUGADORES (Sección Principal) */}
+                {/* JUGADORES (Sección Principal) */}
                 <section className="flex-1 overflow-hidden flex flex-col mb-8 custom-scrollbar animate-in fade-in slide-in-from-bottom-2">
                     <label className="text-[10px] uppercase tracking-[0.2em] text-text-muted font-bold mb-4 block ml-1">
                         Jugadores (Orden de Mesa)
@@ -152,7 +153,7 @@ export const NewMatchPage = () => {
                                 <p className="text-xs italic">La mesa está vacía...</p>
                             </div>
                         ) : (
-                            // 3. Solo si hay jugadores, mapeamos las filas
+                            // Solo si hay jugadores, mapeamos las filas
                             players.map((p, i) => (
                                 <div key={i} className="player-input-row flex justify-between p-3 bg-surface/50 border-white/5 border">
                                     <div className="flex items-center gap-4 flex-1">
@@ -189,6 +190,23 @@ export const NewMatchPage = () => {
                                 </div>
                             )))}
                     </div>
+
+                    {['Burako', 'Truco'].includes(gameType) && (
+                        <div className="flex gap-2 mb-2">
+                            <button
+                                onClick={() => setSelectedTeam('A')}
+                                className={`flex-1 py-1 rounded-lg text-[10px] font-bold ${selectedTeam === 'A' ? 'bg-indigo-500 text-white' : 'bg-surface text-text-muted'}`}
+                            >
+                                EQUIPO A
+                            </button>
+                            <button
+                                onClick={() => setSelectedTeam('B')}
+                                className={`flex-1 py-1 rounded-lg text-[10px] font-bold ${selectedTeam === 'B' ? 'bg-rose-500 text-white' : 'bg-surface text-text-muted'}`}
+                            >
+                                EQUIPO B
+                            </button>
+                        </div>
+                    )}
 
                     {/* Input de agregado siempre visible */}
                     <div className="player-input-row border-primary/20 ring-2 p-2 ring-primary/5 flex justify-between">

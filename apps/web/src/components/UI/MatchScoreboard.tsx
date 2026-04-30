@@ -23,8 +23,8 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage 
     const isTeamGame = ['Truco', 'Burako'].includes(match.gameType);
 
     // Identificamos quiénes son de cada equipo (usando el campo 'team' que ya tenemos)
-    const teamAPlayers = match.players.filter(p => p.team === 'A').map(p => p.name);
-    const teamBPlayers = match.players.filter(p => p.team === 'B').map(p => p.name);
+    const teamA = match.players.filter(p => p.team === 'A');
+    const teamB = match.players.filter(p => p.team === 'B');
 
     // Helper para sumar puntos de una ronda por equipo
     const sumTeamRound = (round: IRound, teamNames: string[]) => {
@@ -34,11 +34,11 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage 
     };
 
     // Helper para el total histórico
-    const getTeamTotal = (teamNames: string[]) => {
-        return match.players
-            .filter(p => teamNames.includes(p.name))
-            .reduce((acc, p) => acc + p.score, 0);
-    };
+    // const getTeamTotal = (teamNames: string[]) => {
+    //     return match.players
+    //         .filter(p => teamNames.includes(p.name))
+    //         .reduce((acc, p) => acc + p.score, 0);
+    // };
 
     const isMosca = match.gameType === 'Mosca';
     const sombreroIndex = (isMosca && match.players.length === 5)
@@ -62,8 +62,14 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage 
                                 {isTeamGame ? (
                                     // CABECERA MODO EQUIPOS
                                     <>
-                                        <th className="p-4 text-indigo-400 font-display">EQUIPO A</th>
-                                        <th className="p-4 text-rose-400 font-display">EQUIPO B</th>
+                                        <th className="p-4 border-r border-white/5">
+                                            <span className="text-indigo-400 font-display block text-lg">EQUIPO A</span>
+                                            <span className="text-[9px] text-text-muted">{teamA.map(p => p.name).join(' - ')}</span>
+                                        </th>
+                                        <th className="p-4">
+                                            <span className="text-rose-400 font-display block text-lg">EQUIPO B</span>
+                                            <span className="text-[9px] text-text-muted">{teamB.map(p => p.name).join(' - ')}</span>
+                                        </th>
                                     </>
                                 ) : (
                                     // CABECERA INDIVIDUAL 
@@ -116,8 +122,8 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage 
                                 {isTeamGame ? (
                                     // PUNTOS POR EQUIPO
                                     <>
-                                        <td className="p-3 font-mono text-indigo-300">{sumTeamRound(round, teamAPlayers)}</td>
-                                        <td className="p-3 font-mono text-rose-300">{sumTeamRound(round, teamBPlayers)}</td>
+                                        <td className="p-3 font-mono text-indigo-300">{sumTeamRound(round, teamA.map(p => p.name))}</td>
+                                        <td className="p-3 font-mono text-rose-300">{sumTeamRound(round, teamB.map(p => p.name))}</td>
                                     </>
                                 ) : (
                                     // PUNTOS POR JUGADOR
@@ -139,8 +145,12 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage 
                             {
                                 isTeamGame ? (
                                     <>
-                                        <td className="p-5 text-3xl font-display text-indigo-400">{getTeamTotal(teamAPlayers)}</td>
-                                        <td className="p-5 text-3xl font-display text-rose-400">{getTeamTotal(teamBPlayers)}</td>
+                                        <td className="p-5 text-3xl font-display text-indigo-400 border-r border-white/5">
+                                            {teamA.reduce((acc, p) => acc + p.score, 0)}
+                                        </td>
+                                        <td className="p-5 text-3xl font-display text-rose-400">
+                                            {teamB.reduce((acc, p) => acc + p.score, 0)}
+                                        </td>
                                     </>
                                 ) : (
                                     match.players.map(player => (
@@ -175,21 +185,25 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage 
                                 <td className={`p-5 ${limitColorClass} text-[10px] uppercase tracking-widest sticky left-0 bg-surface z-10`}>
                                     {limitLabel}
                                 </td>
-                                {match.players.map(player => {
-                                    // Calculamos cuánto falta
-                                    let distance = 0;
-                                    if (isMosca) {
-                                        distance = player.score; // En la Mosca falta lo que tenés para llegar a 0
-                                    } else if (match.config.limitScore) {
-                                        distance = match.config.limitScore - player.score;
-                                    }
 
-                                    return (
-                                        <td key={player.name} className={`p-5 text-2xl font-display ${limitColorClass} ${player.isOut ? 'opacity-10' : ''}`}>
-                                            {distance}
+                                {isTeamGame ? (
+                                    <>
+                                        {/* Distancia para el Equipo A */}
+                                        <td className={`p-5 text-2xl font-display ${limitColorClass}`}>
+                                            {match.config.limitScore - teamA.reduce((acc, p) => acc + p.score, 0)}
                                         </td>
-                                    );
-                                })}
+                                        {/* Distancia para el Equipo B */}
+                                        <td className={`p-5 text-2xl font-display ${limitColorClass}`}>
+                                            {match.config.limitScore - teamB.reduce((acc, p) => acc + p.score, 0)}
+                                        </td>
+                                    </>
+                                ) : (
+                                    match.players.map(player => (
+                                        <td key={player.name} className={`p-5 text-2xl font-display ${limitColorClass} ${player.isOut ? 'opacity-10' : ''}`}>
+                                            {match.config.limitScore! - player.score}
+                                        </td>
+                                    ))
+                                )}
                             </tr>
                         )}
                     </tbody>
