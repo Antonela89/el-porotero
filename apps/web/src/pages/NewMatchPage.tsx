@@ -43,9 +43,15 @@ export const NewMatchPage = () => {
             return;
         }
 
+        const isTeamGame = ['Burako', 'Truco'].includes(gameType);
+
+        const assignedTeam = isTeamGame
+            ? (players.length % 2 === 0 ? 'A' : 'B')
+            : 'None';
+
         const newPlayer: IPlayer = {
             name: trimmedName,
-            team: ['Burako', 'Truco'].includes(gameType) ? selectedTeam : 'None',
+            team: assignedTeam,
             score: 0,
             isOut: false
         };
@@ -170,6 +176,9 @@ export const NewMatchPage = () => {
                                             />
                                         ) : (
                                             <span className="font-semibold text-text-main">{p.name}</span>
+                                        )}
+                                        {p.team !== 'None' && (
+                                            <span className={`text-[8px] px-2 py-0.5 rounded-full font-bold border ${p.team === 'A' ? 'border-indigo-500 text-indigo-400' : 'border-rose-500 text-rose-400'}`}>EQUIPO {p.team}</span>
                                         )}
                                     </div>
 

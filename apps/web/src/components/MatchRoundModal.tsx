@@ -153,19 +153,21 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
                                     )}
 
                                     {/* ACCIONES DE EQUIPO (Solo Burako) */}
-                                    {match.gameType === 'Burako' && teamId !== 'None' && (
-                                        <div className="flex gap-2 mb-4">
+                                    {match.gameType === 'Burako' && (
+                                        <div className="flex gap-2 mb-4 px-2">
                                             <button
                                                 onClick={() => handleTeamUpdate(teamId, { isCerrar: !teamScores[0].details.isCerrar })}
-                                                className={`flex-1 py-2 rounded-xl text-[10px] font-bold transition-all ${teamScores[0].details.isCerrar ? 'bg-emerald-500 text-white' : 'bg-surface text-text-muted opacity-50'}`}
+                                                className={`flex-1 py-2.5 rounded-xl text-[10px] font-bold transition-all 
+                        ${teamScores.some(s => s.details.isCerrar) ? 'bg-emerald-500 text-white' : 'bg-surface text-text-muted opacity-40'}`}
                                             >
-                                                CERRÓ
+                                                EQUIPO CERRÓ
                                             </button>
                                             <button
                                                 onClick={() => handleTeamUpdate(teamId, { tomoMuerto: !teamScores[0].details.tomoMuerto })}
-                                                className={`flex-1 py-2 rounded-xl text-[10px] font-bold transition-all ${teamScores[0].details.tomoMuerto !== false ? 'bg-indigo-500 text-white' : 'bg-orange-500 text-white'}`}
+                                                className={`flex-1 py-2.5 rounded-xl text-[10px] font-bold transition-all
+                        ${teamScores[0].details.tomoMuerto !== false ? 'bg-indigo-500 text-white' : 'bg-orange-500 text-white'}`}
                                             >
-                                                {teamScores[0].details.tomoMuerto !== false ? 'MUERTO' : 'SIN MUERTO'}
+                                                {teamScores[0].details.tomoMuerto !== false ? 'CON MUERTO' : 'SIN MUERTO'}
                                             </button>
                                         </div>
                                     )}

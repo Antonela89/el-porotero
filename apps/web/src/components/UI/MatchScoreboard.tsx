@@ -61,16 +61,31 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage 
 
                                 {isTeamGame ? (
                                     // CABECERA MODO EQUIPOS
-                                    <>
-                                        <th className="p-4 border-r border-white/5">
-                                            <span className="text-indigo-400 font-display block text-lg">EQUIPO A</span>
-                                            <span className="text-[9px] text-text-muted">{teamA.map(p => p.name).join(' - ')}</span>
-                                        </th>
-                                        <th className="p-4">
-                                            <span className="text-rose-400 font-display block text-lg">EQUIPO B</span>
-                                            <span className="text-[9px] text-text-muted">{teamB.map(p => p.name).join(' - ')}</span>
-                                        </th>
-                                    </>
+                                    ['A', 'B'].map(t => {
+                                        const teamPlayers = match.players.filter(p => p.team === t);
+                                        const isTeamStarting = teamPlayers.some((_, idx) =>
+                                            match.players.indexOf(teamPlayers[idx]) === match.currentDealerIndex
+                                        );
+
+                                        return (
+                                            <th key={t} className={`p-4 border-r border-white/5 ${t === 'A' ? 'text-indigo-400' : 'text-rose-400'}`}>
+                                                <div className="flex flex-col items-center gap-1">
+                                                    {/* Mostramos la corona si alguien del equipo es el repartidor */}
+                                                    <div className="h-4">
+                                                        {isTeamStarting && <Crown size={14} fill="currentColor" />}
+                                                    </div>
+                                                    <span className="font-display text-lg uppercase tracking-widest">Equipo {t}</span>
+                                                    <div className="flex gap-1">
+                                                        {teamPlayers.map(p => (
+                                                            <span key={p.name} className="text-[8px] opacity-60 uppercase border border-white/10 px-1 rounded">
+                                                                {p.name.substring(0, 3)}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </th>
+                                        );
+                                    })
                                 ) : (
                                     // CABECERA INDIVIDUAL 
                                     match.players.map((player, index) => {
