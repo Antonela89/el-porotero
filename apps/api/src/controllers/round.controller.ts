@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { MatchModel } from '@/models/Match.js';
 import * as GameRules from '@/services/gameRules.services.js';
-
 // Función  Auxiliar
 const recalculateMatchScores = (match: any) => {
 	// Resetear a todos los jugadores al estado inicial
@@ -75,6 +74,28 @@ export const addRound = async (req: Request, res: Response) => {
 			case 'Burako':
 				GameRules.processBurakoRules(match, scores);
 				break;
+		}
+
+		const isTeamGame = ['Truco', 'Burako'].includes(match.gameType);
+
+		if (isTeamGame) {
+			// Calculamos el total de cada equipo
+			const totalA = match.players
+				.filter((p: any) => p.team === 'A')
+				.reduce((acc: number, p: any) => acc + p.score, 0);
+			const totalB = match.players
+				.filter((p: any) => p.team === 'B')
+				.reduce((acc: number, p: any) => acc + p.score, 0);
+
+			const limit = match.config.limitScore;
+
+			if (totalA >= limit) {
+				match.status = 'finished';
+				match.winner = 'Equipo A';
+			} else if (totalB >= limit) {
+				match.status = 'finished';
+				match.winner = 'Equipo B';
+			}
 		}
 
 		match.rounds.push({
