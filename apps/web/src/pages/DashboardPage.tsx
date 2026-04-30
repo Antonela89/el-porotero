@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import api from '@/api/axios';
 import { IMatch } from '@el-porotero/shared';
 import { Plus, Clock } from 'lucide-react';
-import { CardMatch } from '@/components';
+import { CardMatch, EditMatchModal } from '@/components';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 export const DashboardPage = () => {
     const navigate = useNavigate();
     const [matches, setMatches] = useState<IMatch[]>([]);
+    const [matchToEdit, setMatchToEdit] = useState<IMatch | null>(null);
 
     useEffect(() => {
         const fetchHistory = async () => {
@@ -41,10 +42,9 @@ export const DashboardPage = () => {
         }
     };
 
-    // Función para editar (por ahora solo un log, luego modal)
-    const handleEditMatch = (match: IMatch) => {
-        console.log("Editando partida:", match._id);
-        // abrir un modal para cambiar el nombre de los jugadores y el estado del juego
+    // Función para editar 
+    const handleUpdateSuccess = (updatedMatch: IMatch) => {
+        setMatches(prev => prev.map(m => m._id === updatedMatch._id ? updatedMatch : m));
     };
 
     const groupMatchesByDate = (matches: IMatch[]) => {
@@ -104,10 +104,19 @@ export const DashboardPage = () => {
                                             key={match._id}
                                             match={match}
                                             onDelete={handleDeleteMatch}
-                                            onEdit={handleEditMatch}
+                                            onEdit={() => setMatchToEdit(match)}
                                         />
                                     ))}
                                 </div>
+
+                                {matchToEdit && (
+                                    <EditMatchModal
+                                        match={matchToEdit}
+                                        isOpen={!!matchToEdit}
+                                        onClose={() => setMatchToEdit(null)}
+                                        onSuccess={handleUpdateSuccess}
+                                    />
+                                )}
                             </div>
                         ))}
                     </section>

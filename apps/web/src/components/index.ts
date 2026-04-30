@@ -3,6 +3,7 @@ export * from './ProtectedRoute';
 export * from './CardMatch';
 export * from './MatchRoundModal';
 export * from './GameSelector';
+export * from './EditMatchModal';
 // export * from './MatchRoundDetails';
 export * from './UI/MatchHeader';
 export * from './UI/IconButton';
