@@ -76,7 +76,7 @@ export interface IRoundDetails {
 export interface IRoundScore {
 	playerName: string;
 	pointsAdded: number;
-	details?: any; // Bazas, escobas, etc.
+	details?: IRoundDetails; // Bazas, escobas, etc.
 }
 
 // Puntaje de la ronda
