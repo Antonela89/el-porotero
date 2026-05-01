@@ -1,67 +1,11 @@
 // --- Interfaces ---
-export interface IRoundScore {
-	playerName: string;
-	pointsAdded: number;
-	details?: any; // Bazas, escobas, etc.
-}
-
-export interface IRound {
-	roundNumber: number;
-	dealerIndex: number;
-	scores: IRoundScore[];
-	timestamp: Date;
-}
-
-export interface IRoundDetails {
-	isCorteMinus10?: boolean;
-	isCerrar?: boolean;
-	isReengage?: boolean;
-	bazas?: number;
-	paso?: boolean;
-	escobas?: number;
-	velos?: number;
-	hasVeloAs?: boolean;
-	hasVelo7?: boolean;
-	hasVelo12?: boolean;
-	hasOros?: boolean;
-	hasSetenta?: boolean;
-	hasCartas?: boolean;
-	cantos?: number;
-	canastasPuras?: number; // 200 pts c/u
-	canastasImpuras?: number; // 100 pts c/u
-	tomoMuerto?: boolean; // Si no lo tomó, restar 100
-}
-
-// --- Detalles de Juegos ---
-export interface RoundScoreDetail {
-	playerName: string;
-	pointsAdded: number;
-	details?: {
-		// Loba/Chinchón
-		isCorteMinus10?: boolean;
-		isCerrar: boolean;
-
-		// Mosca
-		bazas?: number;
-		paso?: boolean; // Mosca
-
-		// Escoba/ Barsiga
-		escobas?: number;
-		velos?: number;
-		hasVeloAs?: boolean;
-		hasVelo7?: boolean;
-		hasVelo12?: boolean;
-		hasOros?: boolean;
-		hasSetenta?: boolean;
-		hasCartas?: boolean;
-		cantos?: number;
-
-		// Burako
-		canastasPuras?: number; // 200 pts c/u
-		canastasImpuras?: number; // 100 pts c/u
-		tomoMuerto?: boolean; // Si no lo tomó, restar 100
-		cierre?: boolean;
-	};
+// Jugador
+export interface IPlayer {
+	_id?: string; // En el front es opcional y es string
+	name: string;
+	score: number;
+	team: 'A' | 'B' | 'None';
+	isOut: boolean;
 }
 
 // Configuración inicial de la partida
@@ -71,22 +15,23 @@ export interface IMatchConfig {
 	isDescending: boolean; // true para Mosca (resta), false para el resto
 }
 
-export interface IPlayer {
-	_id?: string; // En el front es opcional y es string
-	name: string;
-	score: number;
-	team: 'A' | 'B' | 'None';
-	isOut: boolean;
-}
-
+// Equipo
 export interface ITeamScore {
 	teamName: 'A' | 'B';
 	score: number;
 }
 
+// Juego
 export interface IMatch {
 	_id?: string;
-	gameType: string;
+	gameType:
+		| 'Loba'
+		| 'Truco'
+		| 'Chinchon'
+		| 'Escoba'
+		| 'Barsiga'
+		| 'Mosca'
+		| 'Burako';
 	status: 'active' | 'finished' | 'cancelled';
 	players: IPlayer[];
 	winner?: string;
@@ -97,4 +42,47 @@ export interface IMatch {
 	rounds: IRound[];
 	isTeamGame: boolean;
 	teamScores?: ITeamScore[];
+}
+
+// --- Detalles de Juegos ---
+export interface IRoundDetails {
+	// Loba / Chinchón
+	isCerrar?: boolean;
+	isCorteMinus10?: boolean;
+	isReengage?: boolean; // Para el asterisco y la lógica de re-entrada
+
+	// Mosca
+	bazas?: number;
+	paso?: boolean;
+
+	// Escoba / Bársiga
+	escobas?: number;
+	velos?: number; // El número total calculado (1, 2, 3)
+	hasVeloAs?: boolean; // Checkbox individual
+	hasVelo7?: boolean; // Checkbox individual
+	hasVelo12?: boolean; // Checkbox individual
+	hasOros?: boolean;
+	hasSetenta?: boolean;
+	hasCartas?: boolean;
+	cantos?: number; // Puntos extra de Bársiga
+
+	// Burako
+	canastasPuras?: number;
+	canastasImpuras?: number;
+	tomoMuerto?: boolean;
+}
+
+// Puntaje individual de los jugadores
+export interface IRoundScore {
+	playerName: string;
+	pointsAdded: number;
+	details?: any; // Bazas, escobas, etc.
+}
+
+// Puntaje de la ronda
+export interface IRound {
+	roundNumber: number;
+	dealerIndex: number;
+	scores: IRoundScore[];
+	timestamp: Date;
 }
