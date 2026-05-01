@@ -40,6 +40,7 @@ export const NewMatchPage = () => {
     const [tempEditName, setTempEditName] = useState('');
 
     const currentGame = GAMES.find(g => g.id === gameType);
+    const hasLimitOptions = ['Loba', 'Chinchon'].includes(gameType);
 
     const addPlayer = () => {
         const trimmedName = playerName.trim();
@@ -134,17 +135,21 @@ export const NewMatchPage = () => {
                     </p>
                 </section>
 
-                {/* CONFIGURACIÓN EXTRA (Si es Loba) */}
-                {gameType === 'Loba' || gameType === 'Chinchon' && (
-                    <section className="mb-8 animate-in fade-in slide-in-from-top-2">
-                        <div className="flex gap-2">
+                {/* SELECTOR DE LÍMITE (Solo Loba/Chinchon) */}
+                {hasLimitOptions && (
+                    <section>
+                        <label className="text-[10px] uppercase tracking-[0.2em] text-text-muted font-bold mb-3 block">
+                            Límite de Puntos
+                        </label>
+                        <div className="flex gap-2 bg-surface p-1 rounded-2xl border border-white/5">
                             {[100, 101].map(val => (
                                 <button
                                     key={val}
                                     onClick={() => setLimitScore(val)}
-                                    className={`flex-1 py-3 rounded-2xl border-2 transition-all font-bold ${limitScore === val ? 'border-primary bg-primary/10 text-primary' : 'border-white/5 bg-surface text-text-muted'}`}
+                                    className={`flex-1 py-3 rounded-xl transition-all font-bold text-sm 
+                                ${limitScore === val ? 'bg-primary text-background shadow-lg' : 'text-text-muted hover:text-text-main'}`}
                                 >
-                                    {val} pts
+                                    {val} PUNTOS
                                 </button>
                             ))}
                         </div>
@@ -269,7 +274,7 @@ export const NewMatchPage = () => {
                     className="btn-primary w-full py-5 text-xl flex items-center justify-center gap-3 mt-auto shadow-2xl"
                 >
                     <Play size={24} fill="currentColor" />
-                    ¡A Jugar! (A {gameType === 'Burako' ? (isTeamGame ? 5000 : 3000) : currentGame?.defaultLimit} pts)
+                    ¡A Jugar! (A {hasLimitOptions ? ` ${limitScore}` : gameType === 'Burako' ? (isTeamGame ? 5000 : 3000) : currentGame?.defaultLimit} pts)
                 </button>
             </footer>
         </div >
