@@ -24,14 +24,22 @@ export const NewMatchPage = () => {
         return state?.gameType || 'Loba';
     });
 
+    const [isTeamGame, setIsTeamGame] = useState<boolean>(() => {
+        if (['Burako', 'Truco'].includes(gameType)) {
+            return true;
+        }
+        return false;
+    });
+
+    const [limitScore, setLimitScore] = useState(100);
+
     // --- ESTADO DE JUGADORES ---
     const [players, setPlayers] = useState<IPlayer[]>(() => state?.players || []);
     const [playerName, setPlayerName] = useState('');
     const [editingIndex, setEditingIndex] = useState<number | null>(null);
     const [tempEditName, setTempEditName] = useState('');
-    const [limitScore, setLimitScore] = useState(100);
-    const [selectedTeam, setSelectedTeam] = useState<'A' | 'B' | 'None'>('A');
 
+    const currentGame = GAMES.find(g => g.id === gameType);
 
     const addPlayer = () => {
         const trimmedName = playerName.trim();
@@ -43,15 +51,11 @@ export const NewMatchPage = () => {
             return;
         }
 
-        const isTeamGame = ['Burako', 'Truco'].includes(gameType);
-
-        const assignedTeam = isTeamGame
-            ? (players.length % 2 === 0 ? 'A' : 'B')
-            : 'None';
+        if (players.length >= (currentGame?.maxPlayers || 6)) return;
 
         const newPlayer: IPlayer = {
             name: trimmedName,
-            team: assignedTeam,
+            team: isTeamGame ? (players.length % 2 === 0 ? 'A' : 'B') : 'None',
             score: 0,
             isOut: false
         };
@@ -59,6 +63,7 @@ export const NewMatchPage = () => {
         setPlayers([...players, newPlayer]);
         setPlayerName(''); // Limpiamos el input
     };
+
 
     // Limite de jugadores: Mosca máximo 5, el resto máximo 6
     const isMosca = gameType === 'Mosca';
@@ -76,6 +81,7 @@ export const NewMatchPage = () => {
         setPlayers(newPlayers);
         setEditingIndex(null);
     };
+
 
     const removePlayer = (index: number) => {
         setPlayers(players.filter((_, i) => i !== index));
@@ -145,6 +151,25 @@ export const NewMatchPage = () => {
                     </section>
                 )}
 
+                {/* TOGGLE DE EQUIPOS (Solo si el juego lo permite) */}
+                {['Burako', 'Truco'].includes(gameType) && (
+                    <section>
+                        <div className="flex items-center justify-between bg-surface p-4 rounded-2xl border border-white/5 shadow-inner">
+                            <div className="flex flex-col">
+                                <span className="text-sm font-bold text-text-main">Jugar por Equipos</span>
+                                <span className="text-[10px] text-text-muted">Intercalado (1-3 vs 2-4)</span>
+                            </div>
+                            <button
+                                onClick={() => setIsTeamGame(prev => !prev)}
+                                className={`w-12 h-6 rounded-full transition-all relative ${isTeamGame ? 'bg-primary' : 'bg-background'}`}
+                            >
+                                <div className={`absolute top-1 w-4 h-4 rounded-full ${isTeamGame ? 'bg-background' : 'bg-white'} transition-all ${isTeamGame ? 'left-7' : 'left-1'}`} />
+                            </button>
+                        </div>
+                    </section>
+                )}
+
+
                 {/* JUGADORES (Sección Principal) */}
                 <section className="flex-1 overflow-hidden flex flex-col mb-8 custom-scrollbar animate-in fade-in slide-in-from-bottom-2">
                     <label className="text-[10px] uppercase tracking-[0.2em] text-text-muted font-bold mb-4 block ml-1">
@@ -154,7 +179,7 @@ export const NewMatchPage = () => {
                     {/* Lista con scroll si hay muchos */}
                     <div className="flex flex-col max-h-75 mb-3 overflow-y-auto custom-scrollbar">
                         {players.length === 0 ? (
-                            <div className="py-8 border-2 border-dashed border-white/5 rounded-3xl flex flex-col items-center justify-center text-text-muted opacity-40">
+                            <div className="py-8 border-2 border-dashed border-white rounded-3xl flex flex-col items-center justify-center text-text-muted opacity-40">
                                 <Users size={32} className="mb-2" />
                                 <p className="text-xs italic">La mesa está vacía...</p>
                             </div>
@@ -175,10 +200,13 @@ export const NewMatchPage = () => {
                                                 onKeyDown={(e) => e.key === 'Enter' && saveEdit(i)}
                                             />
                                         ) : (
-                                            <span className="font-semibold text-text-main">{p.name}</span>
-                                        )}
-                                        {p.team !== 'None' && (
-                                            <span className={`text-[8px] px-2 py-0.5 rounded-full font-bold border ${p.team === 'A' ? 'border-indigo-500 text-indigo-400' : 'border-rose-500 text-rose-400'}`}>EQUIPO {p.team}</span>
+                                            p.team !== 'None' ? (
+                                                <>
+                                                    <span className="font-semibold text-text-main">{p.name}</span>
+                                                    <span className={`text-[8px] px-2 py-0.5 rounded-full font-bold border ${p.team === 'A' ? 'border-indigo-500 text-indigo-400' : 'border-rose-500 text-rose-400'}`}>EQUIPO {p.team}</span>
+                                                </>
+                                            ) :
+                                                <span className="font-semibold text-text-main">{p.name}</span>
                                         )}
                                     </div>
 
@@ -188,7 +216,7 @@ export const NewMatchPage = () => {
                                                 <Check size={18} />
                                             </button>
                                         ) : (
-                                            <button onClick={() => startEditing(i, p.name)} className="text-text-muted hover:text-primary p-1">
+                                            <button onClick={() => startEditing(i, p.name)} className="text-primary/70 hover:text-primary p-1">
                                                 <Edit2 size={18} />
                                             </button>
                                         )}
@@ -199,23 +227,6 @@ export const NewMatchPage = () => {
                                 </div>
                             )))}
                     </div>
-
-                    {['Burako', 'Truco'].includes(gameType) && (
-                        <div className="flex gap-2 mb-2">
-                            <button
-                                onClick={() => setSelectedTeam('A')}
-                                className={`flex-1 py-1 rounded-lg text-[10px] font-bold ${selectedTeam === 'A' ? 'bg-indigo-500 text-white' : 'bg-surface text-text-muted'}`}
-                            >
-                                EQUIPO A
-                            </button>
-                            <button
-                                onClick={() => setSelectedTeam('B')}
-                                className={`flex-1 py-1 rounded-lg text-[10px] font-bold ${selectedTeam === 'B' ? 'bg-rose-500 text-white' : 'bg-surface text-text-muted'}`}
-                            >
-                                EQUIPO B
-                            </button>
-                        </div>
-                    )}
 
                     {/* Input de agregado siempre visible */}
                     <div className="player-input-row border-primary/20 ring-2 p-2 ring-primary/5 flex justify-between">
@@ -238,6 +249,15 @@ export const NewMatchPage = () => {
                     {isMosca && players.length === 5 && (
                         <p className="text-[10px] text-warning mt-2 ml-1 animate-pulse font-bold uppercase">
                             ⚠️ La Mosca se juega con máximo 5 jugadores (Regla del Sombrero activa)
+                        </p>)}
+                    {gameType === 'Truco' && players.length === 6 && (
+                        <p className="text-[10px] text-warning mt-2 ml-1 animate-pulse font-bold uppercase">
+                            ⚠️ El Truco se juegan con máximo 6 jugadores (3 vs 3)
+                        </p>
+                    )}
+                    {gameType === 'Burako' && players.length === 6 && (
+                        <p className="text-[10px] text-warning mt-2 ml-1 animate-pulse font-bold uppercase">
+                            ⚠️ Burako se juega con máximo 4 jugadores (2 vs 2)
                         </p>
                     )}
                 </section>
@@ -248,7 +268,8 @@ export const NewMatchPage = () => {
                     disabled={players.length < 2}
                     className="btn-primary w-full py-5 text-xl flex items-center justify-center gap-3 mt-auto shadow-2xl"
                 >
-                    <Play size={24} fill="currentColor" /> ¡A Jugar!
+                    <Play size={24} fill="currentColor" />
+                    ¡A Jugar! (A {gameType === 'Burako' ? (isTeamGame ? 5000 : 3000) : currentGame?.defaultLimit} pts)
                 </button>
             </footer>
         </div >

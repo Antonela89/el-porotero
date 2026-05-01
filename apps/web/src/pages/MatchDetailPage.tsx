@@ -108,14 +108,12 @@ export const MatchDetailPage = () => {
     // return <LoadingSpinner />; 
     // }
 
-    const gameLimit = gameInfo.defaultLimit || 0;
 
     return (
         <div className="match-layout">
             {/* HEADER COMPACTO */}
             <MatchHeader
-                gameType={match.gameType}
-                limit={gameLimit}
+                match={match}
                 onRefresh={refetch}
                 icon={gameInfo.icon}
             />

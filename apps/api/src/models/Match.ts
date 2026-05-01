@@ -20,13 +20,14 @@ interface IMatch extends Document {
 		| 'Barsiga'
 		| 'Mosca'
 		| 'Burako';
-	status: 'active' | 'finished';
+	status: 'active' | 'finished' | 'cancelled';
 	adminId: Types.ObjectId;
 	players: Types.DocumentArray<IPlayer & Types.Subdocument>; // Esto habilita los métodos de subdocumentos
 	rounds: IRound[];
 	config: IMatchConfig;
 	currentDealerIndex: number;
 	winner?: string;
+	isTeamGame: boolean;
 }
 
 // --- Esquema de Jugador ---
@@ -71,11 +72,12 @@ const matchSchema = new Schema<IMatch>(
 		},
 		status: {
 			type: String,
-			enum: ['active', 'finished'],
+			enum: ['active', 'finished', 'cancelled'],
 			default: 'active',
 		},
 		adminId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 		currentDealerIndex: { type: Number, default: 0 },
+		isTeamGame: { type: Boolean, default: false },
 
 		config: {
 			limitScore: Number,
