@@ -24,7 +24,7 @@ export const BurakoPlayerInput = ({
 
     return (
         <div className="flex flex-col gap-4 w-full">
-            {/* 1. INPUT DE PUNTOS DE FICHAS (Base de la ronda) */}
+            {/* INPUT DE PUNTOS DE FICHAS (Base de la ronda) */}
             <div className="flex flex-col gap-1">
                 <input
                     type="text"
@@ -39,7 +39,7 @@ export const BurakoPlayerInput = ({
                 />
             </div>
 
-            {/* 2. CONTADORES DE CANASTAS (Individuales) */}
+            {/* CONTADORES DE CANASTAS (Individuales) */}
             <div className="grid grid-cols-2 gap-3">
                 {/* Puras */}
                 <div className="flex flex-col gap-1.5">
@@ -90,7 +90,7 @@ export const BurakoPlayerInput = ({
                 </div>
             </div>
 
-            {/* 3. ACCIONES DE CIERRE (Solo si NO es por equipos) */}
+            {/* ACCIONES DE CIERRE (Solo si NO es por equipos) */}
             {/* Si es por equipos, estos botones desaparecen de acá porque están arriba de todo el equipo en el Modal */}
             {!isTeamGame && (
                 <div className="flex gap-2">
