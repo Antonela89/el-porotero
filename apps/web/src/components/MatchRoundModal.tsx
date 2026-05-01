@@ -15,6 +15,8 @@ interface Props {
     onSuccess: (updatedMatch: IMatch) => void;
 }
 
+type ScoreUpdatePayload = Partial<IRoundScore & IRoundDetails>;
+
 export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess }: Props) => {
     const isEditMode = !!roundToEdit;
     const { validateRound, sombreroIndex } = useMoscaLogic(match);
@@ -30,58 +32,52 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
             return match.players.map(p => ({
                 playerName: p.name,
                 pointsAdded: 0,
-                details: { bazas: 0, paso: false, isCerrar: false, isCorteMinus10: false, hizoBatida: false, tomoMuerto: true }
+                details: { bazas: 0, paso: false, isCerrar: false, isCorteMinus10: false, tomoMuerto: true }
             }));
         }
     });
 
     const [loading, setLoading] = useState(false);
 
-    const updateScoreState = (index: number, payload: Partial<IRoundScore> & Partial<IRoundDetails>) => {
+    // --- FUNCIÓN ÚNICA DE ACTUALIZACIÓN (Soporta puntos, detalles y exclusividad) ---
+    const updateScoreState = (index: number, payload: ScoreUpdatePayload) => {
         setScores(prev => {
-            const next = [...prev];
-            const EXCLUSIVE_KEYS: (keyof IRoundDetails)[] = ['isCerrar', 'isCorteMinus10'];
+            let next = [...prev];
 
-            const isActivatingExclusive = Object.entries(payload).some(
-                ([key, value]) => EXCLUSIVE_KEYS.includes(key as keyof IRoundDetails) && value === true
-            );
+            // Si el payload contiene una clave exclusiva, aplicamos lógica de "dueño único"
+            const exclusiveKey = Object.keys(payload).find(k =>
+                ['isCerrar', 'isCorteMinus10', 'hasOros', 'hasCartas', 'hasSetenta', 'hasVeloAs', 'hasVelo7', 'hasVelo12'].includes(k)
+            ) as keyof IRoundDetails | undefined;
 
-            if (isActivatingExclusive) {
-                next.forEach((s, idx) => {
-                    if (idx !== index) {
-                        s.details = { ...s.details, isCerrar: false, isCorteMinus10: false };
-                    }
-                });
-                next[index].pointsAdded = 0;
+            if (exclusiveKey && payload[exclusiveKey] === true) {
+                next = applyExclusivity(next, index, exclusiveKey, true);
+                // Si es un cierre, forzamos puntos a 0 (el backend restará el -10 si aplica)
+                if (['isCerrar', 'isCorteMinus10'].includes(exclusiveKey)) next[index].pointsAdded = 0;
             }
 
-            if (payload.pointsAdded !== undefined) next[index].pointsAdded = payload.pointsAdded;
-            next[index].details = { ...next[index].details, ...payload };
+            // Aplicamos el resto de los cambios
+            const current = next[index];
+            if ('pointsAdded' in payload) {
+                current.pointsAdded = (payload as IRoundScore).pointsAdded;
+            } else {
+                current.details = { ...current.details, ...payload };
+            }
+
+            // Recálculo automático de Velos
+            if (['Escoba', 'Barsiga'].includes(match.gameType)) {
+                const d = current.details;
+                current.details.velos = (d.hasVeloAs ? 1 : 0) + (d.hasVelo7 ? 1 : 0) + (d.hasVelo12 ? 1 : 0);
+            }
+
             return next;
         });
     };
 
     const handleTeamUpdate = (teamId: string, payload: Partial<IRoundDetails>) => {
-        setScores(prev => {
-            const next = [...prev];
-            const teamIndices = match.players
-                .map((p, idx) => (p.team === teamId ? idx : -1))
-                .filter(idx => idx !== -1);
-
-            teamIndices.forEach(idx => {
-                next[idx].details = { ...next[idx].details, ...payload };
-            });
-
-            if (payload.isCerrar) {
-                next.forEach((s, idx) => {
-                    if (!teamIndices.includes(idx)) {
-                        s.details = { ...s.details, isCerrar: false, isCorteMinus10: false };
-                    }
-                });
-            }
-            return next;
-        });
+        const teamIndices = match.players.map((p, idx) => (p.team === teamId ? idx : -1)).filter(idx => idx !== -1);
+        teamIndices.forEach(idx => updateScoreState(idx, payload));
     };
+
 
     const anyoneClosed = scores.some(s => s.details?.isCerrar || s.details?.isCorteMinus10);
     const { isValid: isMoscaValid, totalBazas } = validateRound(scores);
@@ -93,15 +89,19 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
     };
 
     const validateEscoba = () => {
-        // Definimos qué velos son obligatorios según el juego
-        const requiredVelos = match.gameType === 'Barsiga'
-            ? ['hasVeloAs', 'hasVelo7', 'hasVelo12']
-            : ['hasVelo7']; // Escoba normal solo obliga al 7
 
-        // Verificamos que cada velo requerido aparezca al menos una vez en los scores de los jugadores
-        return requiredVelos.every(veloKey =>
-            scores.some(s => s.details[veloKey as keyof IRoundDetails] === true)
+        const requiredVelos = ['hasVeloAs', 'hasVelo7', 'hasVelo12'];
+        const requiredItems = ['hasOros', 'hasCartas', 'hasSetenta'];
+
+        const allVelosAssigned = requiredVelos.every(key =>
+            scores.filter(s => s.details[key as keyof IRoundDetails] === true).length === 1
         );
+
+        const allItemsAssigned = requiredItems.every(key =>
+            scores.filter(s => s.details[key as keyof IRoundDetails] === true).length <= 1
+        );
+
+        return allVelosAssigned && allItemsAssigned;
     };
 
     const isFormValid = (() => {
@@ -113,7 +113,7 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
                 return validateLoba(); // La que chequea un solo cierre y puntos > 0
             case 'Escoba':
             case 'Barsiga':
-                return validateEscoba(); 
+                return validateEscoba();
             case 'Burako':
                 return anyoneClosed; // En Burako alguien tiene que haber cerrado
             default:
@@ -121,47 +121,14 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
         }
     })();
 
-    const handleSubmit = async () => {
-        setLoading(true);
-        try {
-            const url = isEditMode ? `/matches/${match._id}/round/${roundToEdit}` : `/matches/${match._id}/round`;
-            const method = isEditMode ? 'patch' : 'post';
-            const { data } = await api[method](url, { scores });
-            onSuccess(isEditMode ? data.match : data);
-            onClose();
-        } catch (err: unknown) {
-            let msg = "Error al guardar";
-            if (axios.isAxiosError(err)) msg = err.response?.data?.message || err.message;
-            alert(msg);
-        } finally { setLoading(false); }
-    };
-
-    const handleToggleExclusive = (index: number, key: keyof IRoundDetails) => {
-        setScores(prev => {
-            const currentValue = !!prev[index].details[key];
-            // Usamos la lógica compartida del service
-            const nextScores = applyExclusivity(prev, index, key, !currentValue);
-
-            // Recálculo automático de puntos de velos (1 por cada uno)
-            nextScores.forEach(s => {
-                const vCount = (s.details.hasVeloAs ? 1 : 0) +
-                    (s.details.hasVelo7 ? 1 : 0) +
-                    (s.details.hasVelo12 ? 1 : 0);
-                s.details.velos = vCount;
-            });
-
-            return nextScores;
-        });
-    };
-
     const renderScoringInput = (s: IRoundScore, player: IPlayer, originalIndex: number) => {
         const isDealer = originalIndex === (isEditMode ? match.rounds.find(r => r.roundNumber === roundToEdit)?.dealerIndex : match.currentDealerIndex);
 
-        // Agrupamos props comunes para no repetir
         const commonProps = {
             score: s,
-            onUpdate: (payload: Partial<IRoundScore> & Partial<IRoundDetails>) => updateScoreState(originalIndex, payload)
+            onUpdate: (payload: ScoreUpdatePayload) => updateScoreState(originalIndex, payload)
         };
+
 
         switch (match.gameType) {
             case 'Mosca':
@@ -188,7 +155,7 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
                     <EscobaInputRow
                         {...commonProps}
                         onUpdate={(payload) => updateScoreState(originalIndex, payload)}
-                        onToggleExclusive={(key) => handleToggleExclusive(originalIndex, key)}
+                        onToggleExclusive={(key) => updateScoreState(originalIndex, { [key]: !s.details?.[key as keyof IRoundDetails] })}
                         isBarsiga={match.gameType === 'Barsiga'}
                     />
                 );
@@ -198,8 +165,9 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
             case 'Uno':
                 return (
                     <AccumulativeInputRow
-                        score={s}
+                        {...commonProps}
                         disableExclusives={anyoneClosed}
+                        onUpdateScore={(f) => updateScoreState(originalIndex, f)}
                         onUpdateDetails={(d) => updateScoreState(originalIndex, d)}
                     />
                 );
@@ -207,6 +175,21 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
             default:
                 return <p className="text-xs text-warning text-center">Juego no soportado</p>;
         }
+    };
+
+    const handleSubmit = async () => {
+        setLoading(true);
+        try {
+            const url = isEditMode ? `/matches/${match._id}/round/${roundToEdit}` : `/matches/${match._id}/round`;
+            const method = isEditMode ? 'patch' : 'post';
+            const { data } = await api[method](url, { scores });
+            onSuccess(isEditMode ? data.match : data);
+            onClose();
+        } catch (err: unknown) {
+            let msg = "Error al guardar";
+            if (axios.isAxiosError(err)) msg = err.response?.data?.message || err.message;
+            alert(msg);
+        } finally { setLoading(false); }
     };
 
     return (

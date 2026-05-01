@@ -31,7 +31,8 @@ export interface IMatch {
 		| 'Escoba'
 		| 'Barsiga'
 		| 'Mosca'
-		| 'Burako';
+		| 'Burako'
+		| 'Uno';
 	status: 'active' | 'finished' | 'cancelled';
 	players: IPlayer[];
 	winner?: string;
@@ -76,7 +77,7 @@ export interface IRoundDetails {
 export interface IRoundScore {
 	playerName: string;
 	pointsAdded: number;
-	details?: IRoundDetails; // Bazas, escobas, etc.
+	details: IRoundDetails; // Bazas, escobas, etc.
 }
 
 // Puntaje de la ronda

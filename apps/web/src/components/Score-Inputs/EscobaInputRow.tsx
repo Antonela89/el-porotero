@@ -33,20 +33,30 @@ export const EscobaInputRow = ({ score, onUpdate, onToggleExclusive, isBarsiga }
                     { key: 'hasOros', label: 'Oros', color: 'yellow', icon: <Coins size={14} /> },
                     { key: 'hasCartas', label: 'Cartas', color: 'blue', icon: <Layers size={14} /> },
                     { key: 'hasSetenta', label: 'Setenta', color: 'emerald', icon: <Trophy size={14} /> }
-                ].map((item) => (
-                    <button
-                        key={item.key}
-                        type="button"
-                        onClick={() => onToggleExclusive(item.key as keyof IRoundDetails)}
-                        className={`flex flex-col items-center gap-1 p-2 rounded-xl border transition-all duration-300
-                            ${d[item.key as keyof IRoundDetails]
-                                ? `bg-${item.color}-500/20 border-${item.color}-500 text-${item.color}-500 shadow-lg shadow-${item.color}-500/10`
-                                : 'bg-surface border-white/5 text-text-muted opacity-50 hover:opacity-100'}`}
-                    >
-                        {item.icon}
-                        <span className="text-[8px] font-bold uppercase">{item.label}</span>
-                    </button>
-                ))}
+                ].map((item) => {
+                    // Creamos un diccionario con las clases COMPLETAS
+                    // Al estar escritas enteras acá, Tailwind las va a detectar y compilar
+                    const colorClasses: Record<string, string> = {
+                        yellow: 'bg-yellow-500/20 border-yellow-500 text-yellow-500 shadow-yellow-500/10',
+                        blue: 'bg-blue-500/20 border-blue-500 text-blue-500 shadow-blue-500/10',
+                        emerald: 'bg-emerald-500/20 border-emerald-500 text-emerald-500 shadow-emerald-500/10'
+                    };
+
+                    return (
+                        <button
+                            key={item.key}
+                            type="button"
+                            onClick={() => onToggleExclusive(item.key as keyof IRoundDetails)}
+                            className={`flex flex-col items-center gap-1 p-2 rounded-xl border transition-all duration-300
+                    ${d[item.key as keyof IRoundDetails]
+                                    ? colorClasses[item.color] 
+                                    : 'bg-surface border-white/5 text-text-muted opacity-50 hover:opacity-100'}`}
+                        >
+                            {item.icon}
+                            <span className="text-[8px] font-bold uppercase">{item.label}</span>
+                        </button>
+                    );
+                })}
             </div>
 
             {/* 3. LÓGICA DE VELOS (Exclusivos) */}
@@ -72,25 +82,26 @@ export const EscobaInputRow = ({ score, onUpdate, onToggleExclusive, isBarsiga }
                                 </button>
                             );
                         })}
-                    </div>
 
-                    {/* CANTOS (Solo Bársiga) */}
-                    {isBarsiga && (
-                        <div className="flex flex-col items-end shrink-0">
-                            <label className="text-[8px] text-text-muted uppercase font-bold mb-1">Cantos</label>
-                            <input
-                                type="text"
-                                inputMode="numeric"
-                                placeholder="0"
-                                className="w-12 bg-background border border-white/10 rounded-lg text-center py-1 text-sm outline-none focus:border-primary transition-all"
-                                value={d.cantos || ""}
-                                onChange={(e) => {
-                                    const val = e.target.value.replace(/\D/g, "");
-                                    onUpdate({ cantos: parseInt(val) || 0 });
-                                }}
-                            />
-                        </div>
-                    )}
+
+                        {/* CANTOS (Solo Bársiga) */}
+                        {isBarsiga && (
+                            <div className="flex flex-col items-end shrink-0">
+                                <label className="text-[8px] text-text-muted uppercase font-bold mb-1">Cantos</label>
+                                <input
+                                    type="text"
+                                    inputMode="numeric"
+                                    placeholder="0"
+                                    className="w-12 bg-background border border-white/10 rounded-lg text-center py-1 text-sm outline-none focus:border-primary transition-all"
+                                    value={d.cantos || ""}
+                                    onChange={(e) => {
+                                        const val = e.target.value.replace(/\D/g, "");
+                                        onUpdate({ cantos: parseInt(val) || 0 });
+                                    }}
+                                />
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

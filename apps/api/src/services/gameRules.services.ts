@@ -1,10 +1,7 @@
-import { IMatch, IRoundDetails, RoundScoreDetail } from '@el-porotero/shared';
+import { IMatch, IRoundScore } from '@el-porotero/shared';
 
 // Lógica para juegos de sumar puntos (Loba, Chinchón, etc.)
-export const processAccumulativeRules = (
-	match: any,
-	scores: { details?: Partial<IRoundDetails> } & RoundScoreDetail[],
-) => {
+export const processAccumulativeRules = (match: any, scores: IRoundScore[]) => {
 	const limit = match.config.limitScore || 101; // Usamos el límite de la config
 
 	scores.forEach((s) => {
@@ -27,10 +24,7 @@ export const processAccumulativeRules = (
 };
 
 // Lógica para la Mosca (Juego descendente)
-export const processMoscaRules = (
-	match: any,
-	scores: { details?: Partial<IRoundDetails> } & RoundScoreDetail[],
-) => {
+export const processMoscaRules = (match: any, scores: IRoundScore[]) => {
 	let instantWinner = null;
 
 	const totalBazas = scores.reduce(
@@ -79,31 +73,31 @@ export const processMoscaRules = (
 };
 
 // Lógica para Escoba (Basada en objetivos)
-export const processEscobaRules = (
-	match: any,
-	scores: { details?: Partial<IRoundDetails> } & RoundScoreDetail[],
-) => {
+export const processEscobaRules = (match: any, scores: IRoundScore[]) => {
 	scores.forEach((s) => {
 		const player = match.players.find((p: any) => p.name === s.playerName);
 		if (!player) return;
 
 		if (player) {
-			// Puntos Base
-			let roundTotal = s.pointsAdded;
+			let roundTotal = 0;
+			const d = s.details || {};
 
-			// Bonus - al final de la partida
-			if (s.details) {
-				if (s.details.escobas) roundTotal += s.details.escobas;
-				if (s.details.velos) roundTotal += s.details.velos;
-				if (s.details.hasVeloAs) roundTotal += 1;
-				if (s.details.hasVelo7) roundTotal += 1;
-				if (s.details.hasVelo12) roundTotal += 1;
-				if (s.details.hasSetenta) roundTotal += 1;
-				if (s.details.hasOros) roundTotal += 1;
-				if (s.details.hasCartas) roundTotal += 1;
-			}
-			if (match.gameType === 'Barsiga' && s.details?.cantos) {
-				roundTotal += s.details.cantos;
+			// Puntos de mesa (1 cada uno)
+			if (d.hasOros) roundTotal += 1;
+			if (d.hasCartas) roundTotal += 1;
+			if (d.hasSetenta) roundTotal += 1;
+
+			// Velos (1 punto por cada uno)
+			if (d.hasVeloAs) roundTotal += 1;
+			if (d.hasVelo7) roundTotal += 1;
+			if (d.hasVelo12) roundTotal += 1;
+
+			// Escobas (valor nominal)
+			if (d.escobas) roundTotal += Number(d.escobas);
+
+			// Cantos (Solo Bársiga)
+			if (match.gameType === 'Barsiga' && d.cantos) {
+				roundTotal += Number(d.cantos);
 			}
 
 			s.pointsAdded = roundTotal;
@@ -112,10 +106,7 @@ export const processEscobaRules = (
 	});
 };
 
-export const processBurakoRules = (
-	match: any,
-	scores: { details?: Partial<IRoundDetails> } & RoundScoreDetail[],
-) => {
+export const processBurakoRules = (match: any, scores: IRoundScore[]) => {
 	scores.forEach((s) => {
 		const player = match.players.find((p: any) => p.name === s.playerName);
 		if (player) {
@@ -126,7 +117,7 @@ export const processBurakoRules = (
 					totalRonda += s.details.canastasPuras * 200;
 				if (s.details.canastasImpuras)
 					totalRonda += s.details.canastasImpuras * 100;
-				if (s.details.cierre) totalRonda += 100;
+				if (s.details.isCerrar) totalRonda += 100;
 
 				// Regla del Muerto: si no lo tomó, resta 100
 				if (s.details.tomoMuerto === false) {
@@ -141,10 +132,7 @@ export const processBurakoRules = (
 };
 
 // Lógica para procesar puntos de equipo (Truco, Burako, etc.)
-export const processTeamRules = (
-	match: any,
-	scores: { details?: Partial<IRoundDetails> } & RoundScoreDetail[],
-) => {
+export const processTeamRules = (match: any, scores: IRoundScore[]) => {
 	// procesar las reglas específicas de cada juego (Burako o Truco)
 	if (match.gameType === 'Burako') {
 		processBurakoRules(match, scores);
