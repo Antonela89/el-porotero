@@ -2,8 +2,8 @@ import { IMatch, IRoundDetails, RoundScoreDetail } from '@el-porotero/shared';
 
 // Lógica para juegos de sumar puntos (Loba, Chinchón, etc.)
 export const processAccumulativeRules = (
-	match: IMatch,
-	scores: {details?: Partial<IRoundDetails>} & RoundScoreDetail[],
+	match: any,
+	scores: { details?: Partial<IRoundDetails> } & RoundScoreDetail[],
 ) => {
 	const limit = match.config.limitScore || 101; // Usamos el límite de la config
 
@@ -28,8 +28,8 @@ export const processAccumulativeRules = (
 
 // Lógica para la Mosca (Juego descendente)
 export const processMoscaRules = (
-	match: IMatch,
-	scores: {details?: Partial<IRoundDetails>} & RoundScoreDetail[],
+	match: any,
+	scores: { details?: Partial<IRoundDetails> } & RoundScoreDetail[],
 ) => {
 	let instantWinner = null;
 
@@ -80,8 +80,8 @@ export const processMoscaRules = (
 
 // Lógica para Escoba (Basada en objetivos)
 export const processEscobaRules = (
-	match: IMatch,
-	scores: {details?: Partial<IRoundDetails>} & RoundScoreDetail[],
+	match: any,
+	scores: { details?: Partial<IRoundDetails> } & RoundScoreDetail[],
 ) => {
 	scores.forEach((s) => {
 		const player = match.players.find((p: any) => p.name === s.playerName);
@@ -106,14 +106,15 @@ export const processEscobaRules = (
 				roundTotal += s.details.cantos;
 			}
 
+			s.pointsAdded = roundTotal;
 			player.score += roundTotal;
 		}
 	});
 };
 
 export const processBurakoRules = (
-	match: IMatch,
-	scores: {details?: Partial<IRoundDetails>} & RoundScoreDetail[],
+	match: any,
+	scores: { details?: Partial<IRoundDetails> } & RoundScoreDetail[],
 ) => {
 	scores.forEach((s) => {
 		const player = match.players.find((p: any) => p.name === s.playerName);
@@ -140,7 +141,10 @@ export const processBurakoRules = (
 };
 
 // Lógica para procesar puntos de equipo (Truco, Burako, etc.)
-export const processTeamRules = (match: IMatch, scores: {details?: Partial<IRoundDetails>} & RoundScoreDetail[]) => {
+export const processTeamRules = (
+	match: any,
+	scores: { details?: Partial<IRoundDetails> } & RoundScoreDetail[],
+) => {
 	// procesar las reglas específicas de cada juego (Burako o Truco)
 	if (match.gameType === 'Burako') {
 		processBurakoRules(match, scores);

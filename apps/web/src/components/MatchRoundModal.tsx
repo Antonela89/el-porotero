@@ -1,8 +1,8 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { useState } from 'react';
-import { IMatch, IRoundScore, IRoundDetails } from '@el-porotero/shared';
+import { IMatch, IRoundScore, IRoundDetails, IPlayer, applyExclusivity } from '@el-porotero/shared';
 import { useMoscaLogic } from '@/hooks/useMoscaLogic';
-import { MoscaInputRow, AccumulativeInputRow, BurakoPlayerInput } from './Score-Inputs';
+import { MoscaInputRow, AccumulativeInputRow, BurakoPlayerInput, EscobaInputRow } from './Score-Inputs';
 import api from '@/api/axios';
 import axios from 'axios';
 import { X, Save, AlertCircle, HatGlasses, Crown } from 'lucide-react';
@@ -19,7 +19,7 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
     const isEditMode = !!roundToEdit;
     const { validateRound, sombreroIndex } = useMoscaLogic(match);
 
-    // 1. Calculamos isTeamGame por si el campo de la DB falla
+    // Calculamos isTeamGame por si el campo de la DB falla
     const isTeamGameActive = match.isTeamGame || match.players.some(p => p.team === 'A' || p.team === 'B');
 
     const [scores, setScores] = useState<IRoundScore[]>(() => {
@@ -86,7 +86,40 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
     const anyoneClosed = scores.some(s => s.details?.isCerrar || s.details?.isCorteMinus10);
     const { isValid: isMoscaValid, totalBazas } = validateRound(scores);
 
-    const isFormValid = match.gameType === 'Mosca' ? isMoscaValid : anyoneClosed || match.gameType === 'Burako';
+    const validateLoba = () => {
+        const closedCount = scores.filter(s => s.details?.isCerrar).length;
+        const totalPoints = scores.reduce((sum, s) => sum + (s.pointsAdded || 0), 0);
+        return closedCount === 1 && totalPoints > 0;
+    };
+
+    const validateEscoba = () => {
+        // Definimos qué velos son obligatorios según el juego
+        const requiredVelos = match.gameType === 'Barsiga'
+            ? ['hasVeloAs', 'hasVelo7', 'hasVelo12']
+            : ['hasVelo7']; // Escoba normal solo obliga al 7
+
+        // Verificamos que cada velo requerido aparezca al menos una vez en los scores de los jugadores
+        return requiredVelos.every(veloKey =>
+            scores.some(s => s.details[veloKey as keyof IRoundDetails] === true)
+        );
+    };
+
+    const isFormValid = (() => {
+        switch (match.gameType) {
+            case 'Mosca':
+                return isMoscaValid; // La que ya tenías (suma 5 bazas)
+            case 'Loba':
+            case 'Chinchon':
+                return validateLoba(); // La que chequea un solo cierre y puntos > 0
+            case 'Escoba':
+            case 'Barsiga':
+                return validateEscoba(); 
+            case 'Burako':
+                return anyoneClosed; // En Burako alguien tiene que haber cerrado
+            default:
+                return true;
+        }
+    })();
 
     const handleSubmit = async () => {
         setLoading(true);
@@ -101,6 +134,79 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
             if (axios.isAxiosError(err)) msg = err.response?.data?.message || err.message;
             alert(msg);
         } finally { setLoading(false); }
+    };
+
+    const handleToggleExclusive = (index: number, key: keyof IRoundDetails) => {
+        setScores(prev => {
+            const currentValue = !!prev[index].details[key];
+            // Usamos la lógica compartida del service
+            const nextScores = applyExclusivity(prev, index, key, !currentValue);
+
+            // Recálculo automático de puntos de velos (1 por cada uno)
+            nextScores.forEach(s => {
+                const vCount = (s.details.hasVeloAs ? 1 : 0) +
+                    (s.details.hasVelo7 ? 1 : 0) +
+                    (s.details.hasVelo12 ? 1 : 0);
+                s.details.velos = vCount;
+            });
+
+            return nextScores;
+        });
+    };
+
+    const renderScoringInput = (s: IRoundScore, player: IPlayer, originalIndex: number) => {
+        const isDealer = originalIndex === (isEditMode ? match.rounds.find(r => r.roundNumber === roundToEdit)?.dealerIndex : match.currentDealerIndex);
+
+        // Agrupamos props comunes para no repetir
+        const commonProps = {
+            score: s,
+            onUpdate: (payload: Partial<IRoundScore> & Partial<IRoundDetails>) => updateScoreState(originalIndex, payload)
+        };
+
+        switch (match.gameType) {
+            case 'Mosca':
+                return (
+                    <MoscaInputRow
+                        {...commonProps}
+                        isDealer={isDealer}
+                        onUpdateDetails={(d) => updateScoreState(originalIndex, d)}
+                    />
+                );
+
+            case 'Burako':
+                return (
+                    <BurakoPlayerInput
+                        {...commonProps}
+                        isTeamGame={isTeamGameActive && player.team !== 'None'}
+                        disableExclusives={anyoneClosed}
+                    />
+                );
+
+            case 'Escoba':
+            case 'Barsiga':
+                return (
+                    <EscobaInputRow
+                        {...commonProps}
+                        onUpdate={(payload) => updateScoreState(originalIndex, payload)}
+                        onToggleExclusive={(key) => handleToggleExclusive(originalIndex, key)}
+                        isBarsiga={match.gameType === 'Barsiga'}
+                    />
+                );
+
+            case 'Loba':
+            case 'Chinchon':
+            case 'Uno':
+                return (
+                    <AccumulativeInputRow
+                        score={s}
+                        disableExclusives={anyoneClosed}
+                        onUpdateDetails={(d) => updateScoreState(originalIndex, d)}
+                    />
+                );
+
+            default:
+                return <p className="text-xs text-warning text-center">Juego no soportado</p>;
+        }
     };
 
     return (
@@ -174,17 +280,9 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
 
                                                     {!isSombrero && (
                                                         <div className="flex items-center gap-2">
-                                                            {match.gameType === 'Burako' ? (
-                                                                <BurakoPlayerInput
-                                                                    score={s}
-                                                                    isTeamGame={isTeamGameActive && teamId !== 'None'} // Usamos el cálculo dinámico
-                                                                    onUpdate={(payload) => updateScoreState(originalIndex, payload)}
-                                                                />
-                                                            ) : match.gameType === 'Mosca' ? (
-                                                                <MoscaInputRow score={s} isDealer={isDealer} onUpdateDetails={(d) => updateScoreState(originalIndex, d)} />
-                                                            ) : (
-                                                                <AccumulativeInputRow score={s} disableExclusives={anyoneClosed} onUpdateScore={(f) => updateScoreState(originalIndex, f)} onUpdateDetails={(d) => updateScoreState(originalIndex, d)} />
-                                                            )}
+                                                            <div className="flex items-center gap-2 w-full">
+                                                                {renderScoringInput(s, player, originalIndex)}
+                                                            </div>
                                                         </div>
                                                     )}
                                                 </div>

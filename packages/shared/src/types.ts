@@ -85,12 +85,13 @@ export interface ITeamScore {
 }
 
 export interface IMatch {
-	_id: string;
+	_id?: string;
 	gameType: string;
 	status: 'active' | 'finished' | 'cancelled';
 	players: IPlayer[];
 	winner?: string;
-	createdAt: string;
+	createdAt?: string | Date;
+	updatedAt?: string | Date;
 	config: IMatchConfig;
 	currentDealerIndex: number;
 	rounds: IRound[];

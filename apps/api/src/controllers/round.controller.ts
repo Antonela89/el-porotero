@@ -62,17 +62,17 @@ export const addRound = async (req: Request, res: Response) => {
 		switch (match.gameType) {
 			case 'Loba':
 			case 'Chinchon':
-				GameRules.processAccumulativeRules(match, scores);
+				GameRules.processAccumulativeRules(match as any, scores);
 				break;
 			case 'Mosca':
-				instantWinner = GameRules.processMoscaRules(match, scores);
+				instantWinner = GameRules.processMoscaRules(match as any, scores);
 				break;
 			case 'Escoba':
 			case 'Barsiga':
-				GameRules.processEscobaRules(match, scores);
+				GameRules.processEscobaRules(match as any, scores);
 				break;
 			case 'Burako':
-				GameRules.processBurakoRules(match, scores);
+				GameRules.processBurakoRules(match as any, scores);
 				break;
 		}
 
