@@ -28,17 +28,6 @@ export const useTrucoLogic = (match: IMatch | null) => {
 		return { totalA: a, totalB: b, maxScore: Math.max(a, b) };
 	}, [match]);
 
-	const calculateFalta = () => {
-		if (!match) return 1;
-		const limit = match.config.limitScore;
-		const leaderScore = Math.max(totalA, totalB);
-		const faltaValue = Math.max(1, limit - leaderScore); 
-
-		// En el Truco, la falta es lo que le falta al que va GANANDO para llegar al límite
-		// (ya sea 18, 24 o 30)
-		return faltaValue;
-	};
-
 	// Determinar el modo de juego (Redonda vs Punta y Hacha)
 	const currentMode = useMemo(() => {
 		if (!match || match.players.length !== 6) return 'Redonda';
@@ -64,6 +53,20 @@ export const useTrucoLogic = (match: IMatch | null) => {
 		];
 	}, [match]);
 
+	const faltaValue = useMemo(() => {
+		if (!match) return 1;
+
+		// --- LA REGLA DE ORO DEL PUNTA Y HACHA ---
+		if (currentMode === 'Punta y Hacha') {
+			return 6; // En P&H la falta siempre vale 6 si es querida
+		}
+
+		// En modo Redonda, sigue valiendo lo que falta para ganar
+		const limit = match.config.limitScore;
+		const leaderScore = Math.max(totalA, totalB);
+		return Math.max(1, limit - leaderScore);
+	}, [match, currentMode, totalA, totalB]);
+
 	// Helper para el marcador visual (Malas/Buenas)
 	const getStatus = (score: number) => {
 		if (score <= halfLimit) return { label: 'Malas', val: score };
@@ -78,6 +81,6 @@ export const useTrucoLogic = (match: IMatch | null) => {
 		totalA,
 		totalB,
 		phMatchups,
-		faltaValue: calculateFalta(),
+		faltaValue,
 	};
 };
