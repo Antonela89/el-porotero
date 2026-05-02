@@ -255,7 +255,7 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
                                             const originalIndex = match.players.findIndex(p => p.name === s.playerName);
                                             const player = match.players[originalIndex];
                                             const isDealer = originalIndex === (isEditMode ? match.rounds.find(r => r.roundNumber === roundToEdit)?.dealerIndex : match.currentDealerIndex);
-                                            const isSombrero = originalIndex === sombreroIndex;
+                                            const isSombrero = (originalIndex === sombreroIndex  && match.gameType === 'Mosca');
 
                                             if (player.isOut && !isEditMode) return null;
 
