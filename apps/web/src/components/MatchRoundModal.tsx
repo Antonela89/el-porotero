@@ -110,6 +110,7 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
                 return isMoscaValid; // La que ya tenías (suma 5 bazas)
             case 'Loba':
             case 'Chinchon':
+            case 'Uno':
                 return validateLoba(); // La que chequea un solo cierre y puntos > 0
             case 'Escoba':
             case 'Barsiga':

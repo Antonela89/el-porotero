@@ -24,7 +24,8 @@ interface IMatch extends Document {
 		| 'Escoba'
 		| 'Barsiga'
 		| 'Mosca'
-		| 'Burako';
+		| 'Burako'
+		| 'Uno';
 	status: 'active' | 'finished' | 'cancelled';
 	adminId: Types.ObjectId;
 	players: Types.DocumentArray<IPlayer & Types.Subdocument>; // Esto habilita los métodos de subdocumentos
@@ -73,6 +74,7 @@ const matchSchema = new Schema<IMatch>(
 				'Barsiga',
 				'Mosca',
 				'Burako',
+				'Uno'
 			],
 			required: true,
 		},

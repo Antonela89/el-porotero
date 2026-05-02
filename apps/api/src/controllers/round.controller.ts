@@ -62,6 +62,7 @@ export const addRound = async (req: Request, res: Response) => {
 		switch (match.gameType) {
 			case 'Loba':
 			case 'Chinchon':
+			case 'Uno':
 				GameRules.processAccumulativeRules(match as any, scores);
 				break;
 			case 'Mosca':
@@ -246,7 +247,7 @@ export const deleteRound = async (req: Request, res: Response) => {
 export const addCanto = async (req: Request, res: Response) => {
 	try {
 		const { matchId } = req.params;
-		const { playerName, points} = req.body; 
+		const { playerName, points } = req.body;
 
 		const match = await MatchModel.findById(matchId);
 		if (!match)

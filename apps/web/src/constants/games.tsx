@@ -5,7 +5,8 @@ import {
     Layers,
     Bug,
     LayoutGrid,
-    Dice5
+    Dice5,
+    Copy
 } from 'lucide-react';
 
 export interface GameDefinition {
@@ -27,7 +28,7 @@ export const GAMES: GameDefinition[] = [
         description: 'Gana el último en pie. Límite de 100 o 101 puntos.',
         icon: <Layers size={24} />,
         color: 'text-blue-400',
-        defaultLimit: 100 | 101, 
+        defaultLimit: 100 | 101,
         isDescending: false
     },
     {
@@ -47,7 +48,7 @@ export const GAMES: GameDefinition[] = [
         description: 'Armá escaleras y grupos. No te pases de 100.',
         icon: <LayoutGrid size={24} />,
         color: 'text-green-400',
-        defaultLimit: 100 | 101, 
+        defaultLimit: 100 | 101,
         isDescending: false
     },
     {
@@ -88,6 +89,16 @@ export const GAMES: GameDefinition[] = [
         icon: <Dice5 size={24} />,
         color: 'text-orange-400',
         defaultLimit: 3000 | 5000,
+        isDescending: false
+    },
+    {
+        id: 'Uno',
+        name: 'Uno',
+        maxPlayers: 4,
+        description: 'Sumá los puntos de tus cartas. El límite estándar es 500.',
+        icon: <Copy size={24} />, 
+        color: 'text-violet-400',
+        defaultLimit: 500,
         isDescending: false
     },
 ];
