@@ -1,4 +1,4 @@
-import { Crown, HatGlasses, Trash2, Edit2 } from 'lucide-react';
+import { Crown, HatGlasses, Trash2, Edit2, Asterisk } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { getShortName } from '@/utils/formatters';
 import { IMatch, IRoundScore, IRound } from '@el-porotero/shared';
@@ -155,9 +155,22 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
                                     // PUNTOS POR JUGADOR
                                     match.players.map(player => {
                                         const roundScore = round.scores.find(s => s.playerName === player.name);
+                                        const wasReengagedInThisRound = roundScore?.details?.isReengage === true;
+
                                         return (
                                             <td key={player.name} className="p-3 font-mono text-sm">
-                                                {roundScore ? roundScore.pointsAdded : 0}
+                                                <div className="flex items-center justify-center gap-0.5">
+                                                    <span>{roundScore ? roundScore.pointsAdded : 0}</span>
+
+                                                    {/* --- REPETIR ICONOS DE ASTERISCO --- */}
+                                                    {wasReengagedInThisRound && (
+                                                        <Asterisk
+                                                            size={12}
+                                                            className="text-secondary shrink-0"
+                                                            strokeWidth={3}
+                                                        />
+                                                    )}
+                                                </div>
                                             </td>
                                         );
                                     })
@@ -180,22 +193,30 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
                                     </>
                                 ) : (
                                     match.players.map(player => (
-                                        <td key={player.name} className={`p-5 text-2xl font-display ${player.name === match.winner ? 'text-primary animate-bounce' : 'text-text-main'} ${player.isOut ? 'opacity-20' : ''}`}>
-                                            <div className="flex flex-col items-center">
-                                                <span className={player.name === match.winner ? 'text-primary animate-bounce' : player.isOut ? 'text-text-muted opacity-20' : 'text-text-main'}>
-                                                    {player.score}
+                                        <td key={player.name} className={`p-5 text-2xl font-display ${player.name === match.winner ? 'text-primary animate-bounce' : 'text-text-main'}`}>
+                                            <div className={`flex ${player.isOut && match.status === 'active' ? 'flex-col' : ''} items-center justify-center gap-1`}>
 
-                                                    {match.rounds.some(r => r.scores.find(s => s.playerName === player.name)?.details?.isReengage) &&
-                                                        <span className="text-secondary text-sm ml-1">*</span>
-                                                    }
+                                                {/* PUNTAJE */}
+                                                <span className={player.name === match.winner ? 'text-primary animate-bounce' : player.isOut ? 'text-text-muted opacity-40' : 'text-text-main'}>
+                                                    {player.score}
                                                 </span>
 
+                                                {/* ASTERISCOS */}
+                                                {player.reengageCount > 0 && (!player.isOut || match.status === 'finished') && (
+                                                    <div className="flex -space-x-1 ml-0.5 mt-1">
+                                                        {Array.from({ length: player.reengageCount }).map((_, idx) => (
+                                                            <Asterisk key={idx} size={10} className="text-secondary" strokeWidth={4} />
+                                                        ))}
+                                                    </div>
+                                                )}
+
+                                                {/* 3. BOTÓN DE RE-ENGANCHE: */}
                                                 {player.isOut && match.status === 'active' && (
                                                     <button
                                                         onClick={() => onReengage(player.name)}
-                                                        className="text-[9px] bg-secondary text-white px-2 py-1 rounded-full animate-pulse mt-2"
+                                                        className="text-[9px] bg-secondary text-white px-3 py-1.5 rounded-lg font-black animate-pulse mt-2 shadow-lg shadow-secondary/40 uppercase tracking-tighter"
                                                     >
-                                                        RE-ENGANCHE
+                                                        RE-ENGANCHAR
                                                     </button>
                                                 )}
                                             </div>

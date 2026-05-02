@@ -5,7 +5,6 @@ import { GAMES_MAP } from '@/constants/games';
 import api from '@/api/axios';
 import { Plus } from 'lucide-react';
 import { MatchRoundModal, MatchHeader, LoadingSpinner, ErrorMessage, NotFound, MatchScoreboard, WinnerDisplay, ConfirmDialog } from '@/components';
-import { useLobaLogic } from '@/hooks/useLobaLogic';
 import { AddCantoModal } from '@/components/AddCantoModal';
 import { useMatch } from '@/hooks/useMatch';
 
@@ -17,7 +16,6 @@ export const MatchDetailPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [roundToDelete, setRoundToDelete] = useState<number | null>(null);
     const [roundToEdit, setRoundToEdit] = useState<number | null>(null);
-    const { getReengageScore } = useLobaLogic(match || ({} as IMatch));
     const [cantoPlayer, setCantoPlayer] = useState<string | null>(null);
 
     if (loading) return <LoadingSpinner />; // Un componente que podrías crear
@@ -66,17 +64,10 @@ export const MatchDetailPage = () => {
     };
 
     const handleReengage = async (playerName: string) => {
-        const newScore = getReengageScore();
-
-        if (window.confirm(`¿Re-enganchar a ${playerName} con ${newScore} puntos?`)) {
+        if (window.confirm(`¿Re-enganchar a ${playerName}? Entrará con el puntaje del más alto.`)) {
             try {
-                // Mandamos una ronda especial de "re-enganche"
-                const { data } = await api.post(`/matches/${match?._id}/round`, {
-                    scores: match?.players.map(p => ({
-                        playerName: p.name,
-                        pointsAdded: p.name === playerName ? (newScore - p.score) : 0,
-                        details: p.name === playerName ? { isReengage: true } : {}
-                    }))
+                const { data } = await api.patch(`/matches/${match?._id}/reengage`, {
+                    playerName
                 });
                 setMatch(data);
             } catch (error) {

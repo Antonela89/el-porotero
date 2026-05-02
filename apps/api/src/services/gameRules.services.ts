@@ -9,8 +9,18 @@ export const processAccumulativeRules = (match: any, scores: IRoundScore[]) => {
 
 	scores.forEach((s) => {
 		const player = match.players.find((p: any) => p.name === s.playerName);
+		if (!player) return;
 
-		if (player && !player.isOut) {
+		// --- LÓGICA DE RE-ENGANCHE ---
+		if (s.details?.isReengage) {
+			player.score += s.pointsAdded;
+			player.isOut = false; // Lo devolvemos al juego
+			player.reengageCount = (player.reengageCount || 0) + 1;
+			s.pointsAdded = player.score;
+			return; // Saltamos el resto del proceso para este jugador
+		}
+
+		if (!player.isOut) {
 			// Determinamos los puntos reales de esta ronda para el historial
 			if (s.details?.isCerrar) {
 				s.pointsAdded = 0;
@@ -125,6 +135,8 @@ export const processEscobaRules = (match: any, scores: IRoundScore[]) => {
 export const processBurakoRules = (match: any, scores: IRoundScore[]) => {
 	scores.forEach((s) => {
 		const player = match.players.find((p: any) => p.name === s.playerName);
+		if (!player) return;
+
 		if (player) {
 			let totalRonda = s.pointsAdded; // Puntos de fichas
 

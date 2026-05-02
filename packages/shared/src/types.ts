@@ -6,6 +6,7 @@ export interface IPlayer {
 	score: number;
 	team: 'A' | 'B' | 'None';
 	isOut: boolean;
+	reengageCount: number;
 }
 
 // Configuración inicial de la partida
@@ -22,8 +23,8 @@ export interface ITeamScore {
 }
 
 export interface ITempCanto {
-    playerName: string;
-    points: number;
+	playerName: string;
+	points: number;
 }
 
 // Juego

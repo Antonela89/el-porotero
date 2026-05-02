@@ -8,6 +8,8 @@ interface IPlayer {
 	team: 'A' | 'B' | 'None';
 	score: number; // Asegurate que el nombre coincida con el que usas en el controller
 	isOut: boolean;
+	reengageCount: number;
+	
 }
 
 export interface ITempCanto {
@@ -45,6 +47,7 @@ const playerSchema = new Schema<IPlayer>({
 	team: { type: String, enum: ['A', 'B', 'None'], default: 'None' },
 	score: { type: Number, default: 0 },
 	isOut: { type: Boolean, default: false },
+	reengageCount: { type: Number, default: 0 }
 });
 
 // --- Esquema de Ronda ---

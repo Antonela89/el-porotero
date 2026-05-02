@@ -16,7 +16,7 @@ export interface GameDefinition {
     description: string;
     icon: React.ReactNode;
     color: string;
-    defaultLimit?: number;
+    defaultLimit: number;
     isDescending: boolean;
 }
 

@@ -9,6 +9,7 @@ import {
 	deleteMatch,
 	updateMatch,
 	deleteRound,
+	reengagePlayer
 } from '@/controllers/index.js';
 import { protect } from '@/middlewares/index.js';
 
@@ -20,6 +21,7 @@ matchRouter.get('/', getUserMatches); // GET /api/matches
 matchRouter.get('/:matchId', getMatchById); // GET /api/matches/:id
 matchRouter.put('/:matchId', updateMatch); // PUT /api/matches/:id
 matchRouter.post('/', createMatch); // POST /api/matches
+matchRouter.patch('/:matchId/reengage', reengagePlayer);
 matchRouter.post('/:matchId/round', addRound); // POST /api/matches/:id/round
 matchRouter.post('/:matchId/round/canto', addCanto); // POST /api/matches/:id/round/canto
 matchRouter.patch('/:matchId/round/:roundNumber', updateRound); //PATCH  /api/matches/:id/round/:id

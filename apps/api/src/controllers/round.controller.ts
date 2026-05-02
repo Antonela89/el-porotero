@@ -7,6 +7,7 @@ const recalculateMatchScores = (match: any) => {
 	match.players.forEach((p: any) => {
 		p.score = match.config.startingScore;
 		p.isOut = false;
+		p.reengageCount = 0;
 	});
 
 	// Volver a procesar cada ronda guardada en el historial
@@ -16,12 +17,18 @@ const recalculateMatchScores = (match: any) => {
 				(p: any) => p.name === roundScore.playerName,
 			);
 			if (player) {
-				// Aplicar lógica según el tipo de juego
-				if (match.config.isDescending) {
-					player.score -= roundScore.pointsAdded;
+				if (roundScore.details?.isReengage) {
+					player.score = roundScore.pointsAdded; // Asignamos el valor que se le dio al volver
+					player.reengageCount += 1; // Sumamos el asterisco
+					player.isOut = false; // Aseguramos que esté vivo
 				} else {
-					// En Loba/Chinchón, el pointsAdded ya viene con el -10 si se cortó
-					player.score += roundScore.pointsAdded;
+					// Aplicar lógica según el tipo de juego
+					if (match.config.isDescending) {
+						player.score -= roundScore.pointsAdded;
+					} else {
+						// En Loba/Chinchón, el pointsAdded ya viene con el -10 si se cortó
+						player.score += roundScore.pointsAdded;
+					}
 				}
 
 				// Verificar si quedó fuera
@@ -178,6 +185,51 @@ export const addRound = async (req: Request, res: Response) => {
 				stack: error.stack, // Opcional para ver dónde falló exacto
 			});
 		}
+	}
+};
+
+export const reengagePlayer = async (req: Request, res: Response) => {
+	try {
+		const { matchId } = req.params;
+		const { playerName } = req.body;
+
+		const match = await MatchModel.findById(matchId);
+		if (!match)
+			return res.status(404).json({ message: 'Partida no encontrada' });
+
+		// 1. Encontrar el puntaje más alto entre los que están activos
+		const activePlayers = match.players.filter((p) => !p.isOut);
+		const maxScore =
+			activePlayers.length > 0
+				? Math.max(...activePlayers.map((p) => p.score))
+				: match.config.startingScore;
+
+		// 2. Actualizar al jugador
+		const player = match.players.find((p) => p.name === playerName);
+		if (player) {
+			player.score = maxScore;
+			player.isOut = false;
+			player.reengageCount = (player.reengageCount || 0) + 1;
+
+			// 3. Marcar la ÚLTIMA ronda para que el asterisco aparezca ahí
+			if (match.rounds.length > 0) {
+				const lastRound = match.rounds[match.rounds.length - 1];
+				const playerRoundScore = lastRound.scores.find(
+					(s) => s.playerName === playerName,
+				);
+				if (playerRoundScore) {
+					playerRoundScore.details = {
+						...playerRoundScore.details,
+						isReengage: true,
+					};
+				}
+			}
+		}
+
+		await match.save();
+		res.json(match);
+	} catch (error) {
+		res.status(500).json({ message: 'Error al re-enganchar' });
 	}
 };
 

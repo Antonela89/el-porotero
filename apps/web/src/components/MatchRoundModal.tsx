@@ -43,30 +43,50 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
     const updateScoreState = (index: number, payload: ScoreUpdatePayload) => {
         setScores(prev => {
             let next = [...prev];
+            const currentDetails = next[index].details || {};
 
-            // Si el payload contiene una clave exclusiva, aplicamos lógica de "dueño único"
-            const exclusiveKey = Object.keys(payload).find(k =>
-                ['isCerrar', 'isCorteMinus10', 'hasOros', 'hasCartas', 'hasSetenta', 'hasVeloAs', 'hasVelo7', 'hasVelo12'].includes(k)
-            ) as keyof IRoundDetails | undefined;
+            // 1. Identificar si el payload trae una de las llaves exclusivas
+            const EXCLUSIVE_KEYS = ['isCerrar', 'isCorteMinus10', 'hizoBatida', 'hasOros', 'hasCartas', 'hasSetenta', 'hasVeloAs', 'hasVelo7', 'hasVelo12'];
+            const keyFound = Object.keys(payload).find(k => EXCLUSIVE_KEYS.includes(k)) as keyof IRoundDetails | undefined;
 
-            if (exclusiveKey && payload[exclusiveKey] === true) {
-                next = applyExclusivity(next, index, exclusiveKey, true);
-                // Si es un cierre, forzamos puntos a 0 (el backend restará el -10 si aplica)
-                if (['isCerrar', 'isCorteMinus10'].includes(exclusiveKey)) next[index].pointsAdded = 0;
+            if (keyFound) {
+                const newValue = payload[keyFound];
+
+                // Si estamos ACTIVANDO (true) un punto exclusivo, se lo quitamos a los demás
+                if (newValue === true) {
+                    next = applyExclusivity(next, index, keyFound, true);
+                    // Forzamos puntos base si es un cierre
+                    if (['isCerrar', 'isCorteMinus10'].includes(keyFound)) {
+                        next[index].pointsAdded = keyFound === 'isCorteMinus10' ? -10 : 0;
+                    }
+                }
+                // Si estamos DESACTIVANDO (false), solo limpiamos el del jugador actual
+                else {
+                    next[index].details = { ...currentDetails, [keyFound]: false };
+                    if (['isCerrar', 'isCorteMinus10'].includes(keyFound)) {
+                        next[index].pointsAdded = 0; // Volvemos a 0 para que el usuario escriba
+                    }
+                    return next; // Retornamos temprano para no aplicar el spread doble
+                }
             }
 
-            // Aplicamos el resto de los cambios
-            const current = next[index];
+            const { pointsAdded, ...restPayload } = payload;
+
+            // Aplicación de cambios normales
             if ('pointsAdded' in payload) {
-                current.pointsAdded = (payload as IRoundScore).pointsAdded;
-            } else {
-                current.details = { ...current.details, ...payload };
+                next[index].pointsAdded = pointsAdded as number;
             }
 
-            // Recálculo automático de Velos
+            // Combinamos detalles asegurando que pointsAdded no se meta en el objeto details
+            next[index].details = {
+                ...(next[index].details || {}),
+                ...restPayload
+            };
+
+            // Recálculo de velos (se mantiene igual)
             if (['Escoba', 'Barsiga'].includes(match.gameType)) {
-                const d = current.details;
-                current.details.velos = (d.hasVeloAs ? 1 : 0) + (d.hasVelo7 ? 1 : 0) + (d.hasVelo12 ? 1 : 0);
+                const d = next[index].details;
+                next[index].details.velos = (d.hasVeloAs ? 1 : 0) + (d.hasVelo7 ? 1 : 0) + (d.hasVelo12 ? 1 : 0);
             }
 
             return next;
@@ -83,9 +103,21 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
     const { isValid: isMoscaValid, totalBazas } = validateRound(scores);
 
     const validateLoba = () => {
-        const closedCount = scores.filter(s => s.details?.isCerrar).length;
-        const totalPoints = scores.reduce((sum, s) => sum + (s.pointsAdded || 0), 0);
-        return closedCount === 1 && totalPoints > 0;
+        // Debe haber exactamente uno que cerró o cortó
+        const winners = scores.filter(s => s.details?.isCerrar || s.details?.isCorteMinus10);
+        if (winners.length !== 1) return false;
+
+        // Los perdedores deben tener puntos mayor a 0 (obligatorio)
+        return scores.every(s => {
+            const p = match.players.find(player => player.name === s.playerName);
+            if (p?.isOut) return true; // Ignoramos a los que ya perdieron la partida
+
+            const isWinnerOfRound = s.details?.isCerrar || s.details?.isCorteMinus10;
+            if (isWinnerOfRound) return true;
+
+            // Validamos que el punto sea un número real y mayor a 0
+            return typeof s.pointsAdded === 'number' && s.pointsAdded > 0;
+        });
     };
 
     const validateEscoba = () => {
@@ -110,8 +142,9 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
                 return isMoscaValid; // La que ya tenías (suma 5 bazas)
             case 'Loba':
             case 'Chinchon':
-            case 'Uno':
                 return validateLoba(); // La que chequea un solo cierre y puntos > 0
+            case 'Uno':
+                return scores.filter(s => s.details?.isCerrar).length === 1;
             case 'Escoba':
             case 'Barsiga':
                 return validateEscoba();

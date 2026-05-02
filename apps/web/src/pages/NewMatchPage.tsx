@@ -24,7 +24,8 @@ export const NewMatchPage = () => {
         ['Burako', 'Truco'].includes(state?.gameType || gameType)
     );
 
-    const [limitScore, setLimitScore] = useState(100);
+    const currentGame = GAMES.find(g => g.id === gameType);
+    const [limitScore, setLimitScore] = useState(currentGame?.defaultLimit);
 
     // --- ESTADO DE JUGADORES ---
     const [players, setPlayers] = useState<IPlayer[]>(() => state?.players || []);
@@ -32,7 +33,6 @@ export const NewMatchPage = () => {
     const [editingIndex, setEditingIndex] = useState<number | null>(null);
     const [tempEditName, setTempEditName] = useState('');
 
-    const currentGame = GAMES.find(g => g.id === gameType);
 
     const maxAllowed = currentGame?.maxPlayers || 6;
     const canAddMore = players.length < maxAllowed;
@@ -65,7 +65,9 @@ export const NewMatchPage = () => {
             name: playerName.trim().toUpperCase(),
             team: 'None',
             score: 0,
-            isOut: false
+            isOut: false,
+            reengageCount: 0
+
         };
 
         setPlayers(prev => syncPlayersWithTeamMode([...prev, newPlayer], isTeamGame));
