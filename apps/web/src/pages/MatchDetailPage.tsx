@@ -6,6 +6,7 @@ import api from '@/api/axios';
 import { Plus } from 'lucide-react';
 import { MatchRoundModal, MatchHeader, LoadingSpinner, ErrorMessage, NotFound, MatchScoreboard, WinnerDisplay, ConfirmDialog } from '@/components';
 import { useLobaLogic } from '@/hooks/useLobaLogic';
+import { AddCantoModal } from '@/components/AddCantoModal';
 import { useMatch } from '@/hooks/useMatch';
 
 export const MatchDetailPage = () => {
@@ -17,6 +18,7 @@ export const MatchDetailPage = () => {
     const [roundToDelete, setRoundToDelete] = useState<number | null>(null);
     const [roundToEdit, setRoundToEdit] = useState<number | null>(null);
     const { getReengageScore } = useLobaLogic(match || ({} as IMatch));
+    const [cantoPlayer, setCantoPlayer] = useState<string | null>(null);
 
     if (loading) return <LoadingSpinner />; // Un componente que podrías crear
     if (error) return <ErrorMessage message={error} />;
@@ -108,6 +110,23 @@ export const MatchDetailPage = () => {
     // return <LoadingSpinner />; 
     // }
 
+    // const handleCantar = async (playerName: string) => {
+    //     const points = prompt(`¿Cuántos puntos canta ${playerName}? (Ej: 20 para Chorizo, 3 para Flor)`);
+    //     if (!points || isNaN(parseInt(points))) return;
+
+    //     try {
+    //         const { data } = await api.post(`/matches/${id}/canto`, {
+    //             playerName,
+    //             points: parseInt(points)
+    //         });
+    //         setMatch(data); // Actualizamos la mesa al instante
+    //     } catch (error) {
+    //         alert("No se pudo registrar el canto");
+    //         console.log(error);
+
+    //     }
+    // };
+
 
     return (
         <div className="match-layout">
@@ -123,6 +142,7 @@ export const MatchDetailPage = () => {
                 onEditRound={openEdit}
                 onDeleteRound={handleDeleteRound}
                 onReengage={handleReengage}
+                onCantar={(name) => setCantoPlayer(name)}
             />
 
             {/* MODAL DE CONFIRMACIÓN PARA BORRAR */}
@@ -157,6 +177,15 @@ export const MatchDetailPage = () => {
                 match={match!}
                 roundToEdit={roundToEdit}
                 onSuccess={handleUpdateMatch}
+            />
+
+            {/* Modal para cantar en Barsiga*/}
+            <AddCantoModal
+                isOpen={!!cantoPlayer}
+                onClose={() => setCantoPlayer(null)}
+                match={match!}
+                playerName={cantoPlayer}
+                onSuccess={setMatch}
             />
         </div>
     );

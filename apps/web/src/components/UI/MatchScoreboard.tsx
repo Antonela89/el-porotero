@@ -8,9 +8,10 @@ interface MatchScoreboardProps {
     onEditRound: (roundNumber: number) => void;
     onDeleteRound: (roundNumber: number) => void;
     onReengage: (playerName: string) => void;
+    onCantar: (name: string) => void;
 }
 
-export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage }: MatchScoreboardProps) => {
+export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage, onCantar }: MatchScoreboardProps) => {
     const allPlayerNames = match.players.map(p => p.name);
     // Juegos donde llegar al límite significa PERDER
     const isLoseOnLimit = ['Loba', 'Chinchon'].includes(match.gameType);
@@ -103,6 +104,16 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage 
                                                         {getShortName(player.name, allPlayerNames)}
                                                     </span>
                                                     <span className="text-[9px] opacity-50 uppercase tracking-tighter">{player.name}</span>
+
+
+                                                    {match.gameType === 'Barsiga' && match.status === 'active' && (
+                                                        <button
+                                                            onClick={() => onCantar(player.name)}
+                                                            className="text-[8px] bg-pink-500/20 text-pink-400 px-2 py-0.5 rounded-full border border-pink-500/30 mt-1 hover:bg-pink-500 hover:text-white transition-all"
+                                                        >
+                                                            CANTAR
+                                                        </button>
+                                                    )}
                                                 </div>
                                             </th>
                                         )

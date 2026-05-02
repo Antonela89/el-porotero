@@ -65,7 +65,10 @@ export const addRound = async (req: Request, res: Response) => {
 				GameRules.processAccumulativeRules(match as any, scores);
 				break;
 			case 'Mosca':
-				instantWinner = GameRules.processMoscaRules(match as any, scores);
+				instantWinner = GameRules.processMoscaRules(
+					match as any,
+					scores,
+				);
 				break;
 			case 'Escoba':
 			case 'Barsiga':
@@ -162,6 +165,7 @@ export const addRound = async (req: Request, res: Response) => {
 		match.currentDealerIndex =
 			(match.currentDealerIndex + 1) % match.players.length;
 
+		match.tempCantos = [];
 		await match.save();
 		res.json(match);
 	} catch (error: unknown) {
@@ -236,5 +240,28 @@ export const deleteRound = async (req: Request, res: Response) => {
 		res.json(match);
 	} catch (error) {
 		res.status(500).json({ message: 'Error al borrar ronda' });
+	}
+};
+
+export const addCanto = async (req: Request, res: Response) => {
+	try {
+		const { matchId } = req.params;
+		const { playerName, points} = req.body; 
+
+		const match = await MatchModel.findById(matchId);
+		if (!match)
+			return res.status(404).json({ message: 'Partida no encontrada' });
+
+		const player = match.players.find((p) => p.name === playerName);
+		if (player) {
+			player.score += points;
+			// Guardamos el canto para que el historial sepa por qué sumó
+			match.tempCantos.push({ playerName, points });
+		}
+
+		await match.save();
+		res.json(match);
+	} catch (error) {
+		res.status(500).json({ message: 'Error al registrar canto' });
 	}
 };

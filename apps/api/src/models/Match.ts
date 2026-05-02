@@ -10,6 +10,11 @@ interface IPlayer {
 	isOut: boolean;
 }
 
+export interface ITempCanto {
+	playerName: string;
+	points: number;
+}
+
 // Interfaz de la partida (Subdocumento)
 interface IMatch extends Document {
 	gameType:
@@ -28,6 +33,7 @@ interface IMatch extends Document {
 	currentDealerIndex: number;
 	winner?: string;
 	isTeamGame: boolean;
+	tempCantos: ITempCanto[];
 }
 
 // --- Esquema de Jugador ---
@@ -89,6 +95,15 @@ const matchSchema = new Schema<IMatch>(
 
 		rounds: { type: [roundSchema], default: [] },
 		winner: { type: String, default: null },
+		tempCantos: {
+			type: [
+				{
+					playerName: String,
+					points: Number,
+				},
+			],
+			default: [],
+		},
 	},
 	{ timestamps: true },
 );

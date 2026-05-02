@@ -156,7 +156,6 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
                         {...commonProps}
                         onUpdate={(payload) => updateScoreState(originalIndex, payload)}
                         onToggleExclusive={(key) => updateScoreState(originalIndex, { [key]: !s.details?.[key as keyof IRoundDetails] })}
-                        isBarsiga={match.gameType === 'Barsiga'}
                     />
                 );
 

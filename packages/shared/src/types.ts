@@ -21,6 +21,11 @@ export interface ITeamScore {
 	score: number;
 }
 
+export interface ITempCanto {
+    playerName: string;
+    points: number;
+}
+
 // Juego
 export interface IMatch {
 	_id?: string;
@@ -43,6 +48,7 @@ export interface IMatch {
 	rounds: IRound[];
 	isTeamGame: boolean;
 	teamScores?: ITeamScore[];
+	tempCantos: ITempCanto[];
 }
 
 // --- Detalles de Juegos ---

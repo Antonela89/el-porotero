@@ -6,10 +6,9 @@ interface Props {
     score: IRoundScore;
     onUpdate: (update: Partial<IRoundScore> & Partial<IRoundDetails>) => void;
     onToggleExclusive: (key: keyof IRoundDetails) => void;
-    isBarsiga: boolean;
 }
 
-export const EscobaInputRow = ({ score, onUpdate, onToggleExclusive, isBarsiga }: Props) => {
+export const EscobaInputRow = ({ score, onUpdate, onToggleExclusive }: Props) => {
     const d = score.details;
 
     return (
@@ -82,25 +81,6 @@ export const EscobaInputRow = ({ score, onUpdate, onToggleExclusive, isBarsiga }
                                 </button>
                             );
                         })}
-
-
-                        {/* CANTOS (Solo Bársiga) */}
-                        {isBarsiga && (
-                            <div className="flex flex-col items-end shrink-0">
-                                <label className="text-[8px] text-text-muted uppercase font-bold mb-1">Cantos</label>
-                                <input
-                                    type="text"
-                                    inputMode="numeric"
-                                    placeholder="0"
-                                    className="w-12 bg-background border border-white/10 rounded-lg text-center py-1 text-sm outline-none focus:border-primary transition-all"
-                                    value={d.cantos || ""}
-                                    onChange={(e) => {
-                                        const val = e.target.value.replace(/\D/g, "");
-                                        onUpdate({ cantos: parseInt(val) || 0 });
-                                    }}
-                                />
-                            </div>
-                        )}
                     </div>
                 </div>
             </div>
