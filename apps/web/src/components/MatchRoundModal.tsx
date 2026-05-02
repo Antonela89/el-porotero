@@ -2,6 +2,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { useState } from 'react';
 import { IMatch, IRoundScore, IRoundDetails, IPlayer, applyExclusivity } from '@el-porotero/shared';
 import { useMoscaLogic } from '@/hooks/useMoscaLogic';
+import { useTrucoLogic } from '@/hooks/useTrucoLogic';
 import { MoscaInputRow, AccumulativeInputRow, BurakoPlayerInput, EscobaInputRow, TrucoInputRow } from './Score-Inputs';
 import api from '@/api/axios';
 import axios from 'axios';
@@ -20,6 +21,7 @@ type ScoreUpdatePayload = Partial<IRoundScore & IRoundDetails>;
 export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess }: Props) => {
     const isEditMode = !!roundToEdit;
     const { validateRound, sombreroIndex } = useMoscaLogic(match);
+    const { currentMode, phMatchups } = useTrucoLogic(match);
 
     // Calculamos isTeamGame por si el campo de la DB falla
     const isTeamGameActive = match.isTeamGame || match.players.some(p => p.team === 'A' || p.team === 'B');
@@ -250,7 +252,7 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
                     details: { bazas: 0, paso: false, isCerrar: false, isCorteMinus10: false, hizoBatida: false, tomoMuerto: true }
                 })));
             }
-            
+
             onClose();
         } catch (err: unknown) {
             let msg = "Error al guardar";
@@ -275,108 +277,138 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
                     <Dialog.Description className="sr-only">Formulario de puntos</Dialog.Description>
 
                     <div className="flex-1 overflow-y-auto p-6 pt-2 custom-scrollbar flex flex-col gap-6">
-                        {['A', 'B', 'None'].map((teamId) => {
-                            const teamPlayers = match.players.filter(p => p.team === teamId);
-                            if (teamPlayers.length === 0) return null;
+                        <div className="bg-indigo-500/10 text-indigo-400 p-3 rounded-2xl text-center font-bold text-[10px] uppercase tracking-widest mb-6 border border-indigo-500/20">
+                            MODO: {currentMode}
+                        </div>
 
-                            const teamScores = scores.filter(s => teamPlayers.some(p => p.name === s.playerName));
-
-                            const teamHasCanasta = teamScores.reduce((acc, s) =>
-                                acc + (s.details?.canastasPuras || 0) + (s.details?.canastasImpuras || 0), 0
-                            ) > 0;
-
-                            return (
-                                <div key={teamId} className={`p-4 rounded-3xl border bg-background/20 
-                                    ${teamId === 'A' ? 'border-l-4 border-indigo-500/50' : teamId === 'B' ? 'border-l-4 border-rose-500/50' : 'border-white/5'}`}>
-
-                                    {teamId !== 'None' && (
-                                        <h3 className={`text-[10px] font-black mb-3 ml-2 uppercase tracking-widest ${teamId === 'A' ? 'text-indigo-400' : 'text-rose-400'}`}>
-                                            Equipo {teamId}
-                                        </h3>
-                                    )}
-
-                                    {/* ACCIONES DE EQUIPO (Solo Burako en modo equipos) */}
-                                    {match.gameType === 'Burako' && teamId !== 'None' && (
-                                        <div className="flex gap-2 mb-4">
-                                            <button
-                                                disabled={!teamHasCanasta || (anyoneClosed && !teamScores.some(s => s.details?.isCerrar))}
-                                                onClick={() => handleTeamUpdate(teamId, { isCerrar: !teamScores[0]?.details?.isCerrar })}
-                                                className={`flex-1 py-2 rounded-xl text-[10px] font-bold transition-all ${teamScores.some(s => s.details?.isCerrar) ? 'bg-emerald-500 text-white' : 'bg-surface text-text-muted opacity-50'}`}
-                                            >
-                                                CERRÓ
-                                            </button>
-                                            <button
-                                                onClick={() => handleTeamUpdate(teamId, { tomoMuerto: !teamScores[0]?.details?.tomoMuerto })}
-                                                className={`flex-1 py-2 rounded-xl text-[10px] font-bold transition-all ${teamScores[0]?.details?.tomoMuerto !== false ? 'bg-indigo-500 text-white' : 'bg-orange-500 text-white'}`}
-                                            >
-                                                {teamScores[0]?.details?.tomoMuerto !== false ? 'MUERTO' : 'SIN MUERTO'}
-                                            </button>
-                                        </div>
-                                    )}
-
-                                    {/* --- LÓGICA ESPECÍFICA PARA TRUCO --- */}
-                                    {match.gameType === 'Truco' && teamId !== 'None' ? (
-                                        <div className="bg-background/40 p-4 rounded-2xl border border-white/5">
-                                            <div className="flex justify-between items-center mb-4">
-                                                <div className="flex gap-1">
-                                                    {teamPlayers.map(p => {
-                                                        const isDealer = match.players.findIndex(mp => mp.name === p.name) === match.currentDealerIndex;
-                                                        return (
-                                                            <div key={p.name} className="flex items-center gap-1">
-                                                                <span className="text-[10px] font-bold text-text-muted">{p.name.substring(0, 3)}</span>
-                                                                {isDealer && <Crown size={12} className="text-primary" fill="currentColor" />}
-                                                            </div>
-                                                        );
-                                                    })}
-                                                </div>
-                                                <span className="text-[8px] text-text-muted uppercase font-black">Anotación de Equipo</span>
-                                            </div>
-
-                                            {/* Renderizamos UNA SOLA fila de Truco para todo el equipo */}
-                                            <TrucoInputRow
-                                                score={teamScores[0]} // Usamos el score del primer integrante como contenedor
-                                                match={match}
-                                                onUpdate={(payload) => {
-                                                    // Buscamos el índice del primer integrante para guardar los puntos ahí
-                                                    const firstPlayerIdx = match.players.findIndex(p => p.name === teamScores[0].playerName);
-                                                    updateScoreState(firstPlayerIdx, payload);
-                                                }}
-                                            />
-                                        </div>) : (
-                                        <div className="flex flex-col gap-3">
-                                            {teamScores.map((s) => {
-                                                const originalIndex = match.players.findIndex(p => p.name === s.playerName);
-                                                const player = match.players[originalIndex];
-                                                const isDealer = originalIndex === (isEditMode ? match.rounds.find(r => r.roundNumber === roundToEdit)?.dealerIndex : match.currentDealerIndex);
-                                                const isSombrero = (originalIndex === sombreroIndex && match.gameType === 'Mosca');
-
-                                                if (player.isOut && !isEditMode) return null;
-
+                        {match.gameType === 'Truco' && currentMode === 'Punta y Hacha' ? (
+                            // --- MODO DUELOS ---
+                            <div className="flex flex-col gap-6">
+                                {phMatchups.map((pair, idx) => (
+                                    <div key={idx} className="bg-surface/30 p-4 rounded-3xl border border-white/5 relative">
+                                        <span className="absolute -top-2 left-4 bg-background px-2 text-[8px] font-black text-text-muted uppercase">Pareja {idx + 1}</span>
+                                        <div className="flex flex-col gap-6">
+                                            {[pair.p1, pair.p2].map(player => {
+                                                const playerIdx = match.players.findIndex(p => p.name === player.name);
+                                                const s = scores[playerIdx];
                                                 return (
-                                                    <div key={s.playerName} className={`p-4 rounded-2xl bg-background/40 border border-white/5 ${isSombrero ? 'opacity-30 border-dashed' : ''}`}>
-                                                        <div className="flex justify-between items-center mb-2">
-                                                            <span className="font-bold text-xs">{s.playerName}</span>
-                                                            <div className="flex gap-1">
-                                                                {isDealer && <span className="text-primary"><Crown size={14} fill="currentColor" /></span>}
-                                                                {isSombrero && <span className="text-purple-400"><HatGlasses size={14} /></span>}
-                                                            </div>
-                                                        </div>
-
-                                                        {!isSombrero && (
-                                                            <div className="flex items-center gap-2">
-                                                                <div className="flex items-center gap-2 w-full">
-                                                                    {renderScoringInput(s, player, originalIndex)}
-                                                                </div>
-                                                            </div>
-                                                        )}
+                                                    <div key={player.name} className="flex flex-col gap-2">
+                                                        <span className={`text-[10px] font-black uppercase ${player.team === 'A' ? 'text-indigo-400' : 'text-rose-400'}`}>
+                                                            {player.name}
+                                                        </span>
+                                                        <TrucoInputRow score={s} match={match} onUpdate={(p) => updateScoreState(playerIdx, p)} />
                                                     </div>
                                                 );
                                             })}
                                         </div>
-                                    )}
-                                </div>
-                            );
-                        })}
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            // MODO NORMAL
+                            ['A', 'B', 'None'].map((teamId) => {
+                                const teamPlayers = match.players.filter(p => p.team === teamId);
+                                if (teamPlayers.length === 0) return null;
+
+                                const teamScores = scores.filter(s => teamPlayers.some(p => p.name === s.playerName));
+
+                                const teamHasCanasta = teamScores.reduce((acc, s) =>
+                                    acc + (s.details?.canastasPuras || 0) + (s.details?.canastasImpuras || 0), 0
+                                ) > 0;
+
+                                return (
+                                    <div key={teamId} className={`p-4 rounded-3xl border bg-background/20 
+                                    ${teamId === 'A' ? 'border-l-4 border-indigo-500/50' : teamId === 'B' ? 'border-l-4 border-rose-500/50' : 'border-white/5'}`}>
+
+                                        {teamId !== 'None' && (
+                                            <h3 className={`text-[10px] font-black mb-3 ml-2 uppercase tracking-widest ${teamId === 'A' ? 'text-indigo-400' : 'text-rose-400'}`}>
+                                                Equipo {teamId}
+                                            </h3>
+                                        )}
+
+                                        {/* ACCIONES DE EQUIPO (Solo Burako en modo equipos) */}
+                                        {match.gameType === 'Burako' && teamId !== 'None' && (
+                                            <div className="flex gap-2 mb-4">
+                                                <button
+                                                    disabled={!teamHasCanasta || (anyoneClosed && !teamScores.some(s => s.details?.isCerrar))}
+                                                    onClick={() => handleTeamUpdate(teamId, { isCerrar: !teamScores[0]?.details?.isCerrar })}
+                                                    className={`flex-1 py-2 rounded-xl text-[10px] font-bold transition-all ${teamScores.some(s => s.details?.isCerrar) ? 'bg-emerald-500 text-white' : 'bg-surface text-text-muted opacity-50'}`}
+                                                >
+                                                    CERRÓ
+                                                </button>
+                                                <button
+                                                    onClick={() => handleTeamUpdate(teamId, { tomoMuerto: !teamScores[0]?.details?.tomoMuerto })}
+                                                    className={`flex-1 py-2 rounded-xl text-[10px] font-bold transition-all ${teamScores[0]?.details?.tomoMuerto !== false ? 'bg-indigo-500 text-white' : 'bg-orange-500 text-white'}`}
+                                                >
+                                                    {teamScores[0]?.details?.tomoMuerto !== false ? 'MUERTO' : 'SIN MUERTO'}
+                                                </button>
+                                            </div>
+                                        )}
+
+                                        {/* --- LÓGICA ESPECÍFICA PARA TRUCO --- */}
+                                        {match.gameType === 'Truco' && teamId !== 'None' ? (
+                                            <div className="bg-background/40 p-4 rounded-2xl border border-white/5">
+                                                <div className="flex justify-between items-center mb-4">
+                                                    <div className="flex gap-1">
+                                                        {teamPlayers.map(p => {
+                                                            const isDealer = match.players.findIndex(mp => mp.name === p.name) === match.currentDealerIndex;
+                                                            return (
+                                                                <div key={p.name} className="flex items-center gap-1">
+                                                                    <span className="text-[10px] font-bold text-text-muted">{p.name.substring(0, 3)}</span>
+                                                                    {isDealer && <Crown size={12} className="text-primary" fill="currentColor" />}
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                    <span className="text-[8px] text-text-muted uppercase font-black">Anotación de Equipo</span>
+                                                </div>
+
+                                                {/* Renderizamos UNA SOLA fila de Truco para todo el equipo */}
+                                                <TrucoInputRow
+                                                    score={teamScores[0]} // Usamos el score del primer integrante como contenedor
+                                                    match={match}
+                                                    onUpdate={(payload) => {
+                                                        // Buscamos el índice del primer integrante para guardar los puntos ahí
+                                                        const firstPlayerIdx = match.players.findIndex(p => p.name === teamScores[0].playerName);
+                                                        updateScoreState(firstPlayerIdx, payload);
+                                                    }}
+                                                />
+                                            </div>) : (
+                                            <div className="flex flex-col gap-3">
+                                                {teamScores.map((s) => {
+                                                    const originalIndex = match.players.findIndex(p => p.name === s.playerName);
+                                                    const player = match.players[originalIndex];
+                                                    const isDealer = originalIndex === (isEditMode ? match.rounds.find(r => r.roundNumber === roundToEdit)?.dealerIndex : match.currentDealerIndex);
+                                                    const isSombrero = (originalIndex === sombreroIndex && match.gameType === 'Mosca');
+
+                                                    if (player.isOut && !isEditMode) return null;
+
+                                                    return (
+                                                        <div key={s.playerName} className={`p-4 rounded-2xl bg-background/40 border border-white/5 ${isSombrero ? 'opacity-30 border-dashed' : ''}`}>
+                                                            <div className="flex justify-between items-center mb-2">
+                                                                <span className="font-bold text-xs">{s.playerName}</span>
+                                                                <div className="flex gap-1">
+                                                                    {isDealer && <span className="text-primary"><Crown size={14} fill="currentColor" /></span>}
+                                                                    {isSombrero && <span className="text-purple-400"><HatGlasses size={14} /></span>}
+                                                                </div>
+                                                            </div>
+
+                                                            {!isSombrero && (
+                                                                <div className="flex items-center gap-2">
+                                                                    <div className="flex items-center gap-2 w-full">
+                                                                        {renderScoringInput(s, player, originalIndex)}
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            })
+                        )}
                     </div>
 
                     <div className="p-6 pt-2 bg-surface shrink-0 border-t border-white/5">

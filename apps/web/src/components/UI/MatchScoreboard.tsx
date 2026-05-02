@@ -2,6 +2,7 @@ import { Crown, HatGlasses, Trash2, Edit2, Asterisk } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { getShortName } from '@/utils/formatters';
 import { IMatch, IRoundScore, IRound } from '@el-porotero/shared';
+import { useTrucoLogic } from '@/hooks/useTrucoLogic';
 
 interface MatchScoreboardProps {
     match: IMatch;
@@ -12,6 +13,7 @@ interface MatchScoreboardProps {
 }
 
 export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage, onCantar }: MatchScoreboardProps) => {
+    const { getStatus } = useTrucoLogic(match);
     const allPlayerNames = match.players.map(p => p.name);
     // Juegos donde llegar al límite significa PERDER
     const isLoseOnLimit = ['Loba', 'Chinchon'].includes(match.gameType);
@@ -21,7 +23,8 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
 
     // Caso especial Mosca: se gana al llegar a 0
 
-    const isTeamGame = match.isTeamGame; 
+    const isTeamLayout = match.isTeamGame || match.gameType === 'Truco';
+    const isTeamHeader = match.isTeamGame;
 
     // Identificamos quiénes son de cada equipo (usando el campo 'team' que ya tenemos)
     const teamA = match.players.filter(p => p.team === 'A');
@@ -60,7 +63,7 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
                             <AnimatePresence>
 
 
-                                {isTeamGame ? (
+                                {isTeamHeader ? (
                                     // CABECERA MODO EQUIPOS
                                     ['A', 'B'].map(t => {
                                         const teamPlayers = match.players.filter(p => p.team === t);
@@ -145,7 +148,7 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
 
                                     </div>
                                 </td>
-                                {isTeamGame ? (
+                                {isTeamLayout ? (
                                     // PUNTOS POR EQUIPO
                                     <>
                                         <td className="p-3 font-mono text-indigo-300">{sumTeamRound(round, teamA.map(p => p.name))}</td>
@@ -182,48 +185,80 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
                         <tr className="bg-primary/5 font-bold">
                             <td className="p-5 text-primary text-xs uppercase tracking-widest sticky left-0 bg-surface">Total</td>
                             {
-                                isTeamGame ? (
-                                    <>
-                                        <td className="p-5 text-3xl font-display text-indigo-400 border-r border-white/5">
-                                            {teamA.reduce((acc, p) => acc + p.score, 0)}
-                                        </td>
-                                        <td className="p-5 text-3xl font-display text-rose-400">
-                                            {teamB.reduce((acc, p) => acc + p.score, 0)}
-                                        </td>
-                                    </>
+                                isTeamLayout ? (
+                                    ['A', 'B'].map(teamId => {
+                                        const teamPlayers = match.players.filter(p => p.team === teamId);
+                                        const teamTotal = teamPlayers.reduce((acc, p) => acc + p.score, 0);
+
+                                        // Lógica específica para TRUCO: Unificamos Etapa y Valor
+                                        if (match.gameType === 'Truco') {
+                                            const status = getStatus(teamTotal);
+                                            const isBuenas = status.label === 'Buenas';
+
+                                            return (
+                                                <td key={teamId} className="p-5 border-r border-white/5">
+                                                    <div className="flex flex-col items-center justify-center">
+                                                        {/* Etiqueta: Malas (Gris) vs Buenas (Amarillo) */}
+                                                        <span className={`text-[10px] uppercase font-black tracking-[0.2em] mb-1 transition-colors duration-500 ${isBuenas ? 'text-primary' : 'text-text-muted opacity-60'
+                                                            }`}>
+                                                            {status.label}
+                                                        </span>
+
+                                                        {/* Valor relativo (1 al 15) */}
+                                                        <span className={`text-4xl font-display transition-all duration-500 ${isBuenas ? 'text-primary scale-110' : 'text-text-main'
+                                                            }`}>
+                                                            {status.val}
+                                                        </span>
+
+                                                        {/* Puntaje real acumulado chiquito para referencia */}
+                                                        <span className="text-[9px] opacity-30 mt-1 font-mono tracking-tighter">
+                                                            {teamTotal} PTS TOTALES
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                            );
+                                        }
+
+                                        // Lógica para BURAKO (u otros juegos por equipo no-truco)
+                                        return (
+                                            <td key={teamId} className={`p-5 text-4xl font-display border-r border-white/5 ${teamId === 'A' ? 'text-indigo-400' : 'text-rose-400'
+                                                }`}>
+                                                {teamTotal}
+                                            </td>
+                                        );
+                                    })
                                 ) : (
+                                    // --- MODO INDIVIDUAL (Loba, Mosca, Uno, Chinchón) ---
                                     match.players.map(player => (
                                         <td key={player.name} className={`p-5 text-2xl font-display ${player.name === match.winner ? 'text-primary animate-bounce' : 'text-text-main'}`}>
                                             <div className={`flex ${player.isOut && match.status === 'active' ? 'flex-col' : ''} items-center justify-center gap-1`}>
 
-                                                {/* PUNTAJE */}
-                                                <span className={player.name === match.winner ? 'text-primary animate-bounce' : player.isOut ? 'text-text-muted opacity-40' : 'text-text-main'}>
+                                                <span className={player.isOut ? 'text-text-muted opacity-40' : ''}>
                                                     {player.score}
+
+                                                    {/* Asteriscos de Re-enganche acumulados */}
+                                                    {player.reengageCount > 0 && (!player.isOut || match.status === 'finished') && (
+                                                        <div className="inline-flex -space-x-1 ml-1">
+                                                            {Array.from({ length: player.reengageCount }).map((_, idx) => (
+                                                                <Asterisk key={idx} size={10} className="text-secondary" strokeWidth={4} />
+                                                            ))}
+                                                        </div>
+                                                    )}
                                                 </span>
 
-                                                {/* ASTERISCOS */}
-                                                {player.reengageCount > 0 && (!player.isOut || match.status === 'finished') && (
-                                                    <div className="flex -space-x-1 ml-0.5 mt-1">
-                                                        {Array.from({ length: player.reengageCount }).map((_, idx) => (
-                                                            <Asterisk key={idx} size={10} className="text-secondary" strokeWidth={4} />
-                                                        ))}
-                                                    </div>
-                                                )}
-
-                                                {/* 3. BOTÓN DE RE-ENGANCHE: */}
+                                                {/* Botón de Re-enganche sutil si está fuera */}
                                                 {player.isOut && match.status === 'active' && (
                                                     <button
                                                         onClick={() => onReengage(player.name)}
                                                         className="text-[9px] bg-secondary text-white px-3 py-1.5 rounded-lg font-black animate-pulse mt-2 shadow-lg shadow-secondary/40 uppercase tracking-tighter"
                                                     >
-                                                        RE-ENGANCHAR
+                                                        Re-enganchar
                                                     </button>
                                                 )}
                                             </div>
                                         </td>
                                     ))
-                                )
-                            }
+                                )}
                         </tr>
 
                         {/* FILA DINÁMICA DE DISTANCIA AL LÍMITE */}
@@ -233,7 +268,7 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
                                     {limitLabel}
                                 </td>
 
-                                {isTeamGame ? (
+                                {isTeamLayout ? (
                                     <>
                                         {/* Distancia para el Equipo A */}
                                         <td className={`p-5 text-2xl font-display ${limitColorClass}`}>

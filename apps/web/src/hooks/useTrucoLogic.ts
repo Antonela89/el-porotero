@@ -32,10 +32,11 @@ export const useTrucoLogic = (match: IMatch | null) => {
 		if (!match) return 1;
 		const limit = match.config.limitScore;
 		const leaderScore = Math.max(totalA, totalB);
+		const faltaValue = Math.max(1, limit - leaderScore); 
 
 		// En el Truco, la falta es lo que le falta al que va GANANDO para llegar al límite
 		// (ya sea 18, 24 o 30)
-		return limit - leaderScore;
+		return faltaValue;
 	};
 
 	// Determinar el modo de juego (Redonda vs Punta y Hacha)
