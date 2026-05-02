@@ -28,17 +28,17 @@ export const GAMES: GameDefinition[] = [
         description: 'Gana el último en pie. Límite de 100 o 101 puntos.',
         icon: <Layers size={24} />,
         color: 'text-blue-400',
-        defaultLimit: 100 | 101,
+        defaultLimit: 100,
         isDescending: false
     },
     {
         id: 'Truco',
         name: 'Truco',
-        maxPlayers: 2 | 4 | 6,
+        maxPlayers: 6,
         description: 'El clásico rioplatense. Se juega a 30 puntos (15 y 15).',
         icon: <Swords size={24} />,
         color: 'text-red-400',
-        defaultLimit: 18 | 24 | 30, // 30 para 6 jugadores, 24 para 4, 18 para 2
+        defaultLimit: 30,
         isDescending: false
     },
     {
@@ -48,7 +48,7 @@ export const GAMES: GameDefinition[] = [
         description: 'Armá escaleras y grupos. No te pases de 100.',
         icon: <LayoutGrid size={24} />,
         color: 'text-green-400',
-        defaultLimit: 100 | 101,
+        defaultLimit: 100,
         isDescending: false
     },
     {
@@ -88,7 +88,7 @@ export const GAMES: GameDefinition[] = [
         description: 'Canastas y muertos. A 3000 o 5000 puntos.',
         icon: <Dice5 size={24} />,
         color: 'text-orange-400',
-        defaultLimit: 3000 | 5000,
+        defaultLimit: 3000,
         isDescending: false
     },
     {
