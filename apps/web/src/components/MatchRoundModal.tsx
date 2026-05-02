@@ -174,6 +174,7 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
                 return (
                     <AccumulativeInputRow
                         {...commonProps}
+                        gameType={match.gameType}
                         disableExclusives={anyoneClosed}
                         onUpdateScore={(f) => updateScoreState(originalIndex, f)}
                         onUpdateDetails={(d) => updateScoreState(originalIndex, d)}
@@ -255,7 +256,7 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
                                             const originalIndex = match.players.findIndex(p => p.name === s.playerName);
                                             const player = match.players[originalIndex];
                                             const isDealer = originalIndex === (isEditMode ? match.rounds.find(r => r.roundNumber === roundToEdit)?.dealerIndex : match.currentDealerIndex);
-                                            const isSombrero = (originalIndex === sombreroIndex  && match.gameType === 'Mosca');
+                                            const isSombrero = (originalIndex === sombreroIndex && match.gameType === 'Mosca');
 
                                             if (player.isOut && !isEditMode) return null;
 
@@ -289,7 +290,8 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
                         {match.gameType === 'Mosca' && !isMoscaValid && (
                             <p className="text-warning text-[10px] text-center mb-3 font-bold uppercase">
                                 <AlertCircle size={14} />
-                                Faltan bazas ({totalBazas}/5)</p>
+                                {totalBazas > 5 ? `Sobran: ${totalBazas - 5}` : `Faltan: ${5 - totalBazas}`}
+                            </p>
                         )}
                         <button onClick={handleSubmit} disabled={loading || !isFormValid} className="btn-primary w-full py-4 flex items-center justify-center gap-2">
                             <Save size={20} />
