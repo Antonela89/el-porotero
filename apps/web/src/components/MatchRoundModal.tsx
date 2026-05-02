@@ -164,7 +164,7 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
             case 'Barsiga':
                 return validateEscoba();
             case 'Burako':
-                return anyoneClosed; // En Burako alguien tiene que haber cerrado
+                return anyoneClosed; // En Burako alguien tiene que haber cerrado         
             default:
                 return true;
         }
@@ -192,6 +192,7 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
             case 'Truco':
                 return (
                     <TrucoInputRow
+                        match={match}
                         score={s}
                         onUpdate={(payload) => updateScoreState(originalIndex, payload)}
                     />
@@ -241,6 +242,15 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
             const method = isEditMode ? 'patch' : 'post';
             const { data } = await api[method](url, { scores });
             onSuccess(isEditMode ? data.match : data);
+
+            if (!isEditMode) {
+                setScores(match.players.map(p => ({
+                    playerName: p.name,
+                    pointsAdded: 0,
+                    details: { bazas: 0, paso: false, isCerrar: false, isCorteMinus10: false, hizoBatida: false, tomoMuerto: true }
+                })));
+            }
+            
             onClose();
         } catch (err: unknown) {
             let msg = "Error al guardar";
@@ -304,36 +314,66 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
                                         </div>
                                     )}
 
-                                    <div className="flex flex-col gap-3">
-                                        {teamScores.map((s) => {
-                                            const originalIndex = match.players.findIndex(p => p.name === s.playerName);
-                                            const player = match.players[originalIndex];
-                                            const isDealer = originalIndex === (isEditMode ? match.rounds.find(r => r.roundNumber === roundToEdit)?.dealerIndex : match.currentDealerIndex);
-                                            const isSombrero = (originalIndex === sombreroIndex && match.gameType === 'Mosca');
+                                    {/* --- LÓGICA ESPECÍFICA PARA TRUCO --- */}
+                                    {match.gameType === 'Truco' && teamId !== 'None' ? (
+                                        <div className="bg-background/40 p-4 rounded-2xl border border-white/5">
+                                            <div className="flex justify-between items-center mb-4">
+                                                <div className="flex gap-1">
+                                                    {teamPlayers.map(p => {
+                                                        const isDealer = match.players.findIndex(mp => mp.name === p.name) === match.currentDealerIndex;
+                                                        return (
+                                                            <div key={p.name} className="flex items-center gap-1">
+                                                                <span className="text-[10px] font-bold text-text-muted">{p.name.substring(0, 3)}</span>
+                                                                {isDealer && <Crown size={12} className="text-primary" fill="currentColor" />}
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                                <span className="text-[8px] text-text-muted uppercase font-black">Anotación de Equipo</span>
+                                            </div>
 
-                                            if (player.isOut && !isEditMode) return null;
+                                            {/* Renderizamos UNA SOLA fila de Truco para todo el equipo */}
+                                            <TrucoInputRow
+                                                score={teamScores[0]} // Usamos el score del primer integrante como contenedor
+                                                match={match}
+                                                onUpdate={(payload) => {
+                                                    // Buscamos el índice del primer integrante para guardar los puntos ahí
+                                                    const firstPlayerIdx = match.players.findIndex(p => p.name === teamScores[0].playerName);
+                                                    updateScoreState(firstPlayerIdx, payload);
+                                                }}
+                                            />
+                                        </div>) : (
+                                        <div className="flex flex-col gap-3">
+                                            {teamScores.map((s) => {
+                                                const originalIndex = match.players.findIndex(p => p.name === s.playerName);
+                                                const player = match.players[originalIndex];
+                                                const isDealer = originalIndex === (isEditMode ? match.rounds.find(r => r.roundNumber === roundToEdit)?.dealerIndex : match.currentDealerIndex);
+                                                const isSombrero = (originalIndex === sombreroIndex && match.gameType === 'Mosca');
 
-                                            return (
-                                                <div key={s.playerName} className={`p-4 rounded-2xl bg-background/40 border border-white/5 ${isSombrero ? 'opacity-30 border-dashed' : ''}`}>
-                                                    <div className="flex justify-between items-center mb-2">
-                                                        <span className="font-bold text-xs">{s.playerName}</span>
-                                                        <div className="flex gap-1">
-                                                            {isDealer && <span className="text-primary"><Crown size={14} fill="currentColor" /></span>}
-                                                            {isSombrero && <span className="text-purple-400"><HatGlasses size={14} /></span>}
-                                                        </div>
-                                                    </div>
+                                                if (player.isOut && !isEditMode) return null;
 
-                                                    {!isSombrero && (
-                                                        <div className="flex items-center gap-2">
-                                                            <div className="flex items-center gap-2 w-full">
-                                                                {renderScoringInput(s, player, originalIndex)}
+                                                return (
+                                                    <div key={s.playerName} className={`p-4 rounded-2xl bg-background/40 border border-white/5 ${isSombrero ? 'opacity-30 border-dashed' : ''}`}>
+                                                        <div className="flex justify-between items-center mb-2">
+                                                            <span className="font-bold text-xs">{s.playerName}</span>
+                                                            <div className="flex gap-1">
+                                                                {isDealer && <span className="text-primary"><Crown size={14} fill="currentColor" /></span>}
+                                                                {isSombrero && <span className="text-purple-400"><HatGlasses size={14} /></span>}
                                                             </div>
                                                         </div>
-                                                    )}
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
+
+                                                        {!isSombrero && (
+                                                            <div className="flex items-center gap-2">
+                                                                <div className="flex items-center gap-2 w-full">
+                                                                    {renderScoringInput(s, player, originalIndex)}
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
                                 </div>
                             );
                         })}

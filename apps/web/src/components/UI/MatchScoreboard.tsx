@@ -247,7 +247,7 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
                                 ) : (
                                     match.players.map(player => (
                                         <td key={player.name} className={`p-5 text-2xl font-display ${limitColorClass} ${player.isOut ? 'opacity-10' : ''}`}>
-                                            {match.config.limitScore! - player.score}
+                                            {match.config.limitScore - player.score}
                                         </td>
                                     ))
                                 )}

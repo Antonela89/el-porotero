@@ -5,7 +5,7 @@ import { IMatchConfig } from '@el-porotero/shared';
 // Crear un juego nuevo
 export const createMatch = async (req: Request, res: Response) => {
 	try {
-		const { gameType, players, limitScore } = req.body;
+		const { gameType, players, limitScore, isTeamGame } = req.body;
 		const adminId = req.user?.userId;
 
 		// Lógica de configuración por defecto según el juego
@@ -19,7 +19,10 @@ export const createMatch = async (req: Request, res: Response) => {
 			config.startingScore = 15;
 			config.isDescending = true;
 		} else if (gameType === 'Truco') {
-			config.limitScore = 30;
+			const totalPlayer = players.length;
+			if (totalPlayer === 2) config.limitScore = 18;
+			if (totalPlayer === 4) config.limitScore = 24;
+			if (totalPlayer === 6) config.limitScore = 30;
 		} else if (gameType === 'Loba') {
 			config.limitScore = limitScore || 100; // El usuario elige 100 o 101
 		} else if (gameType === 'Escoba') {
@@ -42,6 +45,7 @@ export const createMatch = async (req: Request, res: Response) => {
 			adminId,
 			config,
 			players: initialPlayers,
+			isTeamGame: isTeamGame,
 			currentDealerIndex: 0,
 		});
 

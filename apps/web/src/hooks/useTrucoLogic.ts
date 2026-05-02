@@ -13,7 +13,7 @@ export const useTrucoLogic = (match: IMatch | null) => {
 
 	const halfLimit = limit / 2;
 
-	// 2. Cálculos de puntajes por equipo
+	// Cálculos de puntajes por equipo
 	const { totalA, totalB, maxScore } = useMemo(() => {
 		if (!match) return { totalA: 0, totalB: 0, maxScore: 0 };
 
@@ -28,7 +28,17 @@ export const useTrucoLogic = (match: IMatch | null) => {
 		return { totalA: a, totalB: b, maxScore: Math.max(a, b) };
 	}, [match]);
 
-	// 3. Determinar el modo de juego (Redonda vs Punta y Hacha)
+	const calculateFalta = () => {
+		if (!match) return 1;
+		const limit = match.config.limitScore;
+		const leaderScore = Math.max(totalA, totalB);
+
+		// En el Truco, la falta es lo que le falta al que va GANANDO para llegar al límite
+		// (ya sea 18, 24 o 30)
+		return limit - leaderScore;
+	};
+
+	// Determinar el modo de juego (Redonda vs Punta y Hacha)
 	const currentMode = useMemo(() => {
 		if (!match || match.players.length !== 6) return 'Redonda';
 
@@ -42,7 +52,7 @@ export const useTrucoLogic = (match: IMatch | null) => {
 		return 'Redonda';
 	}, [match, limit, maxScore]);
 
-	// 4. Definir parejas para Punta y Hacha (Memoizado)
+	// Definir parejas para Punta y Hacha (Memoizado)
 	// Intercalado 1-3-5 (A) vs 2-4-6 (B) => Indices 0 vs 3, 1 vs 4, 2 vs 5
 	const phMatchups = useMemo(() => {
 		if (!match || match.players.length < 6) return [];
@@ -53,7 +63,7 @@ export const useTrucoLogic = (match: IMatch | null) => {
 		];
 	}, [match]);
 
-	// 5. Helper para el marcador visual (Malas/Buenas)
+	// Helper para el marcador visual (Malas/Buenas)
 	const getStatus = (score: number) => {
 		if (score <= halfLimit) return { label: 'Malas', val: score };
 		return { label: 'Buenas', val: score - halfLimit };
@@ -67,5 +77,6 @@ export const useTrucoLogic = (match: IMatch | null) => {
 		totalA,
 		totalB,
 		phMatchups,
+		faltaValue: calculateFalta(),
 	};
 };

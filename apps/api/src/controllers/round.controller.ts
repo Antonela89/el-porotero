@@ -83,7 +83,8 @@ export const addRound = async (req: Request, res: Response) => {
 				GameRules.processEscobaRules(match as any, scores);
 				break;
 			case 'Burako':
-				GameRules.processBurakoRules(match as any, scores);
+			case 'Truco':
+				GameRules.processTeamRules(match as any, scores);
 				break;
 		}
 

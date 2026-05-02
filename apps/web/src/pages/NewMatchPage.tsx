@@ -154,11 +154,18 @@ export const NewMatchPage = () => {
 
     const handleStart = async () => {
         if (players.length < 2) return alert("Mínimo 2 jugadores");
+        let finalLimit = limitScore;
+
+        if (gameType === 'Truco') {
+            if (players.length <= 2) finalLimit = 18;
+            else if (players.length <= 4) finalLimit = 24;
+            else finalLimit = 30;
+        }
         try {
             const { data } = await api.post('/matches', {
                 gameType,
                 players: players.map((p, i) => ({ ...p, position: i })),
-                limitScore,
+                limitScore: finalLimit,
                 isTeamGame
             });
             navigate(`/match/${data._id}`);
