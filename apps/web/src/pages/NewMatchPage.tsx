@@ -15,21 +15,14 @@ interface RematchState {
 export const NewMatchPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
-
     const state = location.state as RematchState | null;
 
     // --- ESTADO DE JUEGO ---
-    const [gameType, setGameType] = useState<string>(() => {
-        // Si venimos de una revancha, usamos ese juego, si no, 'Loba'
-        return state?.gameType || 'Loba';
-    });
+    const [gameType, setGameType] = useState<string>(() => state?.gameType || 'Loba');
 
-    const [isTeamGame, setIsTeamGame] = useState<boolean>(() => {
-        if (['Burako', 'Truco'].includes(gameType)) {
-            return true;
-        }
-        return false;
-    });
+    const [isTeamGame, setIsTeamGame] = useState<boolean>(() =>
+        ['Burako', 'Truco'].includes(state?.gameType || gameType)
+    );
 
     const [limitScore, setLimitScore] = useState(100);
 
@@ -40,35 +33,44 @@ export const NewMatchPage = () => {
     const [tempEditName, setTempEditName] = useState('');
 
     const currentGame = GAMES.find(g => g.id === gameType);
+
+    const maxAllowed = currentGame?.maxPlayers || 6;
+    const canAddMore = players.length < maxAllowed;
     const hasLimitOptions = ['Loba', 'Chinchon'].includes(gameType);
 
+    const syncPlayersWithTeamMode = (list: IPlayer[], teamMode: boolean) : IPlayer[] => {
+        return list.map((p, i) => ({
+            ...p,
+            team: teamMode ? (i % 2 === 0 ? 'A' : 'B') : 'None' as const
+        }));
+    };
+
+    const handleGameChange = (newType: string) => {
+        setGameType(newType);
+        const teamEnabled = ['Burako', 'Truco'].includes(newType);
+        setIsTeamGame(teamEnabled);
+        setPlayers(prev => syncPlayersWithTeamMode(prev, teamEnabled));
+    };
+
     const addPlayer = () => {
-        const trimmedName = playerName.trim();
-        if (!trimmedName) return;
+        if (!canAddMore && !playerName.trim()) return;
 
         // Evitar nombres duplicados en la misma mesa
-        if (players.some(p => p.name.toLowerCase() === trimmedName.toLowerCase())) {
+        if (players.some(p => p.name.toLowerCase() === playerName.toLowerCase())) {
             alert("Ya hay un jugador con ese nombre");
             return;
         }
 
-        if (players.length >= (currentGame?.maxPlayers || 6)) return;
-
         const newPlayer: IPlayer = {
-            name: trimmedName,
-            team: isTeamGame ? (players.length % 2 === 0 ? 'A' : 'B') : 'None',
+            name: playerName.trim().toUpperCase(),
+            team: 'None',
             score: 0,
             isOut: false
         };
 
-        setPlayers([...players, newPlayer]);
+        setPlayers(prev => syncPlayersWithTeamMode([...prev, newPlayer], isTeamGame));
         setPlayerName(''); // Limpiamos el input
     };
-
-
-    // Limite de jugadores: Mosca máximo 5, el resto máximo 6
-    const isMosca = gameType === 'Mosca';
-    const canAddMorePlayers = isMosca ? players.length < 5 : players.length < 6;
 
     const startEditing = (index: number, currentName: string) => {
         setEditingIndex(index);
@@ -85,7 +87,8 @@ export const NewMatchPage = () => {
 
 
     const removePlayer = (index: number) => {
-        setPlayers(players.filter((_, i) => i !== index));
+        const filtered = players.filter((_, i) => i !== index);
+        setPlayers(syncPlayersWithTeamMode(filtered, isTeamGame));
     };
 
     const handleStart = async () => {
@@ -127,7 +130,7 @@ export const NewMatchPage = () => {
                     <label className="text-[10px] uppercase tracking-[0.2em] text-text-muted font-bold mb-2 block ml-1">
                         Juego Seleccionado
                     </label>
-                    <GameSelector value={gameType} onChange={setGameType} />
+                    <GameSelector value={gameType} onChange={handleGameChange} />
 
                     {/* Breve descripción del juego seleccionado */}
                     <p className="text-xs text-text-muted mt-3 px-1 italic">
@@ -177,8 +180,8 @@ export const NewMatchPage = () => {
 
                 {/* JUGADORES (Sección Principal) */}
                 <section className="flex-1 overflow-hidden flex flex-col mb-8 custom-scrollbar animate-in fade-in slide-in-from-bottom-2">
-                    <label className="text-[10px] uppercase tracking-[0.2em] text-text-muted font-bold mb-4 block ml-1">
-                        Jugadores (Orden de Mesa)
+                    <label className="text-[10px] uppercase tracking-[0.2em] mb-4 text-text-muted font-bold block">
+                        Integrantes ({players.length} / {maxAllowed})
                     </label>
 
                     {/* Lista con scroll si hay muchos */}
@@ -232,51 +235,45 @@ export const NewMatchPage = () => {
                                 </div>
                             )))}
                     </div>
+                </section>
+            </main>
 
-                    {/* Input de agregado siempre visible */}
-                    <div className="player-input-row border-primary/20 ring-2 p-2 ring-primary/5 flex justify-between">
+            {/* 4. FOOTER FIJO (Sumar + Jugar) */}
+            <footer className="fixed bottom-0 left-0 right-0 p-6 bg-background/80 backdrop-blur-xl border-t border-white/5 flex flex-col gap-4 max-w-lg mx-auto z-20">
+                {/* AVISO DINÁMICO DE LÍMITE */}
+                {canAddMore && (
+                    <div className="bg-warning/10 border border-warning/20 p-2 rounded-xl flex items-center justify-center gap-2 animate-in fade-in slide-in-from-bottom-2">
+                        <span className="text-[16px] text-warning font-bold uppercase tracking-tighter text-center">
+                            Mesa completa para {gameType} ({maxAllowed} personas)
+                        </span>
+                    </div>
+                )}
+
+                {!canAddMore && (
+                    <div className="flex gap-2 bg-surface p-2 rounded-2xl border border-white/5 focus-within:border-primary/50 transition-all">
                         <input
                             type="text"
-                            placeholder={canAddMorePlayers ? "Sumar jugador..." : "Límite de jugadores alcanzado"}
-                            disabled={!canAddMorePlayers} // Bloquear el input
-                            className="bg-transparent flex-1 outline-none py-2 text-text-main"
+                            placeholder="Sumar jugador..."
+                            className="bg-transparent flex-1 outline-none px-3 py-2 text-text-main placeholder:text-text-muted/40 uppercase"
                             value={playerName}
                             onChange={(e) => setPlayerName(e.target.value.toUpperCase())}
                             onKeyDown={(e) => e.key === 'Enter' && addPlayer()}
                         />
-                        <button onClick={addPlayer} className="bg-primary text-background p-3 rounded-xl hover:bg-primary-dark transition-colors shadow-lg shadow-primary/20"
-                            disabled={!canAddMorePlayers || !playerName.trim()}>
+                        <button onClick={addPlayer} disabled={!playerName.trim()} className="bg-primary text-background p-3 rounded-xl active:scale-90 transition-transform disabled:opacity-30">
                             <UserPlus size={20} />
                         </button>
                     </div>
+                )}
 
-                    {/* Aviso visual */}
-                    {isMosca && players.length === 5 && (
-                        <p className="text-[10px] text-warning mt-2 ml-1 animate-pulse font-bold uppercase">
-                            ⚠️ La Mosca se juega con máximo 5 jugadores (Regla del Sombrero activa)
-                        </p>)}
-                    {gameType === 'Truco' && players.length === 6 && (
-                        <p className="text-[10px] text-warning mt-2 ml-1 animate-pulse font-bold uppercase">
-                            ⚠️ El Truco se juegan con máximo 6 jugadores (3 vs 3)
-                        </p>
-                    )}
-                    {gameType === 'Burako' && players.length === 6 && (
-                        <p className="text-[10px] text-warning mt-2 ml-1 animate-pulse font-bold uppercase">
-                            ⚠️ Burako se juega con máximo 4 jugadores (2 vs 2)
-                        </p>
-                    )}
-                </section>
-            </main>
-            <footer className='fixed bottom-6 left-1/2 transform -translate-x-1/2 w-full max-w-lg px-4'>
                 <button
                     onClick={handleStart}
                     disabled={players.length < 2}
-                    className="btn-primary w-full py-5 text-xl flex items-center justify-center gap-3 mt-auto shadow-2xl"
+                    className="btn-primary w-full py-5 text-lg flex items-center justify-center gap-3 shadow-2xl disabled:opacity-20"
                 >
-                    <Play size={24} fill="currentColor" />
-                    ¡A Jugar! (A {hasLimitOptions ? ` ${limitScore}` : gameType === 'Burako' ? (isTeamGame ? 5000 : 3000) : currentGame?.defaultLimit} pts)
+                    <Play size={20} fill="currentColor" />
+                    ¡A Jugar! {gameType === 'Uno' ? '(500 pts)' : gameType === 'Burako' ? (isTeamGame ? '(5000 pts)' : '(3000 pts)') : `(${limitScore} pts)`}
                 </button>
             </footer>
-        </div >
+        </div>
     );
 };

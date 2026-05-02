@@ -110,24 +110,6 @@ export const MatchDetailPage = () => {
     // return <LoadingSpinner />; 
     // }
 
-    // const handleCantar = async (playerName: string) => {
-    //     const points = prompt(`¿Cuántos puntos canta ${playerName}? (Ej: 20 para Chorizo, 3 para Flor)`);
-    //     if (!points || isNaN(parseInt(points))) return;
-
-    //     try {
-    //         const { data } = await api.post(`/matches/${id}/canto`, {
-    //             playerName,
-    //             points: parseInt(points)
-    //         });
-    //         setMatch(data); // Actualizamos la mesa al instante
-    //     } catch (error) {
-    //         alert("No se pudo registrar el canto");
-    //         console.log(error);
-
-    //     }
-    // };
-
-
     return (
         <div className="match-layout">
             {/* HEADER COMPACTO */}

@@ -34,17 +34,17 @@ export const GAMES: GameDefinition[] = [
     {
         id: 'Truco',
         name: 'Truco',
-        maxPlayers: 6,
+        maxPlayers: 2 | 4 | 6,
         description: 'El clásico rioplatense. Se juega a 30 puntos (15 y 15).',
         icon: <Swords size={24} />,
         color: 'text-red-400',
-        defaultLimit: 30 | 24 | 18, // 30 para 6 jugadores, 24 para 4, 18 para 2
+        defaultLimit: 18 | 24 | 30, // 30 para 6 jugadores, 24 para 4, 18 para 2
         isDescending: false
     },
     {
         id: 'Chinchon',
         name: 'Chinchón',
-        maxPlayers: 6,
+        maxPlayers: 4,
         description: 'Armá escaleras y grupos. No te pases de 100.',
         icon: <LayoutGrid size={24} />,
         color: 'text-green-400',
@@ -64,7 +64,7 @@ export const GAMES: GameDefinition[] = [
     {
         id: 'Escoba',
         name: 'Escoba de 15',
-        maxPlayers: 6,
+        maxPlayers: 4,
         description: 'Sumá 15 con las cartas de la mesa. A 15 puntos.',
         icon: <Coins size={24} />,
         color: 'text-yellow-400',
@@ -94,9 +94,9 @@ export const GAMES: GameDefinition[] = [
     {
         id: 'Uno',
         name: 'Uno',
-        maxPlayers: 4,
+        maxPlayers: 10,
         description: 'Sumá los puntos de tus cartas. El límite estándar es 500.',
-        icon: <Copy size={24} />, 
+        icon: <Copy size={24} />,
         color: 'text-violet-400',
         defaultLimit: 500,
         isDescending: false

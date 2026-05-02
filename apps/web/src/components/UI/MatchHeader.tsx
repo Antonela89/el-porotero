@@ -13,7 +13,6 @@ type MatchHeaderProps = {
 export const MatchHeader = ({ match, onRefresh, icon }: MatchHeaderProps) => {
 
     const navigate = useNavigate();
-    const isMosca = match.gameType.toLowerCase() === 'mosca';
 
     const handleCancelMatch = async () => {
         if (window.confirm("¿Seguro que querés cancelar la partida? Se marcará como cancelada.")) {
@@ -40,7 +39,7 @@ export const MatchHeader = ({ match, onRefresh, icon }: MatchHeaderProps) => {
                     {icon}
                     <span>{match.gameType}</span>
                 </div>
-                <span className="text-[10px] text-text-muted">{isMosca ? 'Objetivo: 0 pts' : `Límite: ${match.config.limitScore} pts`}</span>
+                <span className="text-[10px] text-text-muted">{match.gameType === 'Mosca' ? 'Objetivo: 0 pts' : `Límite: ${match.config.limitScore} pts`}</span>
             </div>
             <div className="flex items-center gap-2">
                 {match.status === 'active' && (
