@@ -21,7 +21,7 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
 
     // Caso especial Mosca: se gana al llegar a 0
 
-    const isTeamGame = ['Truco', 'Burako'].includes(match.gameType);
+    const isTeamGame = match.isTeamGame; 
 
     // Identificamos quiénes son de cada equipo (usando el campo 'team' que ya tenemos)
     const teamA = match.players.filter(p => p.team === 'A');

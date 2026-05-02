@@ -21,6 +21,7 @@ export const BurakoPlayerInput = ({
     const impuras = score.details?.canastasImpuras || 0;
     const cerro = score.details?.isCerrar || false;
     const muerto = score.details?.tomoMuerto ?? true; // Por defecto asumimos que sí lo tomó
+    const canClose = (puras + impuras) > 0;
 
     return (
         <div className="flex flex-col gap-4 w-full">
@@ -34,7 +35,7 @@ export const BurakoPlayerInput = ({
                     value={score.pointsAdded || ""}
                     onChange={(e) => {
                         const val = e.target.value.replace(/\D/g, "");
-                        onUpdate({ pointsAdded: parseInt(val) || 0 });
+                        onUpdate({ pointsAdded: parseInt(val) });
                     }}
                 />
             </div>
@@ -48,6 +49,7 @@ export const BurakoPlayerInput = ({
                     </div>
                     <div className="flex items-center justify-between bg-background rounded-xl p-1 border border-white/5 shadow-inner">
                         <button
+                            type="button"
                             onClick={() => onUpdate({ canastasPuras: Math.max(0, puras - 1) })}
                             className="p-2 text-text-muted hover:text-white transition-colors"
                         >
@@ -57,6 +59,7 @@ export const BurakoPlayerInput = ({
                             <span className="font-display text-primary font-bold leading-none">{puras}</span>
                         </div>
                         <button
+                            type="button"
                             onClick={() => onUpdate({ canastasPuras: puras + 1 })}
                             className="p-2 text-primary hover:text-white transition-colors"
                         >
@@ -72,6 +75,7 @@ export const BurakoPlayerInput = ({
                     </div>
                     <div className="flex items-center justify-between bg-background rounded-xl p-1 border border-white/5 shadow-inner">
                         <button
+                            type="button"
                             onClick={() => onUpdate({ canastasImpuras: Math.max(0, impuras - 1) })}
                             className="p-2 text-text-muted hover:text-white transition-colors"
                         >
@@ -81,6 +85,7 @@ export const BurakoPlayerInput = ({
                             <span className="font-display text-text-main font-bold leading-none">{impuras}</span>
                         </div>
                         <button
+                            type="button"
                             onClick={() => onUpdate({ canastasImpuras: impuras + 1 })}
                             className="p-2 text-text-main hover:text-white transition-colors"
                         >
@@ -95,7 +100,8 @@ export const BurakoPlayerInput = ({
             {!isTeamGame && (
                 <div className="flex gap-2">
                     <button
-                        disabled={disableExclusives && !cerro}
+                        type="button"
+                        disabled={disableExclusives && !cerro || !canClose}
                         onClick={() => onUpdate({ isCerrar: !cerro })}
                         className={`flex-1 py-3 rounded-xl text-[10px] font-bold flex items-center justify-center gap-2 transition-all
                             ${cerro ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20' : 'bg-surface text-text-muted border border-white/5 opacity-50'}`}
@@ -104,6 +110,7 @@ export const BurakoPlayerInput = ({
                     </button>
 
                     <button
+                        type="button"
                         onClick={() => onUpdate({ tomoMuerto: !muerto })}
                         className={`flex-1 py-3 rounded-xl text-[10px] font-bold flex items-center justify-center gap-2 transition-all
                             ${muerto ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/20' : 'bg-orange-500 text-white shadow-lg shadow-orange-500/20'}`}

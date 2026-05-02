@@ -327,7 +327,7 @@ export const NewMatchPage = () => {
                 {isTruco && players.length % 2 !== 0 && players.length > 0 && (
                     <div className="bg-orange-500/10 border border-orange-500/20 p-2 rounded-xl animate-in fade-in slide-in-from-bottom-2">
                         <span className="text-[10px] text-orange-400 font-bold uppercase block text-center tracking-wider">
-                            El {gameType} se juega de a pares (Falta {isTruco ? 'un compañero' : 'un contrincante'})
+                            El {gameType} se juega de a pares
                         </span>
                     </div>
                 )}

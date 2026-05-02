@@ -144,7 +144,7 @@ export const MatchDetailPage = () => {
 
             {/* EL MODAL */}
             <MatchRoundModal
-                key={isModalOpen ? `modal-${roundToEdit || 'new'}` : 'closed'}
+                key={`modal-${roundToEdit || 'new'}`}
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 match={match!}

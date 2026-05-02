@@ -42,51 +42,66 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
     // --- FUNCIÓN ÚNICA DE ACTUALIZACIÓN (Soporta puntos, detalles y exclusividad) ---
     const updateScoreState = (index: number, payload: ScoreUpdatePayload) => {
         setScores(prev => {
+            // 1. Clonamos el array (Shallow copy)
             let next = [...prev];
-            const currentDetails = next[index].details || {};
 
-            // 1. Identificar si el payload trae una de las llaves exclusivas
-            const EXCLUSIVE_KEYS = ['isCerrar', 'isCorteMinus10', 'hizoBatida', 'hasOros', 'hasCartas', 'hasSetenta', 'hasVeloAs', 'hasVelo7', 'hasVelo12'];
-            const keyFound = Object.keys(payload).find(k => EXCLUSIVE_KEYS.includes(k)) as keyof IRoundDetails | undefined;
+            // 2. Extraemos pointsAdded para separarlo de los detalles
+            const { pointsAdded, ...restPayload } = payload;
+
+            // 3. Lógica de Exclusividad (Cerró, Oros, Velos, etc.)
+            const EXCLUSIVE_KEYS = [
+                'isCerrar', 'isCorteMinus10', 'hizoBatida',
+                'hasOros', 'hasCartas', 'hasSetenta',
+                'hasVeloAs', 'hasVelo7', 'hasVelo12'
+            ];
+
+            // Buscamos si en el payload hay alguna llave exclusiva
+            const keyFound = Object.keys(restPayload).find(k =>
+                EXCLUSIVE_KEYS.includes(k)
+            ) as keyof IRoundDetails | undefined;
 
             if (keyFound) {
-                const newValue = payload[keyFound];
+                const newValue = restPayload[keyFound];
 
-                // Si estamos ACTIVANDO (true) un punto exclusivo, se lo quitamos a los demás
                 if (newValue === true) {
+                    // ACTIVACIÓN: Quitamos el punto a todos los demás
                     next = applyExclusivity(next, index, keyFound, true);
-                    // Forzamos puntos base si es un cierre
-                    if (['isCerrar', 'isCorteMinus10'].includes(keyFound)) {
-                        next[index].pointsAdded = keyFound === 'isCorteMinus10' ? -10 : 0;
+
+                    if (['Loba', 'Chinchon'].includes(match.gameType)) {
+                        if (keyFound === 'isCerrar') next[index].pointsAdded = 0;
+                        if (keyFound === 'isCorteMinus10') next[index].pointsAdded = -10;
                     }
-                }
-                // Si estamos DESACTIVANDO (false), solo limpiamos el del jugador actual
-                else {
-                    next[index].details = { ...currentDetails, [keyFound]: false };
+                } else {
+                    // DESACTIVACIÓN: Limpiamos solo al jugador actual
+                    next[index] = {
+                        ...next[index],
+                        details: { ...next[index].details, [keyFound]: false }
+                    };
+                    // Si apaga el cierre, volvemos puntos a 0 para que escriba
                     if (['isCerrar', 'isCorteMinus10'].includes(keyFound)) {
-                        next[index].pointsAdded = 0; // Volvemos a 0 para que el usuario escriba
+                        next[index].pointsAdded = 0;
                     }
-                    return next; // Retornamos temprano para no aplicar el spread doble
                 }
             }
 
-            const { pointsAdded, ...restPayload } = payload;
-
-            // Aplicación de cambios normales
+            // cambios normales (Puntos y Otros Detalles)
+            // Solo actualizamos puntosAdded si vino explícitamente en el payload
             if ('pointsAdded' in payload) {
                 next[index].pointsAdded = pointsAdded as number;
             }
 
-            // Combinamos detalles asegurando que pointsAdded no se meta en el objeto details
+            // asegurar inmutabilidad
             next[index].details = {
                 ...(next[index].details || {}),
                 ...restPayload
             };
 
-            // Recálculo de velos (se mantiene igual)
+            // RECALCULO DE VELOS (Fundamental para Escoba/Bársiga)
             if (['Escoba', 'Barsiga'].includes(match.gameType)) {
                 const d = next[index].details;
-                next[index].details.velos = (d.hasVeloAs ? 1 : 0) + (d.hasVelo7 ? 1 : 0) + (d.hasVelo12 ? 1 : 0);
+                next[index].details.velos = (d.hasVeloAs ? 1 : 0) +
+                    (d.hasVelo7 ? 1 : 0) +
+                    (d.hasVelo12 ? 1 : 0);
             }
 
             return next;
@@ -256,6 +271,10 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
 
                             const teamScores = scores.filter(s => teamPlayers.some(p => p.name === s.playerName));
 
+                            const teamHasCanasta = teamScores.reduce((acc, s) =>
+                                acc + (s.details?.canastasPuras || 0) + (s.details?.canastasImpuras || 0), 0
+                            ) > 0;
+
                             return (
                                 <div key={teamId} className={`p-4 rounded-3xl border bg-background/20 
                                     ${teamId === 'A' ? 'border-l-4 border-indigo-500/50' : teamId === 'B' ? 'border-l-4 border-rose-500/50' : 'border-white/5'}`}>
@@ -270,6 +289,7 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
                                     {match.gameType === 'Burako' && teamId !== 'None' && (
                                         <div className="flex gap-2 mb-4">
                                             <button
+                                                disabled={!teamHasCanasta || (anyoneClosed && !teamScores.some(s => s.details?.isCerrar))}
                                                 onClick={() => handleTeamUpdate(teamId, { isCerrar: !teamScores[0]?.details?.isCerrar })}
                                                 className={`flex-1 py-2 rounded-xl text-[10px] font-bold transition-all ${teamScores.some(s => s.details?.isCerrar) ? 'bg-emerald-500 text-white' : 'bg-surface text-text-muted opacity-50'}`}
                                             >
