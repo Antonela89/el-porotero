@@ -38,7 +38,7 @@ export const NewMatchPage = () => {
     const canAddMore = players.length < maxAllowed;
     const hasLimitOptions = ['Loba', 'Chinchon'].includes(gameType);
 
-    const syncPlayersWithTeamMode = (list: IPlayer[], teamMode: boolean) : IPlayer[] => {
+    const syncPlayersWithTeamMode = (list: IPlayer[], teamMode: boolean): IPlayer[] => {
         return list.map((p, i) => ({
             ...p,
             team: teamMode ? (i % 2 === 0 ? 'A' : 'B') : 'None' as const
@@ -239,30 +239,30 @@ export const NewMatchPage = () => {
             </main>
 
             {/* 4. FOOTER FIJO (Sumar + Jugar) */}
-            <footer className="fixed bottom-0 left-0 right-0 p-6 bg-background/80 backdrop-blur-xl border-t border-white/5 flex flex-col gap-4 max-w-lg mx-auto z-20">
+            <footer className="fixed bottom-0 left-0 right-0 p-6 bg-background/80 border-t border-white/5 flex flex-col gap-4 max-w-lg mx-auto z-20">
                 {/* AVISO DINÁMICO DE LÍMITE */}
                 {canAddMore && (
-                    <div className="bg-warning/10 border border-warning/20 p-2 rounded-xl flex items-center justify-center gap-2 animate-in fade-in slide-in-from-bottom-2">
-                        <span className="text-[16px] text-warning font-bold uppercase tracking-tighter text-center">
-                            Mesa completa para {gameType} ({maxAllowed} personas)
-                        </span>
-                    </div>
-                )}
+                    <>
+                        <div className="flex gap-2 bg-surface p-2 rounded-2xl border border-white/5 focus-within:border-primary/50 transition-all">
+                            <input
+                                type="text"
+                                placeholder="Sumar jugador..."
+                                className="bg-transparent flex-1 outline-none px-3 py-2 text-text-main placeholder:text-text-muted uppercase"
+                                value={playerName}
+                                onChange={(e) => setPlayerName(e.target.value.toUpperCase())}
+                                onKeyDown={(e) => e.key === 'Enter' && addPlayer()}
+                            />
+                            <button onClick={addPlayer} disabled={!playerName.trim()} className="bg-primary text-background p-3 rounded-xl active:scale-90 transition-transform">
+                                <UserPlus size={20} />
+                            </button>
+                        </div>
 
-                {!canAddMore && (
-                    <div className="flex gap-2 bg-surface p-2 rounded-2xl border border-white/5 focus-within:border-primary/50 transition-all">
-                        <input
-                            type="text"
-                            placeholder="Sumar jugador..."
-                            className="bg-transparent flex-1 outline-none px-3 py-2 text-text-main placeholder:text-text-muted/40 uppercase"
-                            value={playerName}
-                            onChange={(e) => setPlayerName(e.target.value.toUpperCase())}
-                            onKeyDown={(e) => e.key === 'Enter' && addPlayer()}
-                        />
-                        <button onClick={addPlayer} disabled={!playerName.trim()} className="bg-primary text-background p-3 rounded-xl active:scale-90 transition-transform disabled:opacity-30">
-                            <UserPlus size={20} />
-                        </button>
-                    </div>
+                        <div className="bg-warning/10 border border-warning/20 p-2 rounded-xl flex items-center justify-center gap-2 animate-in fade-in slide-in-from-bottom-2">
+                            <span className="text-[16px] text-warning font-bold uppercase tracking-tighter text-center">
+                                Mesa completa para {gameType} ({maxAllowed} personas)
+                            </span>
+                        </div>
+                    </>
                 )}
 
                 <button

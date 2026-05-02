@@ -2,7 +2,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { useState } from 'react';
 import { IMatch, IRoundScore, IRoundDetails, IPlayer, applyExclusivity } from '@el-porotero/shared';
 import { useMoscaLogic } from '@/hooks/useMoscaLogic';
-import { MoscaInputRow, AccumulativeInputRow, BurakoPlayerInput, EscobaInputRow } from './Score-Inputs';
+import { MoscaInputRow, AccumulativeInputRow, BurakoPlayerInput, EscobaInputRow, TrucoInputRow } from './Score-Inputs';
 import api from '@/api/axios';
 import axios from 'axios';
 import { X, Save, AlertCircle, HatGlasses, Crown } from 'lucide-react';
@@ -138,6 +138,14 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
                         {...commonProps}
                         isDealer={isDealer}
                         onUpdateDetails={(d) => updateScoreState(originalIndex, d)}
+                    />
+                );
+
+            case 'Truco':
+                return (
+                    <TrucoInputRow
+                        score={s}
+                        onUpdate={(payload) => updateScoreState(originalIndex, payload)}
                     />
                 );
 

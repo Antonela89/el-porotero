@@ -1,6 +1,6 @@
-import { IMatch, IRoundScore, IRoundDetails } from '@el-porotero/shared';
+import { IRoundScore, IRoundDetails } from '@el-porotero/shared';
 
-export const useEscobaLogic = (match: IMatch) => {
+export const useEscobaLogic = () => {
     
     // Validar que los velos tengan dueño
     const validateRound = (scores: IRoundScore[]) => {
