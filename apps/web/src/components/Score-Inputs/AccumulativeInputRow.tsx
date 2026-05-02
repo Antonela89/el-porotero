@@ -1,13 +1,14 @@
 import { IRoundScore, IRoundDetails } from '@el-porotero/shared';
 
 interface AccumulativeInputRowProps {
+    gameType: string
     score: IRoundScore;
     onUpdateScore: (fields: Partial<IRoundScore> & Partial<IRoundDetails>) => void;
     onUpdateDetails: (fields: Partial<IRoundScore> & Partial<IRoundDetails>) => void;
     disableExclusives: boolean;
 }
 
-export const AccumulativeInputRow = ({ score, onUpdateScore, onUpdateDetails, disableExclusives }: AccumulativeInputRowProps) => (
+export const AccumulativeInputRow = ({ gameType, score, onUpdateScore, onUpdateDetails, disableExclusives }: AccumulativeInputRowProps) => (
     <div className="flex flex-1 items-center gap-2">
         <input
             type="text"
@@ -25,12 +26,15 @@ export const AccumulativeInputRow = ({ score, onUpdateScore, onUpdateDetails, di
         >
             CERRÓ
         </button>
-        <button
-            disabled={disableExclusives && !score.details?.isCorteMinus10}
-            onClick={() => onUpdateDetails({ isCorteMinus10: !score.details?.isCorteMinus10, isCerrar: false, pointsAdded: -10 })}
-            className={`px-3 py-2 rounded-lg text-[10px] font-bold ${score.details?.isCorteMinus10 ? 'bg-orange-500 text-white' : 'bg-surface opacity-50'}`}
-        >
-            -10
-        </button>
+
+        {gameType !== 'Uno' && (
+            <button
+                disabled={disableExclusives && !score.details?.isCorteMinus10}
+                onClick={() => onUpdateDetails({ isCorteMinus10: !score.details?.isCorteMinus10, isCerrar: false, pointsAdded: -10 })}
+                className={`px-3 py-2 rounded-lg text-[10px] font-bold ${score.details?.isCorteMinus10 ? 'bg-orange-500 text-white' : 'bg-surface opacity-50'}`}
+            >
+                -10
+            </button>
+        )}
     </div>
 );
