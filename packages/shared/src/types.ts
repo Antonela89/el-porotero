@@ -94,3 +94,17 @@ export interface IRound {
 	scores: IRoundScore[];
 	timestamp: Date;
 }
+
+export interface IGameStat {
+	_id: string; // Nombre del juego (Loba, Mosca, etc.)
+	count: number;
+}
+
+export interface IUserStats {
+	totalPlayed: number;
+	won: number;
+	lost: number;
+	winRate: number;
+	favoriteGame: string;
+	gameHistory: IGameStat[];
+}

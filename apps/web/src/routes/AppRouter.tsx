@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthForm, ProtectedRoute } from '@/components';
-import { AuthLayout,  AppLayout } from '@/layout';
-import { DashboardPage, NewMatchPage, MatchDetailPage } from '@/pages';
+import { AuthLayout, AppLayout } from '@/layout';
+import { DashboardPage, NewMatchPage, MatchDetailPage, StatsPage } from '@/pages';
 
 export const AppRouter = () => {
     return (
@@ -18,6 +18,7 @@ export const AppRouter = () => {
                 {/* Rutas Protegidas */}
                 <Route element={<ProtectedRoute />}>
                     <Route path="/" element={<AppLayout><DashboardPage /></AppLayout>} />
+                    <Route path="/stats" element={<AppLayout><StatsPage /></AppLayout>} />
                     <Route path="/new-match" element={<AppLayout><NewMatchPage /></AppLayout>} />
                     <Route path="/match/:id" element={<AppLayout><MatchDetailPage /></AppLayout>} />
                 </Route>
