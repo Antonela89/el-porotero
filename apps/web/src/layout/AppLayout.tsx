@@ -3,6 +3,7 @@ import { ReactNode } from 'react';
 import { useAuth } from '@/context';
 import { LogOut, ArrowLeft, BarChart2, Home } from 'lucide-react'; // Importamos Home
 import { useNavigate, useLocation } from 'react-router-dom';
+import { IconButton } from '@/components';
 
 export const AppLayout = ({ children }: { children: ReactNode }) => {
     const { user, logout } = useAuth();
@@ -15,55 +16,43 @@ export const AppLayout = ({ children }: { children: ReactNode }) => {
     const showBack = !isDashboard; // Mostramos flecha de volver si no es el home
 
     return (
-        <div className="flex flex-col h-dvh bg-background text-text-main overflow-hidden font-body">
+        <div className="layout-root">
             {/* HEADER GLOBAL */}
-            <header className="px-6 py-4 flex justify-between items-center border-b border-white/5 bg-surface/20 backdrop-blur-md shrink-0">
-                <div className="flex items-center gap-4">
+            <header className="layout-header">
+                <div className="actions-container">
                     {showBack && (
-                        <button
+                        <IconButton
+                            icon={<ArrowLeft />}
                             onClick={() => navigate(-1)}
-                            className="p-2 -ml-2 text-text-muted hover:text-white transition-colors"
-                        >
-                            <ArrowLeft size={20} />
-                        </button>
+                            title={isStatsPage ? "Inicio" : "Estadísticas"}
+                        />
+
                     )}
-                    <span className="font-display font-bold text-primary tracking-tighter text-xl">
+                    <span className="brand-logo">
                         El Porotero
                     </span>
                 </div>
 
-                <div className="flex items-center gap-4">
+                <div className="actions-container">
                     <span className='text-text-muted'>{user?.username}</span>
                     {/* --- BOTÓN DINÁMICO: STATS o HOME --- */}
-                    {isStatsPage ? (
-                        <button
-                            onClick={() => navigate('/')}
-                            className="p-3 bg-surface rounded-2xl text-text-muted hover:text-primary transition-all border border-white/5 active:scale-90"
-                            title="Volver al Dashboard"
-                        >
-                            <Home size={24} />
-                        </button>
-                    ) : (
-                        <button
-                            onClick={() => navigate('/stats')}
-                            className="p-3 bg-surface rounded-2xl text-text-muted hover:text-primary transition-all border border-white/5 active:scale-90"
-                            title="Ver Mis Estadísticas"
-                        >
-                            <BarChart2 size={24} />
-                        </button>
-                    )}
 
-                    <button
+                    <IconButton
+                        icon={isStatsPage ? <Home /> : <BarChart2 />}
+                        onClick={() => navigate(isStatsPage ? '/' : '/stats')}
+                        title={isStatsPage ? "Inicio" : "Estadísticas"}
+                    />
+
+                    <IconButton
+                        icon={<LogOut />}
+                        variant="warning"
                         onClick={logout}
-                        className="p-3 bg-surface rounded-2xl text-text-muted hover:text-warning transition-all border border-white/5 active:scale-90"
                         title="Cerrar Sesión"
-                    >
-                        <LogOut size={24} />
-                    </button>
+                    />
                 </div>
             </header>
 
-            <main className="flex-1 flex flex-col overflow-hidden relative px-6 py-4">
+            <main className="layout-main">
                 {children}
             </main>
         </div>

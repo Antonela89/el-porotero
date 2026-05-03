@@ -1,22 +1,22 @@
-interface IconButtonProps {
-    icon: React.ReactNode;
+import { ReactNode } from 'react';
+
+interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+    icon: ReactNode;
     onClick: () => void;
     variant?: 'primary' | 'danger' | 'warning' | 'ghost';
     className?: string;
+    title: string;
 }
 
-export const IconButton = ({ icon, onClick, variant = 'ghost', className = '' }: IconButtonProps) => {
-    const variants = {
-        ghost: 'bg-surface text-text-muted hover:text-white',
-        primary: 'bg-primary text-background hover:bg-primary-dark',
-        danger: 'bg-orange-500/10 text-orange-500 hover:bg-orange-500 hover:text-white',
-        warning: 'bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500 hover:text-white'
-    };
+export const IconButton = ({ icon, onClick, variant = 'ghost', className = '', title, ...props }: IconButtonProps) => {
 
     return (
         <button
+            type="button"
             onClick={(e) => { e.stopPropagation(); onClick(); }}
-            className={`p-3 rounded-full transition-all active:scale-90 ${variants[variant]} ${className}`}
+            className={`btn-${variant} btn-icon-sz ${className}`}
+            title={title}
+            {...props}
         >
             {icon}
         </button>

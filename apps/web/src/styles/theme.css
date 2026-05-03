@@ -48,17 +48,44 @@
     }
 }
 
-/* --- COMPONENTES --- */
-@layer components {
-    .btn-primary {
-        @apply bg-primary text-background font-bold rounded-2xl flex items-center justify-center gap-2 text-xl py-4;
-    }
+@utility btn-base {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 1rem;
+    font-weight: 700;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
 
-    .btn-secondary {
-        @apply bg-secondary text-background font-semibold rounded-lg px-4 py-2;
-    }
+/* Variantes */
+.btn-primary {
+    @apply btn-base bg-primary text-background hover:bg-primary-dark;
+}
 
-    .card {
-        @apply bg-surface rounded-lg shadow-md p-6;
-    }
+.btn-ghost {
+    @apply btn-base bg-surface text-text-muted hover:text-white border border-white/5;
+}
+
+.btn-danger {
+    @apply btn-base bg-orange-500/10 text-orange-500 hover:bg-orange-500 hover:text-white;
+}
+
+.btn-warning {
+    @apply btn-base bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500 hover:text-white;
+}
+
+/* Tamaños */
+.btn-md {
+    @apply px-6 py-3 text-base;
+}
+
+.btn-lg {
+    @apply px-8 py-4 text-xl;
+}
+
+.btn-icon-sz {
+    @apply p-3 rounded-full;
 }
