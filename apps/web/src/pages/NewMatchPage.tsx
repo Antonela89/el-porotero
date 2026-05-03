@@ -308,7 +308,7 @@ export const NewMatchPage = () => {
             </main>
 
             {/* 4. FOOTER FIJO (Sumar + Jugar) */}
-            <footer className="fixed bottom-0 left-0 right-0 p-6 bg-background/80 border-t border-white/5 flex flex-col gap-4 max-w-lg mx-auto z-20">
+            <footer className="fixed bottom-0 left-0 right-0 py-6 bg-background/80 border-t border-white/5 flex flex-col gap-4 max-w-lg mx-auto z-20">
                 {/* AVISO DINÁMICO DE LÍMITE */}
 
                 {canAddMore ? (

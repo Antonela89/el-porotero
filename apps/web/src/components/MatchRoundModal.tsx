@@ -12,7 +12,7 @@ export interface TrucoFlowState {
     envidoLevel: number;
     trucoLevel: number;
     voice: 'A' | 'B' | null;
-    envidoClaimedBy: 'A' | 'B' | null; 
+    envidoClaimedBy: 'A' | 'B' | null;
     trucoClaimedBy: 'A' | 'B' | null;
 }
 
@@ -34,7 +34,7 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
     const [flowState, setFlowState] = useState<TrucoFlowState>({
         envidoLevel: 0,
         trucoLevel: 0,
-        voice: null,  
+        voice: null,
         envidoClaimedBy: null,
         trucoClaimedBy: null
     });
@@ -296,9 +296,11 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
                     <Dialog.Description className="sr-only">Formulario de puntos</Dialog.Description>
 
                     <div className="flex-1 overflow-y-auto p-6 pt-2 custom-scrollbar flex flex-col gap-6">
-                        <div className="bg-indigo-500/10 text-indigo-400 p-3 rounded-2xl text-center font-bold text-[10px] uppercase tracking-widest mb-6 border border-indigo-500/20">
-                            MODO: {currentMode}
-                        </div>
+                        {match.gameType === 'Truco' && (
+                            <div className="bg-indigo-500/10 text-indigo-400 p-3 rounded-2xl text-center font-bold text-[10px] uppercase tracking-widest border border-indigo-500/20">
+                                MODO: {currentMode}
+                            </div>
+                        )}
 
                         {match.gameType === 'Truco' && currentMode === 'Punta y Hacha' ? (
                             // --- MODO DUELOS ---

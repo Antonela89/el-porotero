@@ -1,5 +1,5 @@
 .dashboard-container {
-    @apply min-h-screen bg-background flex flex-col gap-8;
+    @apply min-h-screen bg-background flex flex-col gap-8 w-full;
 }
 
 .dashboard-header {
