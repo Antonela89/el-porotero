@@ -8,6 +8,14 @@ import api from '@/api/axios';
 import axios from 'axios';
 import { X, Save, AlertCircle, HatGlasses, Crown } from 'lucide-react';
 
+export interface TrucoFlowState {
+    envidoLevel: number;
+    trucoLevel: number;
+    voice: 'A' | 'B' | null;
+    envidoClaimedBy: 'A' | 'B' | null; 
+    trucoClaimedBy: 'A' | 'B' | null;
+}
+
 interface Props {
     isOpen: boolean;
     onClose: () => void;
@@ -22,6 +30,14 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
     const isEditMode = !!roundToEdit;
     const { validateRound, sombreroIndex } = useMoscaLogic(match);
     const { currentMode, phMatchups } = useTrucoLogic(match);
+
+    const [flowState, setFlowState] = useState<TrucoFlowState>({
+        envidoLevel: 0,
+        trucoLevel: 0,
+        voice: null,  
+        envidoClaimedBy: null,
+        trucoClaimedBy: null
+    });
 
     // Calculamos isTeamGame por si el campo de la DB falla
     const isTeamGameActive = match.isTeamGame || match.players.some(p => p.team === 'A' || p.team === 'B');
@@ -196,7 +212,10 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
                     <TrucoInputRow
                         match={match}
                         score={s}
+                        teamId={player.team as 'A' | 'B'}
+                        flowState={flowState}
                         onUpdate={(payload) => updateScoreState(originalIndex, payload)}
+                        onFlowChange={(newFlow) => setFlowState(prev => ({ ...prev, ...newFlow }))}
                     />
                 );
 
@@ -296,7 +315,14 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
                                                         <span className={`text-[10px] font-black uppercase ${player.team === 'A' ? 'text-indigo-400' : 'text-rose-400'}`}>
                                                             {player.name}
                                                         </span>
-                                                        <TrucoInputRow score={s} match={match} onUpdate={(p) => updateScoreState(playerIdx, p)} />
+                                                        <TrucoInputRow
+                                                            match={match}
+                                                            score={s}
+                                                            teamId={player.team as 'A' | 'B'} // <--- AGREGAR
+                                                            flowState={flowState}             // <--- AGREGAR
+                                                            onUpdate={(p) => updateScoreState(playerIdx, p)}
+                                                            onFlowChange={(f) => setFlowState(prev => ({ ...prev, ...f }))} // <--- AGREGAR
+                                                        />
                                                     </div>
                                                 );
                                             })}
@@ -351,7 +377,8 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
                                                 <div className="flex justify-between items-center mb-4">
                                                     <div className="flex gap-1">
                                                         {teamPlayers.map(p => {
-                                                            const isDealer = match.players.findIndex(mp => mp.name === p.name) === match.currentDealerIndex;
+                                                            const playerGlobalIdx = match.players.findIndex(mp => mp.name === p.name);
+                                                            const isDealer = playerGlobalIdx === match.currentDealerIndex;
                                                             return (
                                                                 <div key={p.name} className="flex items-center gap-1">
                                                                     <span className="text-[10px] font-bold text-text-muted">{p.name.substring(0, 3)}</span>
@@ -365,13 +392,15 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit, onSuccess
 
                                                 {/* Renderizamos UNA SOLA fila de Truco para todo el equipo */}
                                                 <TrucoInputRow
-                                                    score={teamScores[0]} // Usamos el score del primer integrante como contenedor
                                                     match={match}
+                                                    score={teamScores[0]}
+                                                    teamId={teamId as 'A' | 'B'}
+                                                    flowState={flowState}
                                                     onUpdate={(payload) => {
-                                                        // Buscamos el índice del primer integrante para guardar los puntos ahí
-                                                        const firstPlayerIdx = match.players.findIndex(p => p.name === teamScores[0].playerName);
-                                                        updateScoreState(firstPlayerIdx, payload);
+                                                        const targetIdx = match.players.findIndex(p => p.name === teamScores[0].playerName);
+                                                        updateScoreState(targetIdx, payload);
                                                     }}
+                                                    onFlowChange={(f) => setFlowState(prev => ({ ...prev, ...f }))}
                                                 />
                                             </div>) : (
                                             <div className="flex flex-col gap-3">
