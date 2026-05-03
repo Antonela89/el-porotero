@@ -2,6 +2,9 @@ import { IMatch } from '@el-porotero/shared';
 import { Trophy, Users, ChevronRight, Trash2, Edit3 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { IconButton, Button } from '@/components';
+
+const MotionArticle = motion.create('article');
 
 interface MatchCardProps {
     match: IMatch;
@@ -9,26 +12,12 @@ interface MatchCardProps {
     onEdit: (match: IMatch) => void;
 }
 
-
 export const CardMatch = ({ match, onDelete, onEdit }: MatchCardProps) => {
     const navigate = useNavigate();
-
-    // Manejador para borrar
-    const handleDelete = (e: React.MouseEvent) => {
-        e.stopPropagation(); // Evita navegar a la partida
-        if (window.confirm(`¿Seguro que querés borrar la partida de ${match.gameType}?`)) {
-            onDelete(match._id);
-        }
-    };
-
-    // Manejador para editar
-    const handleEdit = (e: React.MouseEvent) => {
-        e.stopPropagation(); // Evita navegar a la partida
-        onEdit(match);
-    };
+    const isActive = match.status === 'active';
 
     return (
-        <motion.article
+        <MotionArticle
             whileTap={{ scale: 0.98 }}
             className="match-card flex flex-col gap-4"
         >
@@ -38,7 +27,9 @@ export const CardMatch = ({ match, onDelete, onEdit }: MatchCardProps) => {
                         {match.gameType}
                     </h3>
                     <div className="flex items-center gap-3 text-text-muted text-sm mt-1">
-                        <span className="flex items-center gap-1"><Users size={14} /> {match.players.length}</span>
+                        <span className="flex items-center gap-1">
+                            <Users size={14} /> {match.players.length}
+                        </span>
                         {match.winner && (
                             <span className="text-emerald-400 font-bold flex items-center gap-1">
                                 <Trophy size={14} /> {match.winner}
@@ -47,41 +38,37 @@ export const CardMatch = ({ match, onDelete, onEdit }: MatchCardProps) => {
                     </div>
                 </div>
 
-                {/* ESTADO */}
-                <span className={`text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider ${match.status === 'active' ? 'bg-primary/10 text-primary' : 'bg-white/5 text-text-muted'
-                    }`}>
-                    {match.status === 'active' ? 'En Juego' : 'Cerrada'}
+                <span className={isActive ? 'status-active' : 'status-closed'}>
+                    {isActive ? 'En Juego' : 'Cerrada'}
                 </span>
             </div>
 
-            {/* BARRA DE ACCIONES SIEMPRE VISIBLE */}
             <div className="flex items-center justify-between border-t border-white/5 pt-3 mt-auto">
                 <div className="flex gap-2">
-                    <motion.button
-                        whileTap={{ scale: 0.9 }}
-                        onClick={(e) => handleEdit(e)}
-                        className="p-3 bg-surface border border-white/10 rounded-xl text-primary hover:bg-primary/10 transition-colors"
-                    >
-                        <Edit3 size={18} />
-                    </motion.button>
-
-                    <motion.button
-                        whileTap={{ scale: 0.9 }}
-                        onClick={(e) => handleDelete(e)}
-                        className="p-3 bg-surface border border-white/10 rounded-xl text-orange-400 hover:bg-orange-400/10 transition-colors"
-                    >
-                        <Trash2 size={18} />
-                    </motion.button>
+                    <IconButton
+                        icon={<Edit3 size={18} />}
+                        title="Editar"
+                        onClick={() => onEdit(match)}
+                    />
+                    <IconButton
+                        icon={<Trash2 size={18} />}
+                        variant="danger"
+                        title="Borrar"
+                        onClick={() => {
+                            if (window.confirm(`¿Borrar partida de ${match.gameType}?`)) {
+                                onDelete(match._id!);
+                            }
+                        }}
+                    />
                 </div>
 
-                <motion.button
-                    whileTap={{ scale: 0.9 }}
+                <Button
                     onClick={() => navigate(`/match/${match._id}`)}
-                    className="flex items-center gap-2 px-4 py-3 bg-indigo-500 text-white rounded-xl font-bold text-sm shadow-lg shadow-indigo-500/20 active:bg-indigo-600"
+                    className="bg-secondary text-white rounded-xl! py-3! px-4! text-sm!"
                 >
                     Continuar <ChevronRight size={18} />
-                </motion.button>
+                </Button>
             </div>
-        </motion.article>
+        </MotionArticle>
     );
 };

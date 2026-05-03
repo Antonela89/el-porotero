@@ -48,6 +48,7 @@
     }
 }
 
+/* Botones */
 @utility btn-base {
     display: flex;
     align-items: center;
@@ -88,4 +89,84 @@
 
 .btn-icon-sz {
     @apply p-3 rounded-full;
+}
+
+/*Dashboard*/
+/* --- Utilidades de Dashboard --- */
+@utility dashboard-container {
+    min-height: 100dvh;
+    background-color: var(--color-background);
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 100%;
+}
+
+@utility match-grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+
+    @media (min-width: 768px) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* --- Componente Match Card --- */
+.match-card {
+    background-color: var(--color-surface);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 1.25rem;
+    border-radius: 1rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+        border-color: color-mix(in srgb, var(--color-primary), transparent 70%);
+        transform: translateY(-2px);
+    }
+}
+
+/* --- Badges de Estado (Semantic v4) --- */
+@utility status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.status-active {
+    @apply status-badge;
+    background-color: color-mix(in srgb, var(--color-primary), transparent 80%);
+    color: var(--color-primary);
+}
+
+.status-finished {
+    @apply status-badge;
+    background-color: rgba(156, 163, 175, 0.2);
+    color: var(--color-text-muted);
+}
+
+@utility match-card {
+    @apply bg-surface border border-white/5 p-5 rounded-2xl shadow-lg transition-all;
+
+    /* El hover lo manejamos con Framer Motion en el componente o aquí */
+    &:hover {
+        @apply border-primary/30;
+    }
+}
+
+@utility status-badge {
+    @apply text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider;
+}
+
+.status-active {
+    @apply status-badge bg-primary/10 text-primary;
+}
+
+.status-closed {
+    @apply status-badge bg-white/5 text-text-muted;
 }
