@@ -8,9 +8,10 @@ import {
     Dice5,
     Copy
 } from 'lucide-react';
+import { GameType } from '@el-porotero/shared';
 
 export interface GameDefinition {
-    id: string;
+    id: GameType;
     name: string;
     maxPlayers: number;
     description: string;
@@ -104,7 +105,7 @@ export const GAMES: GameDefinition[] = [
 ];
 
 // Tip Pro: Crear un objeto para búsquedas rápidas por ID
-export const GAMES_MAP = GAMES.reduce((acc, game) => {
+export const GAMES_MAP: Record<GameType, GameDefinition> = GAMES.reduce((acc, game) => {
     acc[game.id] = game;
     return acc;
-}, {} as Record<string, GameDefinition>);
+}, {} as Record<GameType, GameDefinition>);

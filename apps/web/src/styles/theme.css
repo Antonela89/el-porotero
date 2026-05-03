@@ -194,3 +194,78 @@
     margin-inline: auto;
     z-index: 50;
 }
+
+/*Tabla de puntajes*/
+@utility match-layout {
+    @apply flex flex-col h-dvh bg-background w-full max-w-2xl mx-auto relative;
+}
+
+/* Scrollbar invisible pero funcional para móviles */
+.custom-scrollbar {
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+/* Invertir colores de iconos de cartas en modo oscuro */
+.card-icon-filter {
+    filter: invert(1) brightness(1.5);
+}
+
+/*MatchHeader*/
+@utility match-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+@utility header-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+@utility card-icon-filter {
+    filter: invert(1) brightness(1.5);
+}
+
+/* --- Utilidades de Interfaz --- */
+
+@utility fab-main {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 4rem;
+    height: 4rem;
+    z-index: 40;
+    @apply shadow-2xl transition-transform active:scale-95;
+
+    & svg {
+        @apply stroke-3;
+    }
+}
+
+@utility winner-card {
+    @apply bg-primary text-background p-6 rounded-3xl flex flex-col items-center gap-2 shadow-2xl;
+}
+
+@utility scoreboard-container {
+    @apply w-full overflow-x-auto custom-scrollbar bg-surface rounded-4xl border border-white/5 shadow-2xl;
+}
+
+@utility sticky-col {
+    @apply sticky left-0 bg-surface z-10 border-r border-white/5;
+}
+
+@utility score-cell {
+    @apply p-4 font-mono text-sm text-center min-w-20;
+}
+
+@utility total-row {
+    @apply bg-primary/5 font-bold border-t border-white/10;
+}

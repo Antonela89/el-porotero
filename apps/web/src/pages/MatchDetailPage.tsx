@@ -1,164 +1,108 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { IMatch } from '@el-porotero/shared';
-import { GAMES_MAP } from '@/constants/games';
-import api from '@/api/axios';
 import { Plus } from 'lucide-react';
-import { MatchRoundModal, MatchHeader, LoadingSpinner, ErrorMessage, NotFound, MatchScoreboard, WinnerDisplay, ConfirmDialog } from '@/components';
-import { AddCantoModal } from '@/components/AddCantoModal';
+import { MatchRoundModal, MatchHeader, MatchScoreboard, WinnerDisplay, ConfirmDialog, AddCantoModal, IconButton } from '@/components';
+import { GAMES_MAP } from '@/constants';
 import { useMatch } from '@/hooks/useMatch';
+import { useMatchActions } from '@/hooks/useMatchActions';
+import { IMatch } from '@el-porotero/shared';
 
 export const MatchDetailPage = () => {
     const { id } = useParams<{ id: string }>();
-    const { match, loading, error, setMatch, refetch } = useMatch(id);
     const navigate = useNavigate();
+
+    // Data Fetching con TanStack Query
+    const { match, loading, refetch } = useMatch(id);
+    // Mutaciones centralizadas
+    const actions = useMatchActions(id!);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [roundToDelete, setRoundToDelete] = useState<number | null>(null);
     const [roundToEdit, setRoundToEdit] = useState<number | null>(null);
     const [cantoPlayer, setCantoPlayer] = useState<string | null>(null);
 
-    if (loading) return <LoadingSpinner />; // Un componente que podrías crear
-    if (error) return <ErrorMessage message={error} />;
-    if (!match) return <NotFound />;
+    const gameInfo = match ? GAMES_MAP[match.gameType] : null;
 
-    const openEdit = (num: number) => {
-        setRoundToEdit(num);
-        setIsModalOpen(true);
-    };
+    if (loading || !match || !gameInfo) return <div className="p-20 text-center animate-pulse">Cargando partida...</div>;
 
-    // Función para abrir modo creación
-    const openAdd = () => {
-        setRoundToEdit(null);
-        setIsModalOpen(true);
-    };
-
-    // Esta función la llamará el Modal de Puntos
-    const handleUpdateMatch = (updatedMatch: IMatch) => {
-        setMatch(updatedMatch);
-    };
-
-    const handleDeleteRound = async (roundNumber: number) => {
-        if (window.confirm(`¿Eliminar la ronda ${roundNumber}? Esta acción no se puede deshacer.`)) {
-            try {
-                await api.delete(`/matches/${match?._id}/round/${roundNumber}`);
-                // Refrescamos la partida para ver los cambios
-                const { data } = await api.get<IMatch>(`/matches/${id}`);
-                setMatch(data);
-            } catch (error) {
-                alert("Error al eliminar la ronda");
-                console.log(error);
-            }
-        }
-    };
-
-    const handleDeleteConfirm = async () => {
-        if (!roundToDelete) return;
-        try {
-            const { data } = await api.delete(`/matches/${id}/round/${roundToDelete}`);
-            setMatch(data); // Actualizamos la tabla con el recalculo del back
-            setRoundToDelete(null);
-        } catch (err) {
-            console.error("Error al borrar", err);
-        }
-    };
-
-    const handleReengage = async (playerName: string) => {
-        if (window.confirm(`¿Re-enganchar a ${playerName}? Entrará con el puntaje del más alto.`)) {
-            try {
-                const { data } = await api.patch(`/matches/${match?._id}/reengage`, {
-                    playerName
-                });
-                setMatch(data);
-            } catch (error) {
-                alert("Error al re-enganchar");
-                console.log(error);
-
-            }
-        }
-    };
-
-    const handleRevancha = (match: IMatch) => {
-        // Mandamos solo los nombres y el equipo, reseteando puntos y estado
-        const playersForRematch = match.players.map(p => ({
-            name: p.name,
-            team: p.team
-        }));
-
+    const handleRevancha = (m: IMatch) => {
         navigate('/new-match', {
-            state: {
-                gameType: match.gameType,
-                players: playersForRematch
-            }
+            state: { gameType: m.gameType, players: m.players.map(p => ({ name: p.name, team: p.team })) }
         });
     };
 
-    const gameInfo = match?.gameType ? GAMES_MAP[match.gameType] : null;
-
-    if (loading || !match || !gameInfo) return <div className="match-layout flex items-center justify-center">Cargando partida...</div>;
-    // CAMBIAR CUANDO ESTE EL SPINNER
-    // if (loading || !match || !gameInfo) {
-    // return <LoadingSpinner />; 
-    // }
-
     return (
-        <div className="match-layout">
-            {/* HEADER COMPACTO */}
-            <MatchHeader
-                match={match}
-                onRefresh={refetch}
-                icon={gameInfo.icon}
-            />
+        <div className="match-layout overflow-hidden flex flex-col h-full">
+            <MatchHeader match={match} onRefresh={refetch} icon={
+                <div className={gameInfo.color}>
+                    {gameInfo.icon}
+                </div>
+            } />
 
-            <MatchScoreboard
-                match={match}
-                onEditRound={openEdit}
-                onDeleteRound={handleDeleteRound}
-                onReengage={handleReengage}
-                onCantar={(name) => setCantoPlayer(name)}
-            />
+            <main className="flex-1 overflow-y-auto custom-scrollbar">
+                {gameInfo.isDescending && (
+                    <div className="bg-purple-500/10 text-purple-400 text-[10px] py-1 text-center font-bold uppercase tracking-widest mb-4 border-y border-purple-500/20">
+                        Modo Descendente: El primero en llegar a 0 gana
+                    </div>
+                )}
 
-            {/* MODAL DE CONFIRMACIÓN PARA BORRAR */}
+                <MatchScoreboard
+                    match={match}
+                    onEditRound={(num) => { setRoundToEdit(num); setIsModalOpen(true); }}
+                    onDeleteRound={setRoundToDelete}
+                    onReengage={(name) => actions.reengage.mutate(name)}
+                    onCantar={setCantoPlayer}
+                />
+            </main>
+
             <ConfirmDialog
                 isOpen={roundToDelete !== null}
                 onClose={() => setRoundToDelete(null)}
-                onConfirm={handleDeleteConfirm}
+                onConfirm={() => {
+                    actions.deleteRound.mutate(roundToDelete!);
+                    setRoundToDelete(null);
+                }}
                 title="¿Borrar ronda?"
-                description={`Se eliminará la ronda ${roundToDelete} y se recalcularán todos los puntajes automáticamente.`}
+                description={`Se eliminará la ronda ${roundToDelete} y se recalcularán los puntos.`}
             />
 
-            {/* RESUMEN DE GANADOR (SI TERMINÓ) */}
             {match.status === 'finished' && (
                 <WinnerDisplay winner={match.winner} handleRevancha={handleRevancha} match={match} />
             )}
 
-            {/* BOTÓN FLOTANTE PARA ANOTAR RONDA */}
             {match.status === 'active' && (
-                <button
-                    className="fixed bottom-8 right-8 w-16 h-16 bg-primary text-background rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-transform"
-                    onClick={() => openAdd()}
-                >
-                    <Plus size={32} strokeWidth={3} />
-                </button>
+                <IconButton
+                    icon={<Plus size={32} />}
+                    variant="primary"
+                    title="Anotar Ronda"
+                    className="fab-main rounded-full!"
+                    onClick={() => {
+                        setRoundToEdit(null);
+                        setIsModalOpen(true);
+                    }}
+                />
             )}
 
-            {/* EL MODAL */}
             <MatchRoundModal
-                key={`modal-${roundToEdit || 'new'}`}
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                match={match!}
+                match={match}
                 roundToEdit={roundToEdit}
-                onSuccess={handleUpdateMatch}
+                onSuccess={() => setIsModalOpen(false)}
             />
 
-            {/* Modal para cantar en Barsiga*/}
             <AddCantoModal
                 isOpen={!!cantoPlayer}
                 onClose={() => setCantoPlayer(null)}
-                match={match!}
                 playerName={cantoPlayer}
-                onSuccess={setMatch}
+                onConfirm={(points) => {
+                    if (cantoPlayer) {
+                        actions.addCanto.mutate({
+                            playerName: cantoPlayer,
+                            points
+                        });
+                    }
+                }}
             />
         </div>
     );

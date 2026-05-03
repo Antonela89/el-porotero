@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { IMatch, IRoundScore, IRoundDetails, IPlayer, applyExclusivity } from '@el-porotero/shared';
 import { useMoscaLogic } from '@/hooks/useMoscaLogic';
 import { useTrucoLogic } from '@/hooks/useTrucoLogic';
-import { MoscaInputRow, AccumulativeInputRow, BurakoPlayerInput, EscobaInputRow, TrucoInputRow } from './Score-Inputs';
+import { MoscaInputRow, AccumulativeInputRow, BurakoPlayerInput, EscobaInputRow, TrucoInputRow } from '../Score-Inputs';
 import api from '@/api/axios';
 import axios from 'axios';
 import { X, Save, AlertCircle, HatGlasses, Crown } from 'lucide-react';

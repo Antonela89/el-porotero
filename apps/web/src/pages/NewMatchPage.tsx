@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { GameSelector } from '@/components/GameSelector';
+import { GameSelector } from '@/components/match/GameSelector';
 import { IconButton, Button } from '@/components';
 import { X, UserPlus, Play, Users, Edit2, Check } from 'lucide-react';
 import { useNewMatch } from '@/hooks/useNewMatch';
