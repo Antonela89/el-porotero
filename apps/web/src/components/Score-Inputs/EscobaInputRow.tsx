@@ -1,6 +1,6 @@
-// apps/web/src/components/score-inputs/EscobaInputRow.tsx
 import { IRoundScore, IRoundDetails } from '@el-porotero/shared';
 import { Minus, Plus, Coins, Trophy, Layers, Star } from 'lucide-react';
+import { IconButton, Button } from '@/components';
 
 interface Props {
     score: IRoundScore;
@@ -19,69 +19,69 @@ export const EscobaInputRow = ({ score, onUpdate, onToggleExclusive }: Props) =>
                     <Star size={16} className="text-primary" />
                     <span className="text-[10px] font-bold uppercase text-text-muted">Escobas</span>
                 </div>
-                <div className="flex items-center gap-4">
-                    <button onClick={() => onUpdate({ escobas: Math.max(0, (d.escobas || 0) - 1) })} className="text-text-muted"><Minus size={16} /></button>
-                    <span className="font-display font-bold text-xl">{d.escobas || 0}</span>
-                    <button onClick={() => onUpdate({ escobas: (d.escobas || 0) + 1 })} className="text-primary"><Plus size={16} /></button>
+                <div className="flex items-center gap-2">
+                    <IconButton
+                        icon={<Minus size={16} />}
+                        title="Quitar Escoba"
+                        onClick={() => onUpdate({ escobas: Math.max(0, (d.escobas || 0) - 1) })}
+                    />
+                    <span className="font-display font-bold text-xl px-2 min-w-[2rem] text-center">
+                        {d.escobas || 0}
+                    </span>
+                    <IconButton
+                        icon={<Plus size={16} />}
+                        variant="primary"
+                        title="Sumar Escoba"
+                        onClick={() => onUpdate({ escobas: (d.escobas || 0) + 1 })}
+                    />
                 </div>
             </div>
 
-            {/* ÍTEMS DE MESA  */}
+            {/* ÍTEMS DE MESA (Oros, Cartas, Setenta) */}
             <div className="grid grid-cols-3 gap-2">
-                {[
-                    { key: 'hasOros', label: 'Oros', color: 'yellow', icon: <Coins size={14} /> },
-                    { key: 'hasCartas', label: 'Cartas', color: 'blue', icon: <Layers size={14} /> },
-                    { key: 'hasSetenta', label: 'Setenta', color: 'emerald', icon: <Trophy size={14} /> }
-                ].map((item) => {
-                    // Creamos un diccionario con las clases COMPLETAS
-                    // Al estar escritas enteras acá, Tailwind las va a detectar y compilar
-                    const colorClasses: Record<string, string> = {
-                        yellow: 'bg-yellow-500/20 border-yellow-500 text-yellow-500 shadow-yellow-500/10',
-                        blue: 'bg-blue-500/20 border-blue-500 text-blue-500 shadow-blue-500/10',
-                        emerald: 'bg-emerald-500/20 border-emerald-500 text-emerald-500 shadow-emerald-500/10'
-                    };
+                {(['hasOros', 'hasCartas', 'hasSetenta'] as const).map((key) => {
+                    const config = {
+                        hasOros: { label: 'Oros', icon: <Coins size={14} />, activeClass: 'active-oro' },
+                        hasCartas: { label: 'Cartas', icon: <Layers size={14} />, activeClass: 'active-cartas' },
+                        hasSetenta: { label: 'Setenta', icon: <Trophy size={14} />, activeClass: 'active-setenta' }
+                    }[key];
+
+                    const isActive = !!d[key];
 
                     return (
                         <button
-                            key={item.key}
+                            key={key}
                             type="button"
-                            onClick={() => onToggleExclusive(item.key as keyof IRoundDetails)}
-                            className={`flex flex-col items-center gap-1 p-2 rounded-xl border transition-all duration-300
-                    ${d[item.key as keyof IRoundDetails]
-                                    ? colorClasses[item.color] 
-                                    : 'bg-surface border-white/5 text-text-muted opacity-50 hover:opacity-100'}`}
+                            onClick={() => onToggleExclusive(key)}
+                            className={`table-item-btn ${isActive ? config.activeClass : ''}`}
                         >
-                            {item.icon}
-                            <span className="text-[8px] font-bold uppercase">{item.label}</span>
+                            {config.icon}
+                            <span className="text-[8px] font-bold uppercase">{config.label}</span>
                         </button>
                     );
                 })}
             </div>
 
-            {/* 3. LÓGICA DE VELOS (Exclusivos) */}
+            {/* LÓGICA DE VELOS (As, 7, 12) */}
             <div className="bg-background/50 p-3 rounded-xl border border-white/5 flex flex-col gap-3">
                 <span className="text-[9px] font-bold text-text-muted uppercase ml-1">Velos de Oro</span>
-                <div className="flex items-center gap-3">
-                    <div className="flex gap-2 flex-1">
-                        {['As', '7', '12'].map((card) => {
-                            const key = `hasVelo${card}` as keyof IRoundDetails;
-                            const isSelected = !!d[key];
+                <div className="flex gap-2">
+                    {['As', '7', '12'].map((card) => {
+                        const key = `hasVelo${card}` as keyof IRoundDetails;
+                        const isSelected = !!d[key];
 
-                            return (
-                                <button
-                                    key={card}
-                                    type="button"
-                                    onClick={() => onToggleExclusive(key)}
-                                    className={`grow py-2 rounded-xl border font-bold text-xs transition-all duration-300
-                                        ${isSelected
-                                            ? 'bg-purple-500/20 border-purple-500 text-purple-400 shadow-lg shadow-purple-500/10 scale-105'
-                                            : 'bg-surface border-white/5 text-text-muted opacity-40 hover:opacity-100'}`}
-                                >
-                                    {card}
-                                </button>
-                            );
-                        })}
-                    </div>
+                        return (
+                            <Button
+                                key={card}
+                                variant="ghost"
+                                // Usamos la clase personalizada para el color púrpura de los velos
+                                className={`flex-1 !py-2 !text-xs ${isSelected ? 'table-item-btn active-velo' : 'opacity-40'}`}
+                                onClick={() => onToggleExclusive(key)}
+                            >
+                                {card}
+                            </Button>
+                        );
+                    })}
                 </div>
             </div>
         </div>

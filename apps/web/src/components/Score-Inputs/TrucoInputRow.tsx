@@ -1,16 +1,9 @@
 import { RotateCcw, Check } from "lucide-react";
-import { IRoundScore, IRoundDetails, IMatch } from '@el-porotero/shared';
-import { TRUCO_ACTIONS } from '@/constants/truco_actions'; // Asegurate de que la ruta sea correcta
+import { IRoundScore, IRoundDetails, IMatch, TrucoFlowState } from '@el-porotero/shared';
+import { TRUCO_ACTIONS } from '@/constants'; // Asegurate de que la ruta sea correcta
 import { useState } from "react";
-import { useTrucoLogic } from '@/hooks/useTrucoLogic';
-
-export interface TrucoFlowState {
-    envidoLevel: number;
-    trucoLevel: number;
-    voice: 'A' | 'B' | null;
-    envidoClaimedBy: 'A' | 'B' | null;
-    trucoClaimedBy: 'A' | 'B' | null;
-}
+import { useTrucoLogic } from '@/hooks';
+import { Button } from '@/components'
 
 interface ITrucoAction {
     id: string;
@@ -132,27 +125,27 @@ export const TrucoInputRow = ({ match, score, teamId, flowState, onUpdate, onFlo
                                             {action.label}
                                         </span>
 
-                                        <button
-                                            type="button"
+                                        <Button
+                                            variant={selections[action.label] === 'q' ? 'success' : 'ghost'}
+                                            className="!rounded-none border-l !px-4 !py-2 min-w-20"
                                             onClick={() => handleToggle(action, 'q')}
-                                            className={`flex flex-col items-center p-2 min-w-18.5 border-l border-white/5 transition-all
-                                        ${selections[action.label] === 'q' ? 'bg-emerald-500 text-white shadow-inner' : 'text-emerald-400 hover:bg-emerald-500/5'}`}
                                         >
-                                            <span className="text-[7px] uppercase font-black opacity-70">Quiero</span>
-                                            <span className="text-sm font-display font-bold">
-                                                +{action.q === 'Falta' ? faltaValue : action.q}
-                                            </span>
-                                        </button>
+                                            <div className="flex flex-col items-center">
+                                                <span className="text-[7px] uppercase opacity-70">Quiero</span>
+                                                <span className="text-sm font-display">+{action.q === 'Falta' ? faltaValue : action.q}</span>
+                                            </div>
+                                        </Button>
 
-                                        <button
-                                            type="button"
+                                        <Button
+                                            variant={selections[action.label] === 'nq' ? 'danger' : 'ghost'}
+                                            className="!rounded-none border-l !px-4 !py-2 min-w-20"
                                             onClick={() => handleToggle(action, 'nq')}
-                                            className={`flex flex-col items-center p-2 min-w-18.5 border-l border-white/5 transition-all
-                                        ${selections[action.label] === 'nq' ? 'bg-orange-500 text-white shadow-inner' : 'text-orange-400 hover:bg-orange-500/5'}`}
                                         >
-                                            <span className="text-[7px] uppercase font-black opacity-70">No Q.</span>
-                                            <span className="text-sm font-display font-bold">+{action.nq}</span>
-                                        </button>
+                                            <div className="flex flex-col items-center">
+                                                <span className="text-[7px] uppercase opacity-70">No Q.</span>
+                                                <span className="text-sm font-display">+{action.nq}</span>
+                                            </div>
+                                        </Button>
                                     </div>
                                 )
                             })}

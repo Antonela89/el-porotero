@@ -1,7 +1,8 @@
-import { IRoundScore, IRoundDetails } from '@el-porotero/shared';
+import { IRoundScore, IRoundDetails, GameType } from '@el-porotero/shared';
+import { Button } from '@/components';
 
 interface AccumulativeInputRowProps {
-    gameType: string
+    gameType: GameType
     score: IRoundScore;
     onUpdateScore: (fields: Partial<IRoundScore> & Partial<IRoundDetails>) => void;
     onUpdateDetails: (fields: Partial<IRoundScore> & Partial<IRoundDetails>) => void;
@@ -24,24 +25,23 @@ export const AccumulativeInputRow = ({ gameType, score, onUpdateScore, onUpdateD
                 value={isCerrar ? "0" : isCorte ? "-10" : (score.pointsAdded || "")}
                 onChange={(e) => onUpdateScore({ pointsAdded: parseInt(e.target.value.replace(/\D/g, "")) || 0 })}
             />
-            <button
-                type="button"
+            <Button
+                variant={isCerrar ? 'primary' : 'ghost'}
+                className="!text-[10px] !py-2 flex-1"
                 disabled={disableExclusives && !isCerrar}
                 onClick={() => onUpdateDetails({ isCerrar: !isCerrar, isCorteMinus10: false })}
-                className={`px-3 py-2 rounded-lg text-[10px] font-bold ${isCerrar ? 'bg-primary text-background' : 'bg-surface opacity-50'}`}
             >
                 CERRÓ
-            </button>
-
+            </Button>
             {gameType !== 'Uno' && (
-                <button
-                    type="button"
+                <Button
+                    variant={isCorte ? 'danger' : 'ghost'}
+                    className="!text-[10px] !py-2 flex-1"
                     disabled={disableExclusives && !isCorte}
                     onClick={() => onUpdateDetails({ isCorteMinus10: !isCorte, isCerrar: false })}
-                    className={`px-3 py-2 rounded-lg text-[10px] font-bold ${isCorte ? 'bg-orange-500 text-white' : 'bg-surface opacity-50'}`}
                 >
                     -10
-                </button>
+                </Button>
             )}
         </div>
     )

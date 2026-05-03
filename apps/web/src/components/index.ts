@@ -8,18 +8,21 @@ export * from './match/AddCantoModal';
 export * from './match/MatchScoreboard';
 export * from './match/WinnerDisplay';
 export * from './match/MatchHeader';
-export * from './match/ScoreHeader';
+export * from './match/PlayerHeader';
+export * from './match/TeamHeader';
 export * from './match/TrucoTotalCell';
-// export * from './MatchRoundDetails';
-
 
 // Componentes atómicos
 export * from './UI/IconButton';
 export * from './UI/Button';
 export * from './UI/Input';
 export * from './UI/LoadingSpinner';
-export * from './UI/ErrorMessage';
-export * from './UI/NotFound';
+export * from './UI/BaseModal';
 export * from './UI/ConfirmDialog';
-// export * from './UI/Modal';
-// export * from './UI/Tooltip';
+
+// Juego
+export { MoscaInputRow } from './Score-Inputs/MoscaInputRow';
+export { AccumulativeInputRow } from './Score-Inputs/AccumulativeInputRow';
+export { BurakoPlayerInput } from './Score-Inputs/BurakoPlayerInput';
+export { EscobaInputRow } from './Score-Inputs/EscobaInputRow';
+export { TrucoInputRow } from './Score-Inputs/TrucoInputRow';

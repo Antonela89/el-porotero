@@ -97,6 +97,7 @@ export interface IRound {
 	timestamp: Date;
 }
 
+// Estadisticas
 export interface IGameStat {
 	_id: string; // Nombre del juego (Loba, Mosca, etc.)
 	count: number;
@@ -109,4 +110,13 @@ export interface IUserStats {
 	winRate: number;
 	favoriteGame: string;
 	gameHistory: IGameStat[];
+}
+
+// Interfaces de cada juego
+export interface TrucoFlowState {
+    envidoLevel: number;
+    trucoLevel: number;
+    voice: 'A' | 'B' | null;
+    envidoClaimedBy: 'A' | 'B' | null;
+    trucoClaimedBy: 'A' | 'B' | null;
 }

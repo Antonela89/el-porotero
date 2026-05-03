@@ -1,5 +1,5 @@
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    variant?: 'primary' | 'ghost' | 'danger' | 'warning';
+    variant?: 'primary' | 'ghost' | 'danger' | 'warning' | 'success';
     size?: 'md' | 'lg';
     loading?: boolean;
 }

@@ -9,3 +9,4 @@ export * from './useMatches';
 export * from './useMoscaLogic';
 export * from './useNewMatch';
 export * from './useTrucoLogic';
+export * from './useMatchRoundForm';

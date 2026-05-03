@@ -2,7 +2,7 @@ import { Trash2, Edit2, Asterisk } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { IMatch, IRound } from '@el-porotero/shared';
 import { useTrucoLogic } from '@/hooks/useTrucoLogic';
-import { IconButton, Button, PlayerHeader, TrucoTotalCell } from '@/components';
+import { IconButton, Button, PlayerHeader, TrucoTotalCell, TeamHeader } from '@/components';
 
 interface MatchScoreboardProps {
     match: IMatch;
@@ -17,6 +17,9 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
     const allPlayerNames = match.players.map(p => p.name);
 
     const isLoseOnLimit = ['Loba', 'Chinchon'].includes(match.gameType);
+    const limitLabel = isLoseOnLimit ? 'Para Salir' : 'Para Ganar';
+    const limitColorClass = isLoseOnLimit ? 'text-orange-400' : 'text-emerald-400';
+    const limitBgClass = isLoseOnLimit ? 'bg-orange-400/5' : 'bg-emerald-400/5';
     const isTeamLayout = match.isTeamGame || match.gameType === 'Truco';
     const isMosca = match.gameType === 'Mosca';
 
@@ -36,19 +39,38 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
                         <tr className="border-b border-white/10">
                             <th className="sticky-col p-4 text-[10px] text-text-muted uppercase tracking-widest">Ronda</th>
                             <AnimatePresence>
+
                                 {isTeamLayout ? (
-                                    ['A', 'B'].map(t => (
-                                        <PlayerHeader
-                                            key={t} name={`Equipo ${t}`} allNames={[]}
-                                            color={t === 'A' ? 'text-indigo-400' : 'text-rose-400'}
-                                        />
-                                    ))
+                                    // --- MODO EQUIPOS CON DEALER INDIVIDUAL ---
+                                    ['A', 'B'].map((t) => {
+                                        const teamPlayers = match.players.filter(p => p.team === t);
+                                        // Mapeamos los jugadores del equipo para saber quién reparte
+                                        const playersWithDealerStatus = teamPlayers.map(p => ({
+                                            name: p.name,
+                                            isDealer: match.players.indexOf(p) === match.currentDealerIndex
+                                        }));
+
+                                        return (
+                                            <TeamHeader
+                                                key={t}
+                                                allNames={allPlayerNames}
+                                                teamId={t as 'A' | 'B'}
+                                                players={playersWithDealerStatus}
+                                                color={t === 'A' ? 'text-indigo-400' : 'text-rose-400'}
+                                            />
+                                        );
+                                    })
                                 ) : (
+                                    // --- MODO INDIVIDUAL ---
                                     match.players.map((p, i) => (
                                         <PlayerHeader
-                                            key={p.name} name={p.name} allNames={allPlayerNames}
+                                            key={p.name}
+                                            name={p.name}
+                                            allNames={allPlayerNames}
                                             isDealer={i === match.currentDealerIndex}
                                             isSombrero={i === sombreroIndex}
+                                            showCantar={match.gameType === 'Barsiga' && match.status === 'active'}
+                                            onCantar={() => onCantar(p.name)}
                                         />
                                     ))
                                 )}
@@ -116,6 +138,31 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
                                 ))
                             )}
                         </tr>
+
+                        {/* FILA DINÁMICA DE DISTANCIA AL LÍMITE (USO DE isLoseOnLimit) */}
+                        {match.config.limitScore && match.gameType !== 'Mosca' && match.status === 'active' && (
+                            <tr className={`${limitBgClass} font-bold border-t border-white/10`}>
+                                <td className={`sticky-col p-5 ${limitColorClass} text-[10px] uppercase tracking-widest`}>
+                                    {limitLabel}
+                                </td>
+                                {isTeamLayout ? (
+                                    ['A', 'B'].map(t => {
+                                        const teamTotal = match.players.filter(p => p.team === t).reduce((acc, p) => acc + p.score, 0);
+                                        return (
+                                            <td key={t} className={`p-5 text-2xl font-display ${limitColorClass}`}>
+                                                {match.config.limitScore - teamTotal}
+                                            </td>
+                                        );
+                                    })
+                                ) : (
+                                    match.players.map(p => (
+                                        <td key={p.name} className={`p-5 text-2xl font-display ${limitColorClass} ${p.isOut ? 'opacity-10' : ''}`}>
+                                            {match.config.limitScore - p.score}
+                                        </td>
+                                    ))
+                                )}
+                            </tr>
+                        )}
                     </tbody>
                 </table>
             </div>
