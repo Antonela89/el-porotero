@@ -52,6 +52,8 @@ export interface IMatch {
 	tempCantos: ITempCanto[];
 }
 
+export type GameType = IMatch['gameType'];
+
 // --- Detalles de Juegos ---
 export interface IRoundDetails {
 	// Loba / Chinchón

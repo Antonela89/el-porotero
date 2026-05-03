@@ -170,3 +170,27 @@
 .status-closed {
     @apply status-badge bg-white/5 text-text-muted;
 }
+
+/*Nuevo Juego*/
+@utility new-match-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    max-width: 100%;
+    background-color: var(--color-background);
+    overflow: hidden;
+}
+
+@utility sticky-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.5rem;
+    background-color: color-mix(in srgb, var(--color-background), transparent 20%);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    max-width: 100%;
+    margin-inline: auto;
+    z-index: 50;
+}
