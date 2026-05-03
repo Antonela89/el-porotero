@@ -5,3 +5,6 @@
 @import "./styles/layout.css";
 @import "./styles/auth.css";
 @import "./styles/dashboard.css";
+@import "./styles/match.css";
+@import "./styles/stats.css";
+@import "./styles/ui.css";

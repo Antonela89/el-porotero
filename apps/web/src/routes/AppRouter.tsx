@@ -27,10 +27,10 @@ export const AppRouter = () => {
                 {/* Rutas Protegidas */}
                 <Route element={<ProtectedRoute />}>
                     <Route element={<AppLayoutWrapper />}>
-                        <Route path="/" element={<AppLayout><DashboardPage /></AppLayout>} />
-                        <Route path="/stats" element={<AppLayout><StatsPage /></AppLayout>} />
-                        <Route path="/new-match" element={<AppLayout><NewMatchPage /></AppLayout>} />
-                        <Route path="/match/:id" element={<AppLayout><MatchDetailPage /></AppLayout>} />
+                        <Route path="/" element={<DashboardPage />} />
+                        <Route path="/stats" element={<StatsPage />} />
+                        <Route path="/new-match" element={<NewMatchPage />} />
+                        <Route path="/match/:id" element={<MatchDetailPage />} />
                     </Route>
                 </Route>
 

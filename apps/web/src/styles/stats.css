@@ -1,0 +1,23 @@
+.stats-grid {
+    @apply grid grid-cols-2 gap-4;
+}
+
+.stat-card {
+    @apply bg-surface p-5 rounded-4xl border border-white/5 flex flex-col gap-3;
+}
+
+.chart-panel {
+    @apply bg-surface p-6 rounded-[2.5rem] border border-white/5;
+}
+
+.progress-track {
+    @apply w-full h-2 bg-background rounded-full overflow-hidden;
+}
+
+.progress-fill {
+    @apply h-full bg-primary rounded-full;
+}
+
+.stat-label-caps {
+    @apply text-[10px] uppercase font-black text-text-muted tracking-widest;
+}
