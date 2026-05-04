@@ -31,11 +31,11 @@ export const MatchHeader = ({ match, onRefresh, icon }: MatchHeaderProps) => {
 
             {/* Información Central */}
             <div className="header-info">
-                <div className="flex items-center gap-2 text-primary font-display font-bold uppercase tracking-widest">
+                <div>
                     {icon}
                     <span>{match.gameType}</span>
                 </div>
-                <span className="text-[10px] text-text-muted font-bold">
+                <span>
                     {match.gameType === 'Mosca'
                         ? 'OBJETIVO: 0 PTS'
                         : `LÍMITE: ${match.config.limitScore} PTS`
@@ -44,17 +44,18 @@ export const MatchHeader = ({ match, onRefresh, icon }: MatchHeaderProps) => {
             </div>
 
             {/* Acciones */}
-            <div className="flex items-center gap-2">
+            <div className="header-actions">
                 {match.status === 'active' && (
                     <IconButton
                         icon={<XCircle size={20} />}
-                        variant="danger" 
+                        variant="danger"
                         title="Cancelar Partida"
                         onClick={handleCancel}
                         disabled={cancelMatch.isPending}
                     />
                 )}
                 <IconButton
+                    variant='secondary'
                     icon={<RotateCcw size={20} />}
                     title="Refrescar Puntajes"
                     onClick={onRefresh}

@@ -31,16 +31,16 @@ export const MatchDetailPage = () => {
     };
 
     return (
-        <div className="match-layout overflow-hidden flex flex-col h-full">
+        <div className="match-page">
             <MatchHeader match={match} onRefresh={refetch} icon={
                 <div className={gameInfo.color}>
                     {gameInfo.icon}
                 </div>
             } />
 
-            <main className="flex-1 overflow-y-auto custom-scrollbar">
+            <main className="match-scroller">
                 {gameInfo.isDescending && (
-                    <div className="bg-purple-500/10 text-purple-400 text-[10px] py-1 text-center font-bold uppercase tracking-widest mb-4 border-y border-purple-500/20">
+                    <div className="game-mode-banner">
                         Modo Descendente: El primero en llegar a 0 gana
                     </div>
                 )}
@@ -74,7 +74,7 @@ export const MatchDetailPage = () => {
                     icon={<Plus size={32} />}
                     variant="primary"
                     title="Anotar Ronda"
-                    className="fab-main rounded-full!"
+                    className="fab-main"
                     onClick={() => {
                         setRoundToEdit(null);
                         setIsModalOpen(true);

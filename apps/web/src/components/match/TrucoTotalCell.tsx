@@ -11,15 +11,20 @@ interface TrucoTotalCellProps {
 export const TrucoTotalCell = ({ total, status }: TrucoTotalCellProps) => {
     const isBuenas = status.label === 'Buenas';
     return (
-        <td className="p-5 border-r border-white/5">
-            <div className="flex flex-col items-center justify-center">
-                <span className={`text-[10px] uppercase font-black tracking-widest mb-1 ${isBuenas ? 'text-primary' : 'text-text-muted opacity-60'}`}>
+        <td className="score-total-cell">
+            <div className="truco-status-stack">
+                {/* La etiqueta (Malas/Buenas) */}
+                <span className={`truco-stage-label ${isBuenas ? 'is-buenas' : ''}`}>
                     {status.label}
                 </span>
-                <span className={`text-4xl font-display ${isBuenas ? 'text-primary scale-110' : 'text-text-main'}`}>
+
+                {/* El valor (1 al 15) */}
+                <span className={`truco-score-value ${isBuenas ? 'is-buenas' : ''}`}>
                     {status.val}
                 </span>
-                <span className="text-[9px] opacity-30 mt-1 font-mono tracking-tighter">
+
+                {/* El total histórico para referencia */}
+                <span className="score-meta-text">
                     {total} PTS TOTALES
                 </span>
             </div>

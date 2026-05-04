@@ -90,9 +90,9 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit }: MatchRo
     };
 
     const modalFooter = (
-        <div className="flex flex-col gap-3">
+        <div className="modal-footer-content">
             {!isFormValid && (
-                <div className="flex items-center justify-center gap-2 text-warning text-[10px] font-bold uppercase">
+                <div className="form-error-banner">
                     <AlertCircle size={14} /> Revisar datos de la ronda
                 </div>
             )}
@@ -100,12 +100,16 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit }: MatchRo
                 className="w-full"
                 disabled={!isFormValid || saveRound.isPending}
                 loading={saveRound.isPending}
-                onClick={() => saveRound.mutate({ scores, isEdit: !!roundToEdit, roundNumber: roundToEdit ?? undefined }, { onSuccess: onClose })}
+                onClick={() => saveRound.mutate(
+                    { scores, isEdit: isEditMode, roundNumber: roundToEdit ?? undefined },
+                    { onSuccess: onClose }
+                )}
             >
                 <Save size={20} /> Confirmar Ronda
             </Button>
         </div>
     );
+
 
     return (
         <BaseModal
@@ -114,27 +118,27 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit }: MatchRo
             title={roundToEdit ? `Editar Ronda ${roundToEdit}` : 'Anotar Ronda'}
             footer={modalFooter}
         >
-            <div className="flex-1 overflow-y-auto p-6 pt-2 flex flex-col gap-6 custom-scrollbar">
+            <div className="anotador-content">
                 {(['A', 'B', 'None'] as const).map(teamId => {
                     const teamPlayers = match.players.filter(p => p.team === teamId);
                     if (teamPlayers.length === 0) return null;
 
                     return (
                         <section key={teamId} className={`score-group-card team-${teamId.toLowerCase()}`}>
-                            <div className="flex justify-between items-center mb-3">
-                                <h3 className={`text-[10px] font-black uppercase tracking-widest ${teamId === 'A' ? 'text-indigo-400' : 'text-rose-400'}`}>
+                            <div className="score-group-header">
+                                <h3 className={`score-group-title team-${teamId.toLowerCase()}`}>s
                                     {teamId === 'None' ? 'Jugadores' : `Equipo ${teamId}`}
                                 </h3>
                                 {match.gameType === 'Burako' && teamId !== 'None' && (
                                     <button
                                         onClick={() => handleTeamUpdate(teamId, { tomoMuerto: false })}
-                                        className="text-[8px] font-bold text-text-muted hover:text-white"
+                                        className="btn-reset-team"
                                     >
                                         LIMPIAR EQUIPO
                                     </button>
                                 )}
                             </div>
-                            <div className="flex flex-col gap-3">
+                            <div className="player-list">
                                 {teamPlayers.map(player => {
                                     const idx = match.players.findIndex(p => p.name === player.name);
                                     const isDealer = idx === match.currentDealerIndex;
@@ -143,10 +147,10 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit }: MatchRo
                                     if (player.isOut && !isEditMode) return null;
 
                                     return (
-                                        <div key={player.name} className="p-4 rounded-2xl bg-background/40 border border-white/5">
-                                            <div className="flex justify-between items-center mb-2">
-                                                <p className="font-bold text-xs">{player.name}</p>
-                                                <div className="flex gap-1">
+                                        <div key={player.name} className="player-card">
+                                            <div className="player-card-header">
+                                                <p className="player-name-label">{player.name}</p>
+                                                <div className="icon-group">
                                                     {isDealer && <Crown size={14} className="text-primary" fill="currentColor" />}
                                                     {isSombrero && <HatGlasses size={14} className="text-purple-400" />}
                                                 </div>
@@ -160,25 +164,6 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit }: MatchRo
                     );
                 })}
             </div>
-
-            <footer className="p-6 pt-2 border-t border-white/5 bg-surface">
-                {!isFormValid && (
-                    <div className="flex items-center justify-center gap-2 text-warning text-[10px] font-bold uppercase mb-3 text-center">
-                        <AlertCircle size={14} /> Revisar datos de la ronda
-                    </div>
-                )}
-                <Button
-                    className="w-full"
-                    disabled={!isFormValid || saveRound.isPending}
-                    loading={saveRound.isPending}
-                    onClick={() => saveRound.mutate(
-                        { scores, isEdit: isEditMode, roundNumber: roundToEdit ?? undefined },
-                        { onSuccess: onClose }
-                    )}
-                >
-                    <Save size={20} /> Confirmar Ronda
-                </Button>
-            </footer>
         </BaseModal>
     );
 };

@@ -1,9 +1,9 @@
 .new-match-layout {
-    @apply flex flex-col h-dvh bg-background overflow-hidden relative;
+    @apply flex flex-col px-6 h-dvh bg-background overflow-hidden relative;
 }
 
 .new-match-header {
-    @apply p-6 flex items-center justify-between border-b border-white/5;
+    @apply flex items-center pb-4 justify-between border-b border-white/5;
 
     & h1 {
         @apply text-2xl font-display font-bold
@@ -11,7 +11,7 @@
 }
 
 .new-match-main {
-    @apply flex-1 overflow-y-auto p-6 flex flex-col gap-8 pb-40 custom-scrollbar;
+    @apply flex-1 overflow-y-auto py-6 flex flex-col gap-6 custom-scrollbar;
 }
 
 .new-match-section {
@@ -95,15 +95,31 @@
 }
 
 .player-row-card {
-    @apply flex items-center justify-between p-3 bg-surface rounded-xl border border-white/5 transition-all;
+    @apply w-full flex items-center justify-between p-3 bg-surface rounded-xl border border-white/5 transition-all;
 
-    & div {
-        @apply flex items-center gap-3 flex-1;
-
-        & span {
-            @apply text-[10px] font-bold text-primary w-4
-        }
+    & div:nth-child(1) {
+        @apply w-full flex items-center gap-3 flex-1;
     }
+}
+
+.player-number {
+    @apply text-[10px] font-bold text-primary w-4
+}
+
+.player-row {
+    @apply w-full flex items-center p-1 gap-2;
+}
+
+.player-row-name {
+    @apply flex flex-1 text-white font-bold text-[16px]; 
+}
+
+.player-row-actions {
+    @apply flex gap-1;
+}
+
+.player-input-row {
+    @apply flex gap-2 items-center justify-between bg-surface p-2 rounded-2xl border border-white/5;
 }
 
 .input-player {
@@ -131,5 +147,5 @@
 }
 
 .new-match-footer {
-    @apply fixed bottom-0 left-0 right-0 p-6 bg-background/80 backdrop-blur-md border-t border-white/5 z-50 flex flex-col gap-3
+    @apply fixed bottom-0 left-0 right-0 px-8 py-6 bg-background/80 backdrop-blur-md border-t border-white/5 z-50 flex flex-col gap-3
 }

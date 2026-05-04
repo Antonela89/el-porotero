@@ -1,72 +1,94 @@
-import * as Dialog from '@radix-ui/react-dialog';
 import { useState } from 'react';
-import { IMatch } from '@el-porotero/shared';
-import api from '@/api/axios';
-import axios from 'axios';
-import { X, Save } from 'lucide-react';
+import { IMatch, IPlayer } from '@el-porotero/shared';
+import { Save, X } from 'lucide-react';
+import { BaseModal, Button, Input } from '@/components';
+import { useMatchActions } from '@/hooks';
 
-export const EditMatchModal = ({ match, isOpen, onClose, onSuccess }: { match: IMatch, isOpen: boolean, onClose: () => void, onSuccess: (m: IMatch) => void }) => {
-    const [players, setPlayers] = useState([...match.players]);
+interface EditMatchModalProps {
+    match: IMatch;
+    isOpen: boolean;
+    onClose: () => void;
+    onSuccess: (updatedMatch: IMatch) => void;
+}
+
+export const EditMatchModal = ({ match, isOpen, onClose, onSuccess }: EditMatchModalProps) => {
+    // CORRECCIÓN: Usamos updateMatch, no saveRound
+    const { updateMatch } = useMatchActions(match._id!);
+
+    const [players, setPlayers] = useState<IPlayer[]>([...match.players]);
     const [status, setStatus] = useState(match.status);
 
-    const handleSave = async () => {
-        try {
-            const { data } = await api.put(`/matches/${match._id}`, { players, status });
-            onSuccess(data);
-            onClose();
-        } catch (error: unknown) {
-            if (axios.isAxiosError(error)) {
-                alert("No se pudo actualizar la partida");
+    const handleSave = () => {
+        // Enviamos el payload que espera la mutación updateMatch
+        updateMatch.mutate(
+            { players, status },
+            {
+                onSuccess: (data) => {
+                    // 'data' es el match actualizado que devuelve el hook/api
+                    onSuccess(data);
+                    onClose();
+                }
             }
-        }
+        );
     };
 
+    const modalFooter = (
+        <div className="edit-match-footer">
+            <Button
+                variant="ghost"
+                className="flex-1"
+                onClick={onClose}
+            >
+                <X size={20} /> Cancelar
+            </Button>
+            <Button
+                variant="primary"
+                className="flex-1"
+                onClick={handleSave}
+                loading={updateMatch.isPending}
+                disabled={updateMatch.isPending}
+            >
+                <Save size={20} /> Guardar
+            </Button>
+        </div>
+    );
+
     return (
-        <Dialog.Root open={isOpen} onOpenChange={onClose}>
-            <Dialog.Portal>
-                <Dialog.Overlay className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50" />
-                <Dialog.Description className="sr-only">
-                    Formulario para editar los detalles de la partida.
-                </Dialog.Description>
-                <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md bg-surface p-6 rounded-3xl shadow-2xl border border-white/10 z-50">
-                    <Dialog.Title className="text-xl font-bold mb-4">Editar Partida</Dialog.Title>
+        <BaseModal
+            isOpen={isOpen}
+            onClose={onClose}
+            title="Ajustes de la Mesa"
+            footer={modalFooter}
+            maxWidth="max-w-sm"
+        >
+            <div className="edit-match-form">
+                <label className="label-caps">Nombres de Jugadores</label>
+                <div className="flex flex-col gap-3">
+                    {players.map((p, i) => (
+                        <Input
+                            key={i}
+                            value={p.name}
+                            onChange={(e) => {
+                                const newP = [...players];
+                                newP[i] = { ...newP[i], name: e.target.value.toUpperCase() };
+                                setPlayers(newP);
+                            }}
+                            placeholder={`Jugador ${i + 1}`}
+                        />
+                    ))}
+                </div>
 
-                    <div className="flex flex-col gap-4 mb-6">
-                        <label className="text-xs text-text-muted font-bold uppercase">Jugadores</label>
-                        {players.map((p, i) => (
-                            <input
-                                key={i}
-                                className="form-input py-2"
-                                value={p.name}
-                                onChange={(e) => {
-                                    const newP = [...players];
-                                    newP[i].name = e.target.value.toUpperCase();
-                                    setPlayers(newP);
-                                }}
-                            />
-                        ))}
-
-                        <label className="text-xs text-text-muted font-bold uppercase mt-2">Estado</label>
-                        <select
-                            className="form-input py-2 bg-background"
-                            value={status}
-                            onChange={(e) => setStatus(e.target.value as "active" | "finished" | "cancelled")} >
-                            <option value="active">En curso</option>
-                            <option value="finished">Finalizada</option>
-                            <option value="cancelled">Cancelada</option>
-                        </select>
-                    </div>
-
-                    <div className="flex gap-2">
-                        <button onClick={onClose} className="flex gap-2 items-center justify-center flex-1 py-3 rounded-xl bg-white/5 text-text-muted font-bold">
-                            <X />
-                            Cancelar</button>
-                        <button onClick={handleSave} className="flex gap-2 items-center justify-center flex-1 py-3 rounded-xl bg-primary text-background font-bold">
-                            <Save />
-                            Guardar</button>
-                    </div>
-                </Dialog.Content>
-            </Dialog.Portal>
-        </Dialog.Root>
+                <label className="label-caps mt-4">Estado de la Partida</label>
+                <select
+                    className="status-select"
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value as IMatch['status'])}
+                >
+                    <option value="active">En curso (Abierta)</option>
+                    <option value="finished">Finalizada (Hay ganador)</option>
+                    <option value="cancelled">Cancelada (Anulada)</option>
+                </select>
+            </div>
+        </BaseModal>
     );
 };

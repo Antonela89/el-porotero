@@ -94,7 +94,7 @@ export const NewMatchPage = () => {
                             players.map((p, i) => (
                                 <div key={i} className="player-row-card">
                                     <div>
-                                        <span>{i + 1}</span>
+                                        <span className="player-number">{i + 1}</span>
                                         {editingIndex === i ? (
                                             <Input
                                                 autoFocus
@@ -105,8 +105,8 @@ export const NewMatchPage = () => {
                                                 onKeyDown={e => e.key === 'Enter' && handleSaveEdit(i)}
                                             />
                                         ) : (
-                                            <div className="flex items-center gap-2">
-                                                <span className="font-bold">{p.name}</span>
+                                            <div className="player-row">
+                                                <span className="player-row-name">{p.name}</span>
                                                 {p.team !== 'None' && (
                                                     <span className={`team-badge team-${p.team.toLowerCase()}`}>
                                                         EQ {p.team}
@@ -115,11 +115,11 @@ export const NewMatchPage = () => {
                                             </div>
                                         )}
                                     </div>
-                                    <div className="flex gap-1">
+                                    <div className="player-row-actions">
                                         {editingIndex === i ? (
                                             <IconButton icon={<Check size={16} />} variant="primary" title="Guardar" onClick={() => handleSaveEdit(i)} />
                                         ) : (
-                                            <IconButton icon={<Edit2 size={16} />} title="Editar" onClick={() => { setEditingIndex(i); setTempEditName(p.name); }} />
+                                            <IconButton icon={<Edit2 size={16} />} variant="info" title="Editar" onClick={() => { setEditingIndex(i); setTempEditName(p.name); }} />
                                         )}
                                         <IconButton icon={<X size={16} />} variant="danger" title="Quitar" onClick={() => removePlayer(i)} />
                                     </div>

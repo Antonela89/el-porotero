@@ -5,7 +5,11 @@
 }
 
 .btn-secondary {
-    @apply btn-base bg-secondary text-white;
+    @apply btn-base bg-purple-500/10 text-purple-500 hover:bg-purple-500 hover:text-white border border-purple-500/20;
+}
+
+.btn-info {
+    @apply btn-base bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white border border-blue-500/20;
 }
 
 .btn-ghost {
@@ -39,7 +43,7 @@
 
 /* ---Inputs --- */
 .player-edit-input {
-    @apply input-porotero !py-1 !px-2 !text-sm uppercase;
+    @apply input-porotero !py-1 !px-2 text-white! w-full! !text-sm uppercase;
 }
 
 /* --- SELECTOR JUEGO --- */

@@ -1,14 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import api from '@/api/axios';
-import { IMatch, IRoundScore } from '@el-porotero/shared';
+import { IMatch, IRoundScore, IPlayer } from '@el-porotero/shared';
 import { notify, handleApiError } from '@/utils';
 
 export const useMatchActions = (matchId: string) => {
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
 
-	// 1. Agregar/Editar Ronda
+	// Agregar/Editar Ronda
 	const saveRound = useMutation({
 		mutationFn: ({
 			roundNumber,
@@ -19,19 +19,34 @@ export const useMatchActions = (matchId: string) => {
 			scores: IRoundScore[];
 			isEdit: boolean;
 		}) => {
-			const url = isEdit
-				? `/matches/${matchId}/round/${roundNumber}`
-				: `/matches/${matchId}/round`;
-			return api[isEdit ? 'patch' : 'post']<{ match: IMatch } | IMatch>(
-				url,
-				{ scores },
-			).then((res) => res.data);
+			const method = isEdit ? 'patch' : 'post';
+			const url = `/matches/${matchId}/round${isEdit ? `/${roundNumber}` : ''}`;
+
+			return api[method]<IMatch>(url, { scores }).then((res) => res.data);
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['match', matchId] });
 			notify.success('Ronda guardada');
 		},
 		onError: (err) => handleApiError(err, 'Error al guardar ronda'),
+	});
+
+	// Editar Juego
+	const updateMatch = useMutation({
+		mutationFn: (payload: {
+			players: IPlayer[];
+			status: IMatch['status'];
+		}) =>
+			api
+				.put<IMatch>(`/matches/${matchId}`, payload)
+				.then((res) => res.data),
+		onSuccess: (data) => {
+			queryClient.setQueryData(['match', matchId], data);
+			queryClient.invalidateQueries({ queryKey: ['matches'] });
+			notify.success('Partida actualizada');
+		},
+		onError: (err) =>
+			handleApiError(err, 'No se pudo actualizar la partida'),
 	});
 
 	// Borrar Ronda
@@ -74,5 +89,12 @@ export const useMatchActions = (matchId: string) => {
 		onError: (err) => handleApiError(err, 'No se pudo cancelar la partida'),
 	});
 
-	return { saveRound, cancelMatch, deleteRound, reengage, addCanto };
+	return {
+		saveRound,
+		updateMatch,
+		cancelMatch,
+		deleteRound,
+		reengage,
+		addCanto,
+	};
 };

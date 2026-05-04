@@ -47,6 +47,7 @@ export const CardMatch = ({ match, onDelete, onEdit }: MatchCardProps) => {
             <div className="match-card-footer">
                 <div className="match-card-actions">
                     <IconButton
+                        variant='info'
                         icon={<Edit3 size={18} />}
                         title="Editar"
                         onClick={() => onEdit(match)}

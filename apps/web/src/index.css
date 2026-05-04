@@ -36,7 +36,7 @@
 /* Input */
 @utility input-porotero {
     width: 100%;
-    border: 1ps solid white;
+    border: 1px solid white;
     padding: 1rem;
     border-radius: 1rem;
     background: var(--color-background);
@@ -47,6 +47,22 @@
     &:focus {
         border-color: var(--color-primary);
         box-shadow: 0 0 0 2px var(--color-primary-dark);
+    }
+}
+
+/* El botón flotante principal */
+@utility fab-main {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 4rem;
+    height: 4rem;
+    z-index: 40;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+    @apply transition-transform active:scale-90;
+
+    & svg {
+        @apply stroke-[3px];
     }
 }
 
