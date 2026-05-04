@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     icon: ReactNode;
     onClick: () => void;
-    variant?: 'primary' | 'danger' | 'warning' | 'ghost';
+    variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'warning' | 'success';
     className?: string;
     title: string;
 }

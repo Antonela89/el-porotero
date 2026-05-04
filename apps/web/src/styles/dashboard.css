@@ -1,27 +1,106 @@
 .dashboard-container {
-    @apply min-h-screen bg-background flex flex-col gap-8 w-full;
+    @apply min-h-screen bg-background flex flex-col gap-8 w-full px-4;
 }
 
 .dashboard-header {
-    @apply flex justify-center items-center w-full;
+    @apply flex justify-center items-center w-full py-6;
 }
 
+.dashboard-welcome {
+    @apply text-text-muted italic text-center;
+    & span { @apply font-semibold; }
+}
+
+.dashboard-action-area {
+    @apply max-w-4xl mx-auto w-full;
+}
+
+.dashboard-recent-list {
+    @apply max-w-4xl mx-auto w-full flex flex-col gap-6 mt-4;
+}
+
+.dashboard-history-title {
+    @apply text-xl font-bold flex items-center gap-2;
+}
+
+.dashboard-empty-state {
+    @apply text-center py-20 opacity-50 border-2 border-dashed border-white/5 rounded-3xl;
+}
+
+/* Agrupadores de fecha */
+.date-group-list {
+    @apply flex flex-col gap-10;
+}
+
+.date-group-container {
+    @apply flex flex-col gap-4;
+}
+
+.date-group-title {
+    @apply text-xs font-bold uppercase tracking-[0.3em] text-text-muted border-l-2 border-primary pl-3;
+}
+
+/* Grid de partidas */
 .match-grid {
-    @apply grid grid-cols-1 md:grid-cols-2 gap-4 mt-4;
+    @apply grid grid-cols-1 md:grid-cols-2 gap-4;
 }
 
+/* Card Match - Estructura */
 .match-card {
-    @apply bg-surface border border-white/5 p-5 rounded-2xl shadow-lg hover:border-primary/30 transition-all cursor-pointer;
+    @apply bg-surface border border-white/5 p-5 rounded-2xl shadow-lg transition-all cursor-pointer flex flex-col gap-4;
+    &:hover { @apply border-primary/30; }
 }
 
-.status-badge {
-    @apply px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider;
+.match-card-header {
+    @apply flex justify-between items-start;
+}
+
+.match-card-info {
+    @apply flex flex-col;
+    & h3 { @apply text-xl font-display font-bold text-primary uppercase; }
+}
+
+.match-card-meta {
+    @apply flex items-center gap-3 text-text-muted text-sm mt-1;
+    & span {
+        @apply flex items-center gap-1;
+    }
+}
+
+.match-card-winner {
+    @apply text-emerald-400 font-bold flex items-center gap-1;
+}
+
+.match-card-footer {
+    @apply flex items-center justify-between border-t border-white/5 pt-3 mt-auto;
+}
+
+.match-card-actions {
+    @apply flex gap-2;
+}
+
+/* Estados */
+.badge {
+    @apply px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider;
 }
 
 .status-active {
-    @apply bg-primary/20 text-primary;
+    @apply bg-primary/10 text-primary;
 }
 
 .status-finished {
-    @apply bg-text-muted/20 text-text-muted;
+    @apply bg-white/5 text-secondary;
+}
+
+.status-closed {
+    @apply bg-white/5 text-text-muted;
+}
+
+/* Skeletons */
+.loading-skeleton-list {
+    @apply flex flex-col gap-4;
+}
+
+.skeleton-card {
+    @apply h-24 w-full bg-surface/50 animate-pulse rounded-2xl;
 }

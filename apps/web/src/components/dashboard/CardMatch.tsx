@@ -15,36 +15,37 @@ interface MatchCardProps {
 export const CardMatch = ({ match, onDelete, onEdit }: MatchCardProps) => {
     const navigate = useNavigate();
     const isActive = match.status === 'active';
+    const isFinished = match.status === 'finished';
 
     return (
         <MotionArticle
             whileTap={{ scale: 0.98 }}
-            className="match-card flex flex-col gap-4"
+            className="match-card"
         >
-            <div className="flex justify-between items-start">
-                <div>
-                    <h3 className="text-xl font-display font-bold text-primary uppercase">
+            <div className="match-card-header">
+                <div className='match-card-info'>
+                    <h3>
                         {match.gameType}
                     </h3>
-                    <div className="flex items-center gap-3 text-text-muted text-sm mt-1">
-                        <span className="flex items-center gap-1">
+                    <div className="match-card-meta">
+                        <span>
                             <Users size={14} /> {match.players.length}
                         </span>
                         {match.winner && (
-                            <span className="text-emerald-400 font-bold flex items-center gap-1">
+                            <span className="match-card-winner">
                                 <Trophy size={14} /> {match.winner}
                             </span>
                         )}
                     </div>
                 </div>
 
-                <span className={isActive ? 'status-active' : 'status-closed'}>
+                <span className={`badge ${isActive ? 'status-active' : isFinished ? 'status-finished' : 'status-closed'}`}>
                     {isActive ? 'En Juego' : 'Cerrada'}
                 </span>
             </div>
 
-            <div className="flex items-center justify-between border-t border-white/5 pt-3 mt-auto">
-                <div className="flex gap-2">
+            <div className="match-card-footer">
+                <div className="match-card-actions">
                     <IconButton
                         icon={<Edit3 size={18} />}
                         title="Editar"
@@ -64,7 +65,8 @@ export const CardMatch = ({ match, onDelete, onEdit }: MatchCardProps) => {
 
                 <Button
                     onClick={() => navigate(`/match/${match._id}`)}
-                    className="bg-secondary text-white rounded-xl! py-3! px-4! text-sm!"
+                    variant='secondary'
+                    className="rounded-xl! py-3! px-4! text-sm!"
                 >
                     Continuar <ChevronRight size={18} />
                 </Button>
