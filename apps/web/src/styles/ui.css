@@ -1,11 +1,60 @@
-.btn-base {
-    @apply flex items-center justify-center gap-2 rounded-2xl transition-all active:scale-95 font-bold disabled:opacity-50;
+/* --- BOTONES --- */
+/* Variantes */
+.btn-primary {
+    @apply btn-base bg-primary text-background hover:bg-primary-dark;
 }
 
-.input-porotero {
-    @apply bg-background border border-white/10 rounded-xl px-4 py-3 text-text-main outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/10;
+.btn-secondary {
+    @apply btn-base bg-secondary text-white;
 }
 
-.modal-panel {
-    @apply fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95%] max-w-md bg-surface rounded-4xl shadow-2xl z-50 border border-white/5 flex flex-col max-h-[90dvh] overflow-hidden;
+.btn-ghost {
+    @apply btn-base bg-surface text-text-muted hover:text-white border border-white/5;
+}
+
+.btn-success {
+    @apply btn-base bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-white border border-emerald-500/20;
+}
+
+.btn-danger {
+    @apply btn-base bg-orange-500/10 text-orange-500 hover:bg-orange-500 hover:text-white border border-orange-500/20;
+}
+
+.btn-warning {
+    @apply btn-base bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500 hover:text-white border border-yellow-500/20;
+}
+
+/* Tamaños */
+.btn-md {
+    @apply px-6 py-3 text-base;
+}
+
+.btn-lg {
+    @apply px-8 py-4 text-xl;
+}
+
+.btn-icon-sz {
+    @apply p-3 rounded-full;
+}
+
+/* ---Inputs --- */
+.player-edit-input {
+    @apply input-porotero !py-1 !px-2 !text-sm uppercase;
+}
+
+/* --- SELECTOR JUEGO --- */
+.game-select-trigger {
+    @apply w-full bg-surface border border-white/10 p-4 rounded-2xl flex items-center justify-between text-text-main outline-none transition-all;
+    &:focus { @apply border-primary ring-2 ring-primary/10; }
+    & div { @apply flex items-center gap-3}
+}
+
+.game-select-content {
+    @apply bg-surface border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-50;
+}
+
+.game-select-item {
+    @apply flex items-center gap-3 p-3 rounded-xl outline-none cursor-pointer transition-colors;
+    &:hover, &[data-highlighted] { @apply bg-primary/10; }
+    &[data-state="checked"] { @apply text-primary; }
 }

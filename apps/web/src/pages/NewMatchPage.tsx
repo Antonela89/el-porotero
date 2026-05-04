@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { GameSelector } from '@/components/match/GameSelector';
-import { IconButton, Button } from '@/components';
+import { IconButton, Button, GameSelector, Input } from '@/components';
 import { X, UserPlus, Play, Users, Edit2, Check } from 'lucide-react';
-import { useNewMatch } from '@/hooks/useNewMatch';
-import { useCreateMatch } from '@/hooks/useCreateMatch';
+import { useNewMatch, useCreateMatch } from '@/hooks';;
 import { GameType, IPlayer } from '@el-porotero/shared';
 
 // Definimos el payload para el POST
@@ -40,29 +38,28 @@ export const NewMatchPage = () => {
 
     return (
         <div className="new-match-layout">
-            <header className="p-6 flex items-center justify-between border-b border-white/5">
-                <h1 className="text-2xl font-display font-bold">Nueva Mesa</h1>
+            <header className="new-match-header">
+                <h1>Nueva Mesa</h1>
                 <IconButton icon={<X size={20} />} title="Cerrar" onClick={() => navigate('/')} />
             </header>
 
-            <main className="flex-1 overflow-y-auto p-6 flex flex-col gap-8 pb-40 custom-scrollbar">
+            <main className="new-match-main">
                 {/* Selector de Juego */}
-                <section className="flex flex-col gap-3">
+                <section className="new-match-section">
                     <label className="label-caps">Juego</label>
                     <GameSelector value={gameType} onChange={(val) => updateGame(val as GameType)} />
                 </section>
 
                 {/* Selector de Límite (Loba/Chinchón) */}
                 {hasLimitOptions && (
-                    <section className="flex flex-col gap-3">
+                    <section className="new-match-section">
                         <label className="label-caps">Límite de Puntos</label>
-                        <div className="flex gap-2 bg-surface p-1 rounded-2xl border border-white/5">
+                        <div className="limit-selector-group">
                             {[100, 101].map(val => (
                                 <button
                                     key={val}
                                     onClick={() => setLimitScore(val)}
-                                    className={`flex-1 py-3 rounded-xl transition-all font-bold text-sm 
-                                    ${limitScore === val ? 'bg-primary text-background shadow-lg' : 'text-text-muted hover:text-text-main'}`}
+                                    className={`limit-btn ${limitScore === val ? 'active' : ''}`}
                                 >
                                     {val} PUNTOS
                                 </button>
@@ -73,36 +70,37 @@ export const NewMatchPage = () => {
 
                 {/* Toggle de Equipos */}
                 {['Burako', 'Truco'].includes(gameType) && players.length >= 4 && players.length % 2 === 0 && (
-                    <div className="flex items-center justify-between bg-surface p-4 rounded-2xl border border-white/5">
-                        <div className="flex flex-col">
-                            <span className="text-sm font-bold">Jugar por Equipos</span>
-                            <span className="text-[10px] text-text-muted">Intercalado</span>
+                    <div className="toggle-container">
+                        <div>
+                            <span>Jugar por Equipos</span>
+                            <span>Intercalado</span>
                         </div>
-                        <button onClick={toggleTeams} className={`w-12 h-6 rounded-full relative transition-colors ${isTeamGame ? 'bg-primary' : 'bg-background'}`}>
-                            <div className={`absolute top-1 w-4 h-4 rounded-full transition-all ${isTeamGame ? 'left-7 bg-background' : 'left-1 bg-white'}`} />
+                        <button onClick={toggleTeams} className={`switch-base ${isTeamGame ? 'active' : 'inactive'}`}>
+                            <div className={`switch-dot ${isTeamGame ? 'active' : 'inactive'}`} />
                         </button>
                     </div>
                 )}
 
                 {/* Lista de Jugadores */}
-                <section className="flex flex-col gap-4">
+                <section className="new-match-section">
                     <label className="label-caps">Integrantes ({players.length}/{currentGame?.maxPlayers || 6})</label>
-                    <div className="flex flex-col gap-2">
+                    <div className="player-list-container">
                         {players.length === 0 ? (
-                            <div className="py-10 border-2 border-dashed border-white/5 rounded-3xl flex flex-col items-center opacity-30">
+                            <div className="empty-table-placeholder">
                                 <Users size={32} />
-                                <p className="text-xs mt-2 italic">Mesa vacía</p>
+                                <p>Mesa vacía</p>
                             </div>
                         ) : (
                             players.map((p, i) => (
-                                <div key={i} className="flex items-center justify-between p-3 bg-surface rounded-xl border border-white/5">
-                                    <div className="flex items-center gap-3 flex-1">
-                                        <span className="text-[10px] font-bold text-primary w-4">{i + 1}</span>
+                                <div key={i} className="player-row-card">
+                                    <div>
+                                        <span>{i + 1}</span>
                                         {editingIndex === i ? (
-                                            <input
-                                                className="bg-background border border-primary/30 rounded px-2 py-1 text-sm outline-none flex-1 uppercase"
-                                                value={tempEditName}
+                                            <Input
                                                 autoFocus
+                                                value={tempEditName}
+                                                containerClassName="flex-1" 
+                                                className="player-edit-input"
                                                 onChange={e => setTempEditName(e.target.value)}
                                                 onKeyDown={e => e.key === 'Enter' && handleSaveEdit(i)}
                                             />
@@ -110,7 +108,7 @@ export const NewMatchPage = () => {
                                             <div className="flex items-center gap-2">
                                                 <span className="font-bold">{p.name}</span>
                                                 {p.team !== 'None' && (
-                                                    <span className={`text-[8px] px-2 py-0.5 rounded-full border ${p.team === 'A' ? 'border-indigo-500 text-indigo-400' : 'border-rose-500 text-rose-400'}`}>
+                                                    <span className={`team-badge team-${p.team.toLowerCase()}`}>
                                                         EQ {p.team}
                                                     </span>
                                                 )}
@@ -132,12 +130,12 @@ export const NewMatchPage = () => {
                 </section>
             </main>
 
-            <footer className="sticky-footer flex flex-col gap-4">
+            <footer className="new-match-footer">
                 {canAddMore ? (
-                    <div className="flex gap-2 bg-surface p-2 rounded-2xl border border-white/5">
-                        <input
+                    <div className="player-input-row">
+                        <Input
                             placeholder="Sumar jugador..."
-                            className="bg-transparent flex-1 px-3 py-2 outline-none uppercase text-sm"
+                            className="input-player"
                             value={playerName}
                             onChange={e => setPlayerName(e.target.value)}
                             onKeyDown={e => e.key === 'Enter' && playerName.trim() && (addPlayer(playerName), setPlayerName(''))}
@@ -151,7 +149,7 @@ export const NewMatchPage = () => {
                         />
                     </div>
                 ) : (
-                    <div className="bg-warning/10 border border-warning/20 p-2 rounded-xl text-center text-warning font-bold uppercase text-xs">
+                    <div className="warning-box">
                         Mesa completa para {gameType}
                     </div>
                 )}
@@ -160,7 +158,7 @@ export const NewMatchPage = () => {
                     onClick={() => createMatch({ gameType, players: players.map((p, i) => ({ ...p, position: i })), limitScore, isTeamGame })}
                     disabled={!isPlayerCountValid || isPending}
                     loading={isPending}
-                    className="w-full py-5!"
+                    className="w-full !py-5"
                 >
                     <Play size={20} fill="currentColor" />
                     {isPlayerCountValid ? `¡A Jugar! (${limitScore} pts)` : 'Esperando jugadores...'}

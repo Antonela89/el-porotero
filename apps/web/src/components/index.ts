@@ -2,7 +2,6 @@ export * from './auth/AuthForm';
 export * from './auth/ProtectedRoute';
 export * from './dashboard/CardMatch';
 export * from './match/MatchRoundModal';
-export * from './match/GameSelector';
 export * from './match/EditMatchModal';
 export * from './match/AddCantoModal';
 export * from './match/MatchScoreboard';
@@ -15,6 +14,7 @@ export * from './match/TrucoTotalCell';
 // Componentes atómicos
 export * from './UI/IconButton';
 export * from './UI/Button';
+export * from './UI/GameSelector';
 export * from './UI/Input';
 export * from './UI/LoadingSpinner';
 export * from './UI/BaseModal';

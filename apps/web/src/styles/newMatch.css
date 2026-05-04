@@ -1,0 +1,135 @@
+.new-match-layout {
+    @apply flex flex-col h-dvh bg-background overflow-hidden relative;
+}
+
+.new-match-header {
+    @apply p-6 flex items-center justify-between border-b border-white/5;
+
+    & h1 {
+        @apply text-2xl font-display font-bold
+    }
+}
+
+.new-match-main {
+    @apply flex-1 overflow-y-auto p-6 flex flex-col gap-8 pb-40 custom-scrollbar;
+}
+
+.new-match-section {
+    @apply flex flex-col gap-3;
+}
+
+/*Labels*/
+.label-caps {
+    @apply text-[10px] uppercase font-black text-text-muted tracking-widest mb-2 block;
+}
+
+/*Limite de puntos*/
+.limit-selector-group {
+    @apply flex gap-2 bg-surface p-1 rounded-2xl border border-white/5;
+}
+
+.limit-btn {
+    @apply flex-1 py-3 rounded-xl transition-all font-bold text-sm text-text-muted;
+
+    &.active {
+        @apply bg-primary text-background shadow-lg;
+    }
+
+    &:hover:not(.active) {
+        @apply text-text-main;
+    }
+}
+
+/*Toggle de Equipos*/
+.toggle-container {
+    @apply flex items-center justify-between bg-surface p-4 rounded-2xl border border-white/5 shadow-inner;
+
+    & div {
+        @apply flex flex-col;
+
+        & span:nth-child(1) {
+            @apply text-sm font-bold;
+        }
+
+        & span:nth-child(2) {
+            @apply text-[10px] text-text-muted;
+        }
+    }
+}
+
+.switch-base {
+    @apply w-12 h-6 rounded-full relative transition-colors;
+
+    &.active {
+        @apply bg-primary;
+    }
+
+    &.inactive {
+        @apply bg-background;
+    }
+}
+
+.switch-dot {
+    @apply absolute top-1 w-4 h-4 rounded-full transition-all;
+
+    &.active {
+        @apply left-7 bg-background;
+    }
+
+    &.inactive {
+        @apply left-1 bg-white;
+    }
+}
+
+/* --- MESA: New Match --- */
+.player-list-container {
+    @apply flex flex-col gap-2;
+}
+
+.empty-table-placeholder {
+    @apply py-10 border-2 border-dashed border-text-muted text-text-muted rounded-3xl flex flex-col items-center;
+
+    & p {
+        @apply text-xs mt-2 italic;
+    }
+}
+
+.player-row-card {
+    @apply flex items-center justify-between p-3 bg-surface rounded-xl border border-white/5 transition-all;
+
+    & div {
+        @apply flex items-center gap-3 flex-1;
+
+        & span {
+            @apply text-[10px] font-bold text-primary w-4
+        }
+    }
+}
+
+.input-player {
+    @apply bg-transparent flex-1 px-3 py-2 outline-none uppercase;
+}
+
+.team-badge {
+    @apply text-[8px] px-2 py-0.5 rounded-full border font-bold uppercase;
+
+    &.team-a {
+        @apply border-indigo-500 text-indigo-400;
+    }
+
+    &.team-b {
+        @apply border-rose-500 text-rose-400;
+    }
+}
+
+.warning-box {
+    @apply bg-warning/10 border border-warning/20 p-3 rounded-xl text-center text-warning font-bold uppercase text-xs;
+}
+
+.info-box {
+    @apply bg-orange-500/10 border border-orange-500/20 p-2 rounded-xl text-center text-orange-400 font-bold uppercase text-[10px] tracking-wider;
+}
+
+.new-match-footer {
+    @apply fixed bottom-0 left-0 right-0 p-6 bg-background/80 backdrop-blur-md border-t border-white/5 z-50 flex flex-col gap-3
+}
