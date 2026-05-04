@@ -158,7 +158,7 @@ export const NewMatchPage = () => {
                     onClick={() => createMatch({ gameType, players: players.map((p, i) => ({ ...p, position: i })), limitScore, isTeamGame })}
                     disabled={!isPlayerCountValid || isPending}
                     loading={isPending}
-                    className="w-full !py-5"
+                    className="w-full py-5!"
                 >
                     <Play size={20} fill="currentColor" />
                     {isPlayerCountValid ? `¡A Jugar! (${limitScore} pts)` : 'Esperando jugadores...'}
