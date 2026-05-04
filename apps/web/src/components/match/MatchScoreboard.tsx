@@ -1,7 +1,7 @@
 import { Trash2, Edit2, Asterisk } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { IMatch, IRound } from '@el-porotero/shared';
-import { useTrucoLogic } from '@/hooks/useTrucoLogic';
+import { useTrucoLogic } from '@/hooks';
 import { IconButton, Button, PlayerHeader, TrucoTotalCell, TeamHeader } from '@/components';
 
 interface MatchScoreboardProps {
@@ -129,7 +129,7 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
                                                 {p.score}
                                             </span>
                                             {p.isOut && match.status === 'active' && (
-                                                <Button size="md" variant="ghost" className="!text-[9px] !py-1" onClick={() => onReengage(p.name)}>
+                                                <Button size="md" variant="ghost" className="text-[9px]! py-1!" onClick={() => onReengage(p.name)}>
                                                     RE-ENGANCHAR
                                                 </Button>
                                             )}

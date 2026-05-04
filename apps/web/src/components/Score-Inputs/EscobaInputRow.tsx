@@ -25,7 +25,7 @@ export const EscobaInputRow = ({ score, onUpdate, onToggleExclusive }: Props) =>
                         title="Quitar Escoba"
                         onClick={() => onUpdate({ escobas: Math.max(0, (d.escobas || 0) - 1) })}
                     />
-                    <span className="font-display font-bold text-xl px-2 min-w-[2rem] text-center">
+                    <span className="font-display font-bold text-xl px-2 min-w-8 text-center">
                         {d.escobas || 0}
                     </span>
                     <IconButton
@@ -75,7 +75,7 @@ export const EscobaInputRow = ({ score, onUpdate, onToggleExclusive }: Props) =>
                                 key={card}
                                 variant="ghost"
                                 // Usamos la clase personalizada para el color púrpura de los velos
-                                className={`flex-1 !py-2 !text-xs ${isSelected ? 'table-item-btn active-velo' : 'opacity-40'}`}
+                                className={`flex-1 py-2! text-xs! ${isSelected ? 'table-item-btn active-velo' : 'opacity-40'}`}
                                 onClick={() => onToggleExclusive(key)}
                             >
                                 {card}

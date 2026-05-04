@@ -3,8 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import { MatchRoundModal, MatchHeader, MatchScoreboard, WinnerDisplay, ConfirmDialog, AddCantoModal, IconButton } from '@/components';
 import { GAMES_MAP } from '@/constants';
-import { useMatch } from '@/hooks/useMatch';
-import { useMatchActions } from '@/hooks/useMatchActions';
+import { useMatch, useMatchActions } from '@/hooks';
 import { IMatch } from '@el-porotero/shared';
 
 export const MatchDetailPage = () => {

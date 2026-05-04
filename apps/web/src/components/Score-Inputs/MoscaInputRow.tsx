@@ -37,7 +37,7 @@ export const MoscaInputRow = ({ score, isDealer, onUpdateDetails }: MoscaInputRo
                 <Button
                     // Si pasó, resaltamos con warning (naranja). Si no, queda en ghost (pálido).
                     variant={hasPassed ? 'warning' : 'ghost'}
-                    className={`flex-1 !py-2.5 !text-[10px] transition-all ${hasPassed ? 'shadow-lg shadow-warning/10 scale-105' : 'opacity-60'
+                    className={`flex-1 py-2.5! text-[10px]! transition-all ${hasPassed ? 'shadow-lg shadow-warning/10 scale-105' : 'opacity-60'
                         }`}
                     onClick={() => onUpdateDetails({ paso: !hasPassed, bazas: 0 })}
                 >

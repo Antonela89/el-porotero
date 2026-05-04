@@ -85,7 +85,7 @@ export const BurakoPlayerInput = ({
                     <Button
                         variant={cerro ? 'success' : 'ghost'}
                         disabled={disableExclusives && !cerro || !canClose}
-                        className="flex-1 !text-[10px] !py-3"
+                        className="flex-1 text-[10px]! py-3!"
                         onClick={() => onUpdate({ isCerrar: !cerro })}
                     >
                         <Check size={14} /> CERRÓ
@@ -93,7 +93,7 @@ export const BurakoPlayerInput = ({
 
                     <Button
                         variant={muerto ? 'primary' : 'danger'}
-                        className="flex-1 !text-[10px] !py-3"
+                        className="flex-1 text-[10px]! py-3!"
                         onClick={() => onUpdate({ tomoMuerto: !muerto })}
                     >
                         {muerto ? <Check size={14} /> : <Ghost size={14} />}

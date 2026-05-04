@@ -2,7 +2,7 @@ import { IMatch } from '@el-porotero/shared';
 import { ArrowLeft, RotateCcw, XCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { IconButton } from '@/components';
-import { useMatchActions } from '@/hooks/useMatchActions';
+import { useMatchActions } from '@/hooks';
 
 type MatchHeaderProps = {
     match: IMatch;

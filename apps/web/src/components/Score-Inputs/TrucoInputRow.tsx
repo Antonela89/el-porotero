@@ -127,7 +127,7 @@ export const TrucoInputRow = ({ match, score, teamId, flowState, onUpdate, onFlo
 
                                         <Button
                                             variant={selections[action.label] === 'q' ? 'success' : 'ghost'}
-                                            className="!rounded-none border-l !px-4 !py-2 min-w-20"
+                                            className="rounded-none! border-l px-4! py-2! min-w-20"
                                             onClick={() => handleToggle(action, 'q')}
                                         >
                                             <div className="flex flex-col items-center">
@@ -138,7 +138,7 @@ export const TrucoInputRow = ({ match, score, teamId, flowState, onUpdate, onFlo
 
                                         <Button
                                             variant={selections[action.label] === 'nq' ? 'danger' : 'ghost'}
-                                            className="!rounded-none border-l !px-4 !py-2 min-w-20"
+                                            className="rounded-none! border-l px-4! py-2! min-w-20"
                                             onClick={() => handleToggle(action, 'nq')}
                                         >
                                             <div className="flex flex-col items-center">
