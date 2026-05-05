@@ -1,31 +1,74 @@
 /* --- BOTONES --- */
 /* Variantes */
 .btn-primary {
-    @apply btn-base bg-primary text-background hover:bg-primary-dark;
+    @apply btn-base bg-primary text-background;
+
+    @media (hover: hover) {
+        &:hover {
+            background-color: var(--color-primary-dark);
+            box-shadow: var(--shadow-primary-glow);
+        }
+    }
 }
 
 .btn-secondary {
-    @apply btn-base bg-purple-500/10 text-purple-500 hover:bg-purple-500 hover:text-white border border-purple-500/20;
+    @apply btn-base bg-purple-500/10 text-purple-500 border border-purple-500/20;
+
+    @media (hover: hover) {
+        &:hover {
+            @apply bg-purple-500 text-white;
+        }
+    }
 }
 
 .btn-info {
-    @apply btn-base bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white border border-blue-500/20;
+    @apply btn-base bg-blue-500/10 text-blue-500 border border-blue-500/20;
+
+    @media (hover: hover) {
+        &:hover {
+            @apply bg-blue-500 text-white;
+        }
+    }
 }
 
 .btn-ghost {
-    @apply btn-base bg-surface text-text-muted hover:text-white border border-white/5;
+    @apply btn-base bg-surface text-text-muted border border-white/5;
+
+    @media (hover: hover) {
+        &:hover {
+            @apply text-white;
+        }
+    }
 }
 
 .btn-success {
-    @apply btn-base bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-white border border-emerald-500/20;
+    @apply btn-base bg-emerald-500/10 text-emerald-500 border border-emerald-500/20;
+
+    @media (hover: hover) {
+        &:hover {
+            @apply bg-emerald-500 text-white;
+        }
+    }
 }
 
 .btn-danger {
-    @apply btn-base bg-orange-500/10 text-orange-500 hover:bg-orange-500 hover:text-white border border-orange-500/20;
+    @apply btn-base bg-orange-500/10 text-orange-500 border border-orange-500/20;
+
+    @media (hover: hover) {
+        &:hover {
+            @apply bg-orange-500 text-white;
+        }
+    }
 }
 
 .btn-warning {
-    @apply btn-base bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500 hover:text-white border border-yellow-500/20;
+    @apply btn-base bg-yellow-500/10 text-yellow-500 border border-yellow-500/20;
+
+    @media (hover: hover) {
+        &:hover {
+            @apply bg-yellow-500 text-white;
+        }
+    }
 }
 
 /* Tamaños */
@@ -47,7 +90,7 @@
 
 /* ---Inputs --- */
 .player-edit-input {
-    @apply input-porotero !py-1 !px-2 text-white ! w-full ! !text-sm uppercase;
+    @apply input-porotero py-1 px-2 text-white w-full text-sm uppercase;
 }
 
 /* --- SELECTOR JUEGO --- */
@@ -70,9 +113,16 @@
 .game-select-item {
     @apply flex items-center gap-3 p-3 rounded-xl outline-none cursor-pointer transition-colors;
 
-    &:hover,
-    &[data-highlighted] {
-        @apply bg-primary/10;
+    &:active {
+        @apply bg-primary/20;
+    }
+
+    @media (hover: hover) {
+
+        &:hover,
+        &[data-highlighted] {
+            @apply bg-primary/10;
+        }
     }
 
     &[data-state="checked"] {
@@ -99,7 +149,7 @@
 
 /* Modal */
 .modal-overlay {
-    @apply fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] duration-300;
+    @apply fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] duration-300 fade-in;
 }
 
 .modal-panel {

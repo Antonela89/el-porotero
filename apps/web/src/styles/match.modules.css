@@ -18,14 +18,14 @@
 
 /* --- HEADER DE PARTIDA --- */
 .match-header {
-    @apply flex w-full items-center justify-between mb-3 px-2;
+    @apply flex w-full items-center justify-between mb-4 px-4 py-2;
 }
 
 .header-info {
     @apply flex flex-col justify-center items-center gap-1;
 
     & .limit-label {
-        @apply text-[10px] text-text-muted font-bold uppercase;
+        @apply text-[10px] text-text-muted font-bold uppercase tracking-tighter;
     }
 }
 
@@ -59,6 +59,7 @@
 
 .score-header-cell {
     @apply p-2 text-center align-middle relative;
+    height: 90px;
 }
 
 .score-cell {
@@ -83,17 +84,17 @@
 
 .player-slot {
     @apply flex flex-col items-center;
-    min-width: 40px; 
+    min-width: 40px;
 }
 
 .btn-cantar-small {
     @apply bg-pink-500/10 text-pink-400 border border-pink-500/20 rounded-full px-1.5 py-0.5;
     @apply text-[7px] font-black uppercase tracking-tighter transition-all;
-    
+
     &:hover {
         @apply bg-pink-500 text-white scale-110;
     }
-    
+
     &:active {
         @apply scale-90;
     }

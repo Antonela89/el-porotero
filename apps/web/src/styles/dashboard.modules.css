@@ -1,54 +1,59 @@
 .dashboard-container {
-    @apply min-h-screen bg-background flex flex-col gap-8 w-full;
+    @apply flex flex-col min-h-screen bg-background w-full px-4;
+    min-height: 100dvh;
 }
 
 .dashboard-header {
-    @apply flex justify-center items-center w-full py-6;
+    @apply flex flex-col justify-center items-center w-full py-8;
 }
 
 .dashboard-welcome {
-    @apply text-text-muted italic text-center;
-    & span { @apply font-semibold; }
+    @apply text-text-muted italic text-center leading-relaxed;
+
+    & span {
+        @apply font-display font-bold text-text-main text-lg not-italic;
+    }
 }
 
 .dashboard-action-area {
-    @apply max-w-4xl mx-auto w-full;
+    @apply max-w-4xl mx-auto w-full mb-4;
 }
 
+/* --- LISTADO Y GRUPO POR FECHAS --- */
 .dashboard-recent-list {
-    @apply max-w-4xl mx-auto w-full flex flex-col gap-6 mt-4;
+    @apply max-w-4xl mx-auto w-full flex flex-col gap-6 mt-2 pb-20;
 }
 
 .dashboard-history-title {
-    @apply text-xl font-bold flex items-center gap-2;
-}
-
-.dashboard-empty-state {
-    @apply text-center py-20 opacity-50 border-2 border-dashed border-white/5 rounded-3xl;
-}
-
-/* Agrupadores de fecha */
-.date-group-list {
-    @apply flex flex-col gap-10;
+    @apply text-xl font-display font-bold flex items-center gap-2 tracking-tight;
 }
 
 .date-group-container {
-    @apply flex flex-col gap-4;
+    @apply flex flex-col gap-4 animate-slide-up;
 }
 
 .date-group-title {
-    @apply text-xs font-bold uppercase tracking-[0.3em] text-text-muted border-l-2 border-primary pl-3;
+    @apply text-[10px] font-black uppercase tracking-[0.2em] text-text-muted border-l-4 border-primary/40 pl-4 py-1 ml-1;
 }
 
-/* Grid de partidas */
+/* --- GRID Y TARJETAS (MATCH CARDS) --- */
 .match-grid {
     @apply grid grid-cols-1 md:grid-cols-2 gap-4;
 }
 
-/* Card Match - Estructura */
 .match-card {
-    @apply bg-surface border border-white/5 p-5 rounded-2xl shadow-lg transition-all cursor-pointer flex flex-col gap-4;
-    &:hover { @apply border-primary/30; }
+    @apply bg-surface border border-white/5 p-6 rounded-[2rem] shadow-xl transition-all cursor-pointer flex flex-col gap-5;
+
+    &:active {
+        @apply scale-[0.97] bg-white/[0.02];
+    }
+
+    @media (hover: hover) {
+        &:hover {
+            @apply border-primary/30 shadow-primary-glow/10;
+            transform: translateY(-4px);
+        }
+    }
 }
 
 .match-card-header {
@@ -56,51 +61,57 @@
 }
 
 .match-card-info {
-    @apply flex flex-col;
-    & h3 { @apply text-xl font-display font-bold text-primary uppercase; }
+    & h3 {
+        @apply text-2xl font-display font-black text-primary uppercase tracking-tighter;
+    }
 }
 
 .match-card-meta {
-    @apply flex items-center gap-3 text-text-muted text-sm mt-1;
+    @apply flex items-center gap-4 text-text-muted text-xs mt-1 font-medium;
+
     & span {
-        @apply flex items-center gap-1;
+        @apply flex items-center gap-1.5;
     }
 }
 
 .match-card-winner {
-    @apply text-emerald-400 font-bold flex items-center gap-1;
+    @apply text-emerald-400 font-bold flex items-center gap-1.5 bg-emerald-400/10 px-2 py-0.5 rounded-lg;
 }
 
 .match-card-footer {
-    @apply flex items-center justify-between border-t border-white/5 pt-3 mt-auto;
+    @apply flex items-center justify-between border-t border-white/5 pt-4 mt-auto;
 }
 
 .match-card-actions {
-    @apply flex gap-2;
+    @apply flex gap-3;
 }
 
-/* Estados */
-.badge {
-    @apply px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider;
+/* --- BADGES DE ESTADO --- */
+.status-badge {
+    @apply px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border transition-colors;
+
+    &.active {
+        @apply bg-primary/10 text-primary border-primary/20;
+    }
+
+    &.finished {
+        @apply bg-secondary/10 text-secondary border-secondary/20;
+    }
+
+    &.closed {
+        @apply bg-white/5 text-text-muted border-white/10;
+    }
 }
 
-.status-active {
-    @apply bg-primary/10 text-primary;
-}
+/* --- ESTADOS DE CARGA --- */
+.dashboard-empty-state {
+    @apply text-center py-20 opacity-40 border-2 border-dashed border-white/10 rounded-[2.5rem] flex flex-col items-center gap-4;
 
-.status-finished {
-    @apply bg-white/5 text-secondary;
-}
-
-.status-closed {
-    @apply bg-white/5 text-text-muted;
-}
-
-/* Skeletons */
-.loading-skeleton-list {
-    @apply flex flex-col gap-4;
+    & p {
+        @apply text-sm italic;
+    }
 }
 
 .skeleton-card {
-    @apply h-24 w-full bg-surface/50 animate-pulse rounded-2xl;
+    @apply h-32 w-full bg-surface/50 animate-pulse rounded-[2rem] border border-white/5;
 }

@@ -1,51 +1,72 @@
-/*AuthLayout*/
 .auth-page {
-    @apply min-h-screen flex items-center justify-center bg-background p-4;
+    @apply min-h-screen flex items-center justify-center bg-background p-6;
 }
 
 .auth-container {
-    @apply flex flex-col items-center gap-8 w-full max-w-md;
+    @apply flex flex-col items-center gap-10 w-full max-w-md;
+    @apply slide-in-from-bottom-4; 
 }
 
 .auth-header {
     @apply text-center;
 
     & h1 {
-        @apply text-5xl text-primary mb-2 font-display font-bold;
+        @apply text-5xl text-primary mb-2 font-display font-bold tracking-tighter;
+        text-shadow: 0 0 20px rgba(253, 224, 71, 0.2);
     }
 
     & p {
-        @apply text-text-muted;
+        @apply text-text-muted text-sm font-medium tracking-wide uppercase;
     }
 }
 
- /* La tarjeta del formulario */
+/* --- TARJETA DE FORMULARIO --- */
 .auth-card {
-    @apply w-full max-w-md bg-surface p-8 rounded-3xl shadow-2xl border border-white/5 flex flex-col gap-6;
+    @apply w-full bg-surface p-8 rounded-[2.5rem] border border-white/5 flex flex-col gap-6;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
- /* Títulos */
 .auth-title {
-    @apply text-3xl font-display font-bold text-primary text-center;
+    @apply text-2xl font-display font-bold text-text-main text-center tracking-tight;
 }
 
- /* Grupos de Input */
+/* --- ELEMENTOS DE FORMULARIO --- */
 .form-group {
     @apply flex flex-col gap-2;
 }
 
 .form-label {
-    @apply text-sm font-semibold text-text-muted ml-1;
+    @apply text-[10px] font-black text-text-muted uppercase tracking-[0.15em] ml-1;
 }
 
 .form-input {
-    @apply w-full bg-background border border-white/10 p-4 rounded-xl text-text-main outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20;
+    @apply w-full bg-background border border-white/10 p-4 rounded-2xl text-text-main outline-none transition-all;
+
+    &:focus {
+        @apply border-primary ring-4 ring-primary/10;
+        background-color: rgba(253, 224, 71, 0.02);
+    }
+
+    &::placeholder {
+        @apply text-text-muted opacity-30;
+    }
 }
 
+/* --- LINKS DE NAVEGACIÓN (Login/Register) --- */
 .auth-link {
     @apply text-sm text-center text-text-muted mt-2;
 
     & span {
-        @apply text-secondary font-semibold hover:underline cursor-pointer;
+        @apply text-primary font-bold transition-all cursor-pointer inline-block;
+
+        &:active {
+            @apply scale-95 opacity-70;
+        }
+
+        @media (hover: hover) {
+            &:hover {
+                @apply text-primary-dark underline underline-offset-4;
+            }
+        }
     }
 }

@@ -39,7 +39,7 @@ export const CardMatch = ({ match, onDelete, onEdit }: MatchCardProps) => {
                     </div>
                 </div>
 
-                <span className={`badge ${isActive ? 'status-active' : isFinished ? 'status-finished' : 'status-closed'}`}>
+                <span className={`status-badge ${isActive ? 'active' : isFinished ? 'finished' : 'closed'}`}>
                     {isActive ? 'En Juego' : isFinished ? 'Finalizada' : 'Cerrada'}
                 </span>
             </div>

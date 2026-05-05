@@ -3,39 +3,41 @@
 }
 
 .layout-header {
-    @apply px-4 py-3 flex justify-between items-center border-b border-white/5 bg-surface/20 backdrop-blur-md shrink-0 z-40;
+    @apply px-4 py-2.5 flex justify-between items-center border-b border-white/5;
+    @apply bg-surface/20 backdrop-blur-md shrink-0 z-40;
 }
 
 .header-left {
-    @apply flex items-center gap-2;
+    @apply flex items-center gap-1;
 }
 
 .header-right {
-    @apply flex items-center gap-3 ml-auto;
-
-    & span {
-        @apply text-[16px];
-    }
-}
-
-.user-tag {
-    @apply text-[10px] font-bold text-text-muted uppercase tracking-tighter hidden;
+    @apply flex items-center gap-2 ml-auto;
 }
 
 .brand-logo {
-    @apply font-display font-bold text-primary tracking-tighter text-lg sm:text-xl truncate;
+    @apply font-display font-black text-primary tracking-tighter text-lg;
+    max-width: 140px;
+    @apply truncate;
+}
+
+.user-tag {
+    @apply hidden font-bold text-text-muted uppercase tracking-widest;
+    font-size: 9px;
+
+    @media (min-width: 400px) {
+        @apply block;
+    }
 }
 
 .layout-main {
-    @apply flex-1 flex flex-col overflow-hidden relative p-4;
-    overflow-y: scroll;
-    scroll-behavior: smooth;
+    @apply flex-1 flex flex-col relative p-4 overflow-hidden;
 }
 
-.custom-scrollbar {
-    scrollbar-width: none;
-
-    &::-webkit-scrollbar {
-        display: none;
-    }
+/* El scroller principal de cada página */
+.main-scroller {
+    @apply flex-1 overflow-y-auto;
+    @apply custom-scrollbar;
+    scroll-behavior: smooth;
+    overscroll-behavior-y: contain;
 }

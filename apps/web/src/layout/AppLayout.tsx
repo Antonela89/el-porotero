@@ -10,10 +10,9 @@ export const AppLayout = ({ children }: { children: ReactNode }) => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    // Detectamos en qué página estamos
-    const isMatch = location.pathname === '/match';
+    const isMatchPage = location.pathname.startsWith('/match/');
     const isStatsPage = location.pathname === '/stats';
-    const showBack = !isMatch; // Mostramos flecha de volver si no es el home
+    const showBack = isMatchPage;
 
     return (
         <div className="layout-root">
@@ -33,7 +32,7 @@ export const AppLayout = ({ children }: { children: ReactNode }) => {
                     )}
                 </div>
                 <div className="header-right">
-                    <span className='text-text-muted'>{user?.username}</span>
+                    <span className="user-tag">{user?.username}</span>
                     {/* --- BOTÓN DINÁMICO: STATS o HOME --- */}
 
                     <IconButton
@@ -52,7 +51,9 @@ export const AppLayout = ({ children }: { children: ReactNode }) => {
             </header>
 
             <main className="layout-main">
-                {children}
+                <div className="main-scroller">
+                    {children}
+                </div>
             </main>
         </div>
     );
