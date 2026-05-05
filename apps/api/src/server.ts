@@ -11,7 +11,17 @@ const PORT = process.env.PORT || 3000;
 // Middlewares
 app.use(
 	cors({
-		origin: ['https://el-porotero-web.vercel.app', 'http://localhost:5173'],
+		origin: (origin, callback) => {
+			if (
+				!origin ||
+				origin.endsWith('.vercel.app') ||
+				origin.includes('localhost')
+			) {
+				callback(null, true);
+			} else {
+				callback(new Error('No permitido por CORS'));
+			}
+		},
 		methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
 		allowedHeaders: ['Content-Type', 'Authorization'],
 		credentials: true,
