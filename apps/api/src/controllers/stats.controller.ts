@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { MatchModel } from '@/models/Match.js';
+import { MatchModel } from '@/models/index.js';
 import { IUserStats } from '@el-porotero/shared';
 
 export const getGlobalStats = async (req: Request, res: Response) => {

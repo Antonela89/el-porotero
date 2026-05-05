@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { MatchModel } from '@/models/Match.js';
+import { MatchModel } from '@/models/index.js';
 import { IMatchConfig } from '@el-porotero/shared';
 
 // Crear un juego nuevo

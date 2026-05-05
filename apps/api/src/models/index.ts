@@ -1,2 +1,2 @@
-import { MatchModel } from './Match.js';
-import { UserModel } from  './User.js';
+export { MatchModel } from './Match.js';
+export { UserModel } from  './User.js';

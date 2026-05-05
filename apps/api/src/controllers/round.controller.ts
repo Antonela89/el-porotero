@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { MatchModel } from '@/models/Match.js';
+import { MatchModel } from '@/models/index.js';
 import * as GameRules from '@/services/gameRules.services.js';
 // Función  Auxiliar
 const recalculateMatchScores = (match: any) => {
