@@ -12,6 +12,7 @@
     "dev:web": "npm run dev -w apps/web",
     "build:web": "npm run build:shared && npm run build -w web",
     "build:api": "npm run build -w @el-porotero/shared && npm run build -w api",
+    "build": "npm run build:api",
     "start": "node apps/api/dist/server.js"
   },
   "repository": {
