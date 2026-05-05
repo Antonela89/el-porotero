@@ -10,7 +10,8 @@
   "scripts": {
     "dev:api": "npm run dev -w apps/api",
     "dev:web": "npm run dev -w apps/web",
-    "build": "npm run build -w @el-porotero/shared && npm run build -w api",
+    "build:web": "npm run build:shared && npm run build -w web",
+    "build:api": "npm run build -w @el-porotero/shared && npm run build -w api",
     "start": "node apps/api/dist/server.js"
   },
   "repository": {
