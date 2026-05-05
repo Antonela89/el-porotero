@@ -3,7 +3,7 @@ import { IRoundScore, IRoundDetails, IMatch, TrucoFlowState } from '@el-porotero
 import { TRUCO_ACTIONS } from '@/constants';
 import { useState } from "react";
 import { useTrucoLogic } from '@/hooks';
-import { Button, IconButton } from '@/components'
+import { Button, IconButton, ConfirmDialog } from '@/components'
 
 interface ITrucoAction {
     id: string;
@@ -24,7 +24,17 @@ interface TrucoProps {
 
 export const TrucoInputRow = ({ match, score, teamId, flowState, onUpdate, onFlowChange }: TrucoProps) => {
     const { faltaValue } = useTrucoLogic(match);
+    const [showCleanPoints, setShowCleanPoints] = useState(false);
     const [selections, setSelections] = useState<Record<string, 'q' | 'nq' | null>>({});
+
+    const handleShowClean = () => setShowCleanPoints(true);
+
+    const handleClean = () => {
+        setSelections({});
+        onUpdate({ pointsAdded: 0 });
+        onFlowChange({ envidoClaimedBy: null, trucoClaimedBy: null });
+
+    }
 
     const handleToggle = (action: ITrucoAction, type: 'q' | 'nq') => {
         const isTrucoGroup = action.id.includes('truco') || action.id.includes('retruco') || action.id.includes('vale');
@@ -167,16 +177,18 @@ export const TrucoInputRow = ({ match, score, teamId, flowState, onUpdate, onFlo
                         icon={<RotateCcw size={20} />}
                         title="Limpiar puntos"
                         className="p-4! active:rotate-180 duration-500"
-                        onClick={() => {
-                            if (window.confirm("¿Limpiar puntos?")) {
-                                setSelections({});
-                                onUpdate({ pointsAdded: 0 });
-                                onFlowChange({ envidoClaimedBy: null, trucoClaimedBy: null });
-                            }
-                        }}
+                        onClick={handleShowClean}
                     />
                 </div>
             </div>
+
+            <ConfirmDialog
+                isOpen={showCleanPoints}
+                onClose={() => setShowCleanPoints(false)}
+                onConfirm={handleClean}
+                title="¿Limpiar los puntos?"
+                description="Los puntos de la ronda volverán a 0. Esta acción no se puede deshacer."
+            />
         </div>
     );
 };

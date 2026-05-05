@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import { IMatch } from '@el-porotero/shared';
 import { RotateCcw, XCircle } from 'lucide-react';
-import { IconButton } from '@/components';
+import { IconButton, ConfirmDialog } from '@/components';
 import { useMatchActions } from '@/hooks';
 
 type MatchHeaderProps = {
@@ -11,11 +12,11 @@ type MatchHeaderProps = {
 
 export const MatchHeader = ({ match, onRefresh, icon }: MatchHeaderProps) => {
     const { cancelMatch } = useMatchActions(match._id!);
+    const [showCancelModal, setShowCancelModal] = useState(false);
 
-    const handleCancel = () => {
-        if (window.confirm("¿Seguro que querés cancelar la partida?")) {
-            cancelMatch.mutate();
-        }
+    const handleConfirmCancel = () => {
+        cancelMatch.mutate();
+        setShowCancelModal(true);
     };
 
     return (
@@ -41,7 +42,7 @@ export const MatchHeader = ({ match, onRefresh, icon }: MatchHeaderProps) => {
                         icon={<XCircle size={20} />}
                         variant="danger"
                         title="Cancelar Partida"
-                        onClick={handleCancel}
+                        onClick={() => setShowCancelModal(true)}
                         disabled={cancelMatch.isPending}
                     />
                 )}
@@ -52,6 +53,15 @@ export const MatchHeader = ({ match, onRefresh, icon }: MatchHeaderProps) => {
                     onClick={onRefresh}
                 />
             </div>
+
+
+            <ConfirmDialog
+                isOpen={showCancelModal}
+                onClose={() => setShowCancelModal(false)}
+                onConfirm={handleConfirmCancel}
+                title="¿Borrar Partida?"
+                description="Esta acción no se puede deshacer."
+            />
         </header>
     );
 };
