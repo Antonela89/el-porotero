@@ -9,7 +9,14 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middlewares
-app.use(cors());
+app.use(
+	cors({
+		origin: ['https://el-porotero-web.vercel.app', 'http://localhost:5173'],
+		methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+		allowedHeaders: ['Content-Type', 'Authorization'],
+		credentials: true,
+	}),
+);
 app.use(express.json());
 
 // Conexión a la DB
@@ -23,7 +30,7 @@ app.get('/', (req, res) => {
 // Rutas
 app.use('/api/auth', authRouter);
 app.use('/api/matches', matchRouter);
-app.use('/api/stats', statsRouter)
+app.use('/api/stats', statsRouter);
 
 app.listen(PORT, () => {
 	console.log(`Servidor corriendo en http://localhost:${PORT}`);
