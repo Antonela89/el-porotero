@@ -1,19 +1,32 @@
 import { motion } from 'framer-motion';
 
-export const LoadingSpinner = () => (
-    <div className="flex flex-col items-center justify-center gap-4">
+interface LoadingSpinnerProps {
+    fullScreen?: boolean;
+    message?: string;
+}
+
+export const LoadingSpinner = ({
+    fullScreen = false,
+    message = "Mezclando mazo..."
+}: LoadingSpinnerProps) => (
+    <div className={`spinner-wrapper ${fullScreen ? 'full-screen' : ''}`}>
         <motion.div
-            animate={{ 
+            animate={{
                 rotateY: [0, 180, 360],
                 scale: [1, 1.1, 1]
             }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            className="text-6xl"
+            transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut"
+            }}
+            className="spinner-icon"
         >
             🃏
         </motion.div>
-        <p className="text-primary font-display font-bold animate-pulse uppercase tracking-widest text-xs">
-            Mezclando mazo...
+
+        <p className="spinner-text">
+            {message}
         </p>
     </div>
 );

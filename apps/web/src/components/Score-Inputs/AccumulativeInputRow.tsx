@@ -1,5 +1,5 @@
 import { IRoundScore, IRoundDetails, GameType } from '@el-porotero/shared';
-import { Button } from '@/components';
+import { Button, Input } from '@/components';
 
 interface AccumulativeInputRowProps {
     gameType: GameType
@@ -14,35 +14,36 @@ export const AccumulativeInputRow = ({ gameType, score, onUpdateScore, onUpdateD
     const isCorte = !!score.details?.isCorteMinus10;
 
     return (
-
-        <div className="flex flex-1 items-center gap-2">
-            <input
+        <div className="score-input-col">
+            <Input
                 type="text"
                 inputMode="numeric"
                 placeholder="Puntos"
-                className="form-input bg-background border border-white/10 py-2 text-center w-12 rounded-lg flex-1"
+                className="score-input-field w-full"
                 disabled={isCerrar || isCorte}
                 value={isCerrar ? "0" : isCorte ? "-10" : (score.pointsAdded || "")}
                 onChange={(e) => onUpdateScore({ pointsAdded: parseInt(e.target.value.replace(/\D/g, "")) || 0 })}
             />
-            <Button
-                variant={isCerrar ? 'primary' : 'ghost'}
-                className="!text-[10px] !py-2 flex-1"
-                disabled={disableExclusives && !isCerrar}
-                onClick={() => onUpdateDetails({ isCerrar: !isCerrar, isCorteMinus10: false })}
-            >
-                CERRÓ
-            </Button>
-            {gameType !== 'Uno' && (
+            <div className='flex w-full gap-2 items-center mt-2'>
                 <Button
-                    variant={isCorte ? 'danger' : 'ghost'}
-                    className="!text-[10px] !py-2 flex-1"
-                    disabled={disableExclusives && !isCorte}
-                    onClick={() => onUpdateDetails({ isCorteMinus10: !isCorte, isCerrar: false })}
+                    variant={isCerrar ? 'primary' : 'ghost'}
+                    className="text-[12px]! py-2! flex-1"
+                    disabled={disableExclusives && !isCerrar}
+                    onClick={() => onUpdateDetails({ isCerrar: !isCerrar, isCorteMinus10: false })}
                 >
-                    -10
+                    CERRÓ
                 </Button>
-            )}
+                {gameType !== 'Uno' && (
+                    <Button
+                        variant={isCorte ? 'danger' : 'ghost'}
+                        className="text-[12px]! py-2! flex-1"
+                        disabled={disableExclusives && !isCorte}
+                        onClick={() => onUpdateDetails({ isCorteMinus10: !isCorte, isCerrar: false })}
+                    >
+                        -10
+                    </Button>
+                )}
+            </div>
         </div>
     )
 };

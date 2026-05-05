@@ -36,14 +36,14 @@ export const EditMatchModal = ({ match, isOpen, onClose, onSuccess }: EditMatchM
         <div className="edit-match-footer">
             <Button
                 variant="ghost"
-                className="flex-1"
+                className="btn-footer-confirm"
                 onClick={onClose}
             >
                 <X size={20} /> Cancelar
             </Button>
             <Button
                 variant="primary"
-                className="flex-1"
+                className="btn-footer-confirm"
                 onClick={handleSave}
                 loading={updateMatch.isPending}
                 disabled={updateMatch.isPending}
@@ -80,7 +80,7 @@ export const EditMatchModal = ({ match, isOpen, onClose, onSuccess }: EditMatchM
 
                 <label className="label-caps mt-4">Estado de la Partida</label>
                 <select
-                    className="status-select"
+                    className="w-full"
                     value={status}
                     onChange={(e) => setStatus(e.target.value as IMatch['status'])}
                 >

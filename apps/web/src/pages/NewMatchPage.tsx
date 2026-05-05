@@ -22,7 +22,7 @@ export const NewMatchPage = () => {
 
     const {
         gameType, players, isTeamGame, limitScore, currentGame, canAddMore,
-        setLimitScore, updateGame, addPlayer, removePlayer, editPlayer, toggleTeams
+        setLimitScore, updateGame, addPlayer, removePlayer, editPlayer
     } = useNewMatch(state?.players || [], (state?.gameType as GameType) || 'Loba');
 
     const { mutate: createMatch, isPending } = useCreateMatch();
@@ -68,16 +68,10 @@ export const NewMatchPage = () => {
                     </section>
                 )}
 
-                {/* Toggle de Equipos */}
-                {['Burako', 'Truco'].includes(gameType) && players.length >= 4 && players.length % 2 === 0 && (
-                    <div className="toggle-container">
-                        <div>
-                            <span>Jugar por Equipos</span>
-                            <span>Intercalado</span>
-                        </div>
-                        <button onClick={toggleTeams} className={`switch-base ${isTeamGame ? 'active' : 'inactive'}`}>
-                            <div className={`switch-dot ${isTeamGame ? 'active' : 'inactive'}`} />
-                        </button>
+                {isTeamGame && (
+                    <div className="info-box py-3 flex items-center justify-center gap-2">
+                        <Users size={14} />
+                        PARTIDA POR EQUIPOS (INTERCALADO)
                     </div>
                 )}
 
@@ -99,7 +93,7 @@ export const NewMatchPage = () => {
                                             <Input
                                                 autoFocus
                                                 value={tempEditName}
-                                                containerClassName="flex-1" 
+                                                containerClassName="flex-1"
                                                 className="player-edit-input"
                                                 onChange={e => setTempEditName(e.target.value)}
                                                 onKeyDown={e => e.key === 'Enter' && handleSaveEdit(i)}

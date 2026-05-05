@@ -10,6 +10,7 @@ export * from './match/MatchHeader';
 export * from './match/PlayerHeader';
 export * from './match/TeamHeader';
 export * from './match/TrucoTotalCell';
+export * from './match/MesaPointsSelector'
 
 // Componentes atómicos
 export * from './UI/IconButton';

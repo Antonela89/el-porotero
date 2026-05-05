@@ -1,0 +1,281 @@
+/* --- LAYOUT PRINCIPAL --- */
+.match-page {
+    @apply flex flex-col h-dvh bg-background w-full max-w-2xl mx-auto relative overflow-hidden;
+}
+
+.match-scroller {
+    @apply flex-1 overflow-y-auto px-2 py-2;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.game-mode-banner {
+    @apply bg-purple-500/10 text-purple-400 text-[10px] py-2 text-center font-bold uppercase tracking-widest mb-4 border-y border-purple-500/20;
+}
+
+/* --- HEADER DE PARTIDA --- */
+.match-header {
+    @apply flex w-full items-center justify-between mb-3 px-2;
+}
+
+.header-info {
+    @apply flex flex-col justify-center items-center gap-1;
+
+    & .limit-label {
+        @apply text-[10px] text-text-muted font-bold uppercase;
+    }
+}
+
+.header-actions {
+    @apply flex gap-2;
+}
+
+/* --- SCOREBOARD (TABLA) --- */
+.scoreboard-container {
+    @apply w-full overflow-x-auto bg-surface rounded-3xl border border-white/5 shadow-2xl;
+    max-width: calc(100vw - 2rem);
+    margin-inline: auto;
+}
+
+.scoreboard-table {
+    @apply w-full text-center border-collapse;
+    table-layout: fixed;
+}
+
+.score-header-row {
+    @apply border-b border-white/10;
+}
+
+.score-row {
+    @apply border-b border-white/5 transition-colors;
+
+    &:hover {
+        @apply bg-white/[0.02];
+    }
+}
+
+.score-header-cell {
+    @apply p-2 text-center align-middle relative;
+}
+
+.score-cell {
+    @apply p-4 font-mono text-sm text-center min-w-20;
+
+    & .cell-content {
+        @apply flex items-center justify-center gap-1;
+    }
+}
+
+.score-header-stack {
+    @apply flex flex-col items-center justify-end h-full gap-2;
+}
+
+.score-icon-slot {
+    @apply absolute top-2 flex items-center justify-center h-4 w-full;
+}
+
+.team-players-row {
+    @apply flex gap-1.5 relative mt-1;
+}
+
+.player-slot {
+    @apply flex flex-col items-center;
+    min-width: 40px; 
+}
+
+.btn-cantar-small {
+    @apply bg-pink-500/10 text-pink-400 border border-pink-500/20 rounded-full px-1.5 py-0.5;
+    @apply text-[7px] font-black uppercase tracking-tighter transition-all;
+    
+    &:hover {
+        @apply bg-pink-500 text-white scale-110;
+    }
+    
+    &:active {
+        @apply scale-90;
+    }
+}
+
+.player-initials {
+    @apply text-[12px] font-black uppercase transition-colors;
+    line-height: 1;
+}
+
+.dealer-crown-abs {
+    @apply absolute -bottom-0.25 left-1/2 -translate-x-1/2 text-primary;
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
+}
+
+.is-dealer .player-initials {
+    @apply text-primary;
+}
+
+.not-dealer .player-initials {
+    @apply opacity-40;
+}
+
+.crown-reserved-space {
+    @apply h-4 flex items-center justify-center;
+    width: 100%;
+}
+
+.limit-row {
+    @apply font-bold border-t border-white/10 transition-all;
+
+    &.lose-limit {
+        @apply bg-orange-400/5 text-orange-400;
+    }
+
+    &.win-limit {
+        @apply bg-emerald-400/5 text-emerald-400;
+    }
+}
+
+.limit-label-cell {
+    @apply sticky-round-col p-5 uppercase tracking-widest text-[10px];
+}
+
+.limit-value-cell {
+    @apply p-4 text-xl font-display text-center align-middle h-16;
+}
+
+.score-cell-mono {
+    @apply p-3 font-mono text-sm text-center;
+
+    &.team-a {
+        @apply text-indigo-300;
+    }
+
+    &.team-b {
+        @apply text-rose-300;
+    }
+}
+
+/* --- TOTALES --- */
+.totals-row {
+    @apply bg-primary/5 font-bold border-t border-white/10;
+}
+
+.total-display {
+    @apply flex flex-col items-center justify-center py-2 relative;
+    line-height: 1;
+}
+
+.total-main-val {
+    @apply text-3xl font-display transition-all text-text-main block;
+
+    &.highlight {
+        @apply text-primary;
+    }
+
+    &.muted {
+        @apply opacity-20;
+    }
+}
+
+.total-sub-val {
+    @apply text-[8px] opacity-30 mt-1 font-mono uppercase tracking-tighter block;
+    white-space: nowrap;
+}
+
+/* --- TRUCO SPECIFIC --- */
+
+.truco-status-stack {
+    @apply flex flex-col items-center justify-center gap-1;
+}
+
+.truco-stage-label {
+    @apply text-[10px] uppercase font-black tracking-[0.2] pt-2 mb-1 transition-all duration-500 text-text-muted opacity-60;
+
+    &.active {
+        @apply text-primary opacity-100;
+    }
+}
+
+.score-meta-text {
+    @apply text-[10px] text-text-muted pb-2;
+}
+
+/* --- ANOTADOR (MODAL DE RONDA) --- */
+.anotador-content {
+    @apply flex-1 overflow-y-auto pt-2 flex flex-col gap-6;
+}
+
+.score-group-card {
+    @apply p-3 rounded-3xl border bg-background/20 mb-2 transition-all;
+
+    &.team-a {
+        @apply border-l-4 border-indigo-500/50;
+    }
+
+    &.team-b {
+        @apply border-l-4 border-rose-500/50;
+    }
+
+    &.team-none {
+        @apply border-white/5;
+    }
+}
+
+.score-group-header {
+    @apply flex justify-between items-center mb-2;
+}
+
+.player-card {
+    @apply flex flex-col w-full p-2 rounded-2xl bg-background/40 border border-white/5 mb-2;
+}
+
+.team-scoring-area {
+    @apply w-full flex flex-col gap-4;
+}
+
+.player-card-header {
+    @apply flex justify-between items-center mb-2;
+}
+
+.compact-input {
+    @apply bg-background border border-white/10 py-2 text-center w-14 rounded-xl outline-none font-display text-lg focus:border-primary transition-all;
+}
+
+.form-error-banner {
+    @apply flex items-center justify-center gap-2 text-warning text-[10px] font-black uppercase py-2;
+}
+
+.round-number-col {
+    @apply sticky-round-col;
+    @apply flex justify-between items-center p-2;
+
+    & span {
+        @apply text-[10px] text-text-muted;
+    }
+}
+
+.row-actions {
+    @apply flex gap-1;
+}
+
+/* --- COMPONENTES ESPECIALES --- */
+/* Winner Display */
+.winner-card {
+    @apply bg-primary text-background p-6 rounded-3xl flex flex-col items-center gap-2 shadow-2xl mt-4;
+}
+
+.winner-label-primary {
+    @apply text-2xl font-display font-bold uppercase tracking-tight text-center;
+}
+
+.winner-sublabel {
+    @apply text-[10px] font-black opacity-60 uppercase tracking-widest mb-2;
+}
+
+/* Utilitarios de Imagen/Icono */
+.card-icon-filter {
+    filter: invert(1) brightness(1.5);
+}
+
+.label-mini {
+    @apply text-[10px] text-text-muted mb-1 block uppercase font-black tracking-widest;
+}

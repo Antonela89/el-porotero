@@ -29,20 +29,21 @@ export const AddCantoModal = ({ isOpen, onClose, playerName, onConfirm }: Props)
                         }}
                         className="canto-option"
                     >
-                        <div className="canto-main-info">
-                            <div className="canto-icon-box">
-                                <img
-                                    src={canto.icon}
-                                    alt={canto.label}
-                                    className="card-icon-filter"
-                                />
-                            </div>
-                            <span className="canto-label-text">
-                                {canto.label}
-                            </span>
-                        </div>
+                        {/* Puntaje como Badge arriba a la derecha */}
                         <span className="canto-points-badge">
                             +{canto.points}
+                        </span>
+                        
+                        <div className="canto-icon-box">
+                            <img
+                                src={canto.icon}
+                                alt={canto.label}
+                                className="card-icon-filter"
+                            />
+                        </div>
+
+                        <span className="canto-label-text">
+                            {canto.label}
                         </span>
                     </button>
                 ))}

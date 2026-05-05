@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@import "./styles/theme.css";
+@import "./styles/theme.modules.css";
 
 /* Base de botones */
 @utility btn-base {
@@ -66,12 +66,52 @@
     }
 }
 
+@utility sticky-round-col {
+    position: sticky;
+    left: 0;
+    z-index: 20;
+    background-color: var(--color-surface);
+    color: var(--color-text-muted);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 700;
+    text-align: center;
+    vertical-align: middle;
+    width: 100px;
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.4);
+}
+
+@utility score-input-field {
+    background-color: var(--color-background);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+    border-radius: var(--radius-xl);
+    outline: none;
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    padding-block: 0.5rem;
+
+    &:focus {
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary), transparent 80%);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
 @layer components {
-    @import "./styles/ui.css";
-    @import "./styles/layout.css";
-    @import "./styles/auth.css";
-    @import "./styles/dashboard.css";
-    @import "./styles/newMatch.css";
-    @import "./styles/match.css";
-    @import "./styles/stats.css";
+    @import "./styles/ui.modules.css";
+    @import "./styles/layout.modules.css";
+    @import "./styles/auth.modules.css";
+    @import "./styles/dashboard.modules.css";
+    @import "./styles/newMatch.modules.css";
+    @import "./styles/match.modules.css";
+    @import "./styles/scoreInputs.modules.css";
+    @import "./styles/stats.modules.css";
 }

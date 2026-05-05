@@ -20,6 +20,7 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
     const limitLabel = isLoseOnLimit ? 'Para Salir' : 'Para Ganar';
     const isTeamLayout = match.isTeamGame || match.gameType === 'Truco';
     const isMosca = match.gameType === 'Mosca';
+    const isTruco = match.gameType === 'Truco';
 
     const sombreroIndex = (isMosca && match.players.length === 5)
         ? (match.currentDealerIndex + 1) % match.players.length : -1;
@@ -54,6 +55,8 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
                                             teamId={t as 'A' | 'B'}
                                             players={playersWithDealerStatus}
                                             color={t === 'A' ? 'text-indigo-400' : 'text-rose-400'}
+                                            showCantar={match.gameType === 'Barsiga' && match.status === 'active'}
+                                            onCantar={onCantar}
                                         />
                                     );
                                 })
@@ -79,7 +82,6 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
                     {match.rounds.map((round) => (
                         <tr key={round.roundNumber} className="score-row">
                             <td className="round-number-col">
-                                <span>{round.roundNumber}</span>
                                 <div className="row-actions">
                                     <IconButton icon={<Edit2 size={14} />} variant="info" title="Editar" onClick={() => onEditRound(round.roundNumber)} />
                                     <IconButton icon={<Trash2 size={14} />} variant="danger" title="Borrar" onClick={() => onDeleteRound(round.roundNumber)} />
@@ -114,13 +116,13 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
                                 const teamTotal = match.players.filter(p => p.team === t).reduce((acc, p) => acc + p.score, 0);
                                 return match.gameType === 'Truco'
                                     ? <TrucoTotalCell key={t} total={teamTotal} status={getStatus(teamTotal)} />
-                                    : <td key={t} className={`p-5 text-4xl font-display ${t === 'A' ? 'text-indigo-400' : 'text-rose-400'}`}>{teamTotal}</td>;
+                                    : <td key={t} className={`p-5 text-4xl font-display ${t === 'A' ? 'text-indigo-400' : 'text-rose-400'}`}>{teamTotal}</td>
                             })
                         ) : (
                             match.players.map(p => (
                                 <td key={p.name} className="score-cell">
-                                    <div className="total-display">
-                                        <span className={`total-main ${p.isOut ? 'muted' : ''}`}>
+                                    <div className={`total-display ${isTruco ? 'min-height: 100px' : ''}`}>
+                                        <span className={`total-main-val ${p.isOut ? 'muted' : ''}`}>
                                             {p.score}
                                         </span>
                                         {p.isOut && match.status === 'active' && (
@@ -135,7 +137,7 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
                     </tr>
 
                     {/* FILA DINÁMICA DE DISTANCIA AL LÍMITE (USO DE isLoseOnLimit) */}
-                    {match.config.limitScore && match.gameType !== 'Mosca' && match.status === 'active' && (
+                    {match.config.limitScore > 0 && match.gameType !== 'Mosca' && match.status === 'active' && (
                         <tr className={`limit-row ${isLoseOnLimit ? 'lose-limit' : 'win-limit'}`}>
                             <td className="limit-label-cell">{limitLabel}</td>
                             {isTeamLayout ? (

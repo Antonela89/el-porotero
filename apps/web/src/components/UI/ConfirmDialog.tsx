@@ -21,14 +21,14 @@ export const ConfirmDialog = ({
         <div className="confirm-dialog-footer">
             <Button
                 variant="ghost"
-                className="flex-1"
+                className="btn-footer-confirm"
                 onClick={onClose}
             >
                 Cancelar
             </Button>
             <Button
                 variant="danger"
-                className="flex-1"
+                className="btn-footer-confirm"
                 onClick={() => {
                     onConfirm();
                     onClose();

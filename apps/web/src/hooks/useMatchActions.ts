@@ -8,6 +8,11 @@ export const useMatchActions = (matchId: string) => {
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
 
+	const onMutationSuccess = () => {
+		queryClient.invalidateQueries({ queryKey: ['match', matchId] });
+		queryClient.invalidateQueries({ queryKey: ['matches'] });
+	};
+
 	// Agregar/Editar Ronda
 	const saveRound = useMutation({
 		mutationFn: ({
@@ -25,7 +30,7 @@ export const useMatchActions = (matchId: string) => {
 			return api[method]<IMatch>(url, { scores }).then((res) => res.data);
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['match', matchId] });
+			onMutationSuccess();
 			notify.success('Ronda guardada');
 		},
 		onError: (err) => handleApiError(err, 'Error al guardar ronda'),
@@ -42,7 +47,7 @@ export const useMatchActions = (matchId: string) => {
 				.then((res) => res.data),
 		onSuccess: (data) => {
 			queryClient.setQueryData(['match', matchId], data);
-			queryClient.invalidateQueries({ queryKey: ['matches'] });
+			onMutationSuccess();
 			notify.success('Partida actualizada');
 		},
 		onError: (err) =>
@@ -54,7 +59,7 @@ export const useMatchActions = (matchId: string) => {
 		mutationFn: (roundNumber: number) =>
 			api.delete(`/matches/${matchId}/round/${roundNumber}`),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['match', matchId] });
+			onMutationSuccess();
 			notify.success('Ronda eliminada');
 		},
 	});
@@ -64,7 +69,7 @@ export const useMatchActions = (matchId: string) => {
 		mutationFn: (playerName: string) =>
 			api.patch(`/matches/${matchId}/reengage`, { playerName }),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['match', matchId] });
+			onMutationSuccess();
 			notify.info('Jugador re-enganchado');
 		},
 	});
@@ -84,7 +89,7 @@ export const useMatchActions = (matchId: string) => {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['match', matchId] });
 			notify.info('Partida cancelada');
-			navigate('/'); // Opcional, dependiendo de si querés que salga de la página
+			navigate('/');
 		},
 		onError: (err) => handleApiError(err, 'No se pudo cancelar la partida'),
 	});

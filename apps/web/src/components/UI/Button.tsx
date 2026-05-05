@@ -1,6 +1,6 @@
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'warning' | 'success' | 'info';
-    size?: 'md' | 'lg' | 'icon';
+    size?: 'sx' | 'md' | 'lg' | 'icon';
     loading?: boolean;
 }
 
@@ -18,6 +18,7 @@ export const Button = ({
 
     return (
         <button
+            type="button"
             className={`${variantClass} ${sizeClass} ${className}`}
             disabled={loading || props.disabled}
             {...props}

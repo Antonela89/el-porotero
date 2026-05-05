@@ -15,7 +15,7 @@ export const BaseModal = ({ isOpen, onClose, title, children, footer, maxWidth =
     <Dialog.Root open={isOpen} onOpenChange={onClose}>
         <Dialog.Portal>
             <Dialog.Overlay className="modal-overlay" />
-            <Dialog.Content className={`modal-content-anotador ${maxWidth}`}>
+            <Dialog.Content className={`modal-panel ${maxWidth || ''}`}>
                 <header className="p-6 pb-2 flex justify-between items-center shrink-0">
                     <Dialog.Title className="text-xl font-display font-bold">
                         {title}
@@ -25,12 +25,12 @@ export const BaseModal = ({ isOpen, onClose, title, children, footer, maxWidth =
 
                 <Dialog.Description className="sr-only">{title}</Dialog.Description>
 
-                <div className="flex-1 overflow-y-auto p-6 pt-2 custom-scrollbar">
+                <div className="modal-body">
                     {children}
                 </div>
 
                 {footer && (
-                    <footer className="p-6 pt-2 border-t border-white/5 bg-surface shrink-0">
+                    <footer className="modal-footer">
                         {footer}
                     </footer>
                 )}

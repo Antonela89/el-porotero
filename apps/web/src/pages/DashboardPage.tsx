@@ -2,13 +2,16 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Clock } from 'lucide-react';
 import { IMatch } from '@el-porotero/shared';
-import { CardMatch, EditMatchModal, Button } from '@/components';
+import { CardMatch, EditMatchModal, Button, LoadingSpinner, ConfirmDialog } from '@/components';
 import { useMatches } from '@/hooks';
 
 export const DashboardPage = () => {
     const navigate = useNavigate();
     const { matches, loading, deleteMatch, updateMatchInState } = useMatches();
     const [matchToEdit, setMatchToEdit] = useState<IMatch | null>(null);
+    const [idToDelete, setMatchToDelete] = useState<string | null>(null);
+    
+    if (loading) return <LoadingSpinner message="Buscando tus partidas..." />;
 
     // Agrupacion de partidas por fecha
     const groupedMatches = matches.reduce((groups, match) => {
@@ -27,7 +30,7 @@ export const DashboardPage = () => {
             {/* Header */}
             <header className="dashboard-header">
                 <p className="dashboard-welcome">
-                    <span>¡Hola!</span><br />
+                    <span className='text-[16px]'>¡Hola!</span><br />
                     ¿Qué vamos a jugar hoy?
                 </p>
             </header>
@@ -73,7 +76,7 @@ export const DashboardPage = () => {
                                         <CardMatch
                                             key={match._id}
                                             match={match}
-                                            onDelete={deleteMatch}
+                                            onDelete={(id) => setMatchToDelete(id)}
                                             onEdit={setMatchToEdit}
                                         />
                                     ))}
@@ -93,6 +96,17 @@ export const DashboardPage = () => {
                     onSuccess={updateMatchInState}
                 />
             )}
+
+            {/* DIÁLOGO DE CONFIRMACIÓN CENTRALIZADO */}
+            <ConfirmDialog
+                isOpen={!!idToDelete}
+                onClose={() => setMatchToDelete(null)}
+                onConfirm={() => {
+                    if (idToDelete) deleteMatch(idToDelete);
+                }}
+                title="¿Borrar Partida?"
+                description="Esta acción es irreversible. Se perderán todos los porotos de esta mesa."
+            />
         </div>
     );
 };

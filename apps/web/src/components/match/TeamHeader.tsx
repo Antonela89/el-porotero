@@ -6,12 +6,14 @@ interface TeamHeaderProps {
     allNames: string[];
     players: { name: string; isDealer: boolean }[];
     color: string;
+    showCantar?: boolean;
+    onCantar?: (name: string) => void;
 }
 
-export const TeamHeader = ({ teamId, allNames, players, color }: TeamHeaderProps) => (
-    <th className="score-header-cell is-team">
-        <div className="score-header-stack gap-large">
-            <span className={`font-display text-lg uppercase tracking-widest ${color}`}>
+export const TeamHeader = ({ teamId, allNames, players, color, showCantar, onCantar }: TeamHeaderProps) => (
+    <th className="score-header-cell">
+        <div className="score-header-stack">
+            <span className={`font-display uppercase tracking-widest ${color}`}>
                 Equipo {teamId}
             </span>
 
@@ -19,12 +21,24 @@ export const TeamHeader = ({ teamId, allNames, players, color }: TeamHeaderProps
                 {players.map((p) => (
                     <div
                         key={p.name}
-                        className={`player-badge-pill ${p.isDealer ? 'is-dealer' : 'not-dealer'}`}
+                        className={`player-initials ${p.isDealer ? 'is-dealer' : 'not-dealer'}`}
                     >
                         <span className="player-initials">
                             {getShortName(p.name, allNames)}
                         </span>
-                        {p.isDealer && <Crown size={10} fill="currentColor" />}
+
+                        {showCantar && onCantar && (
+                            <button
+                                onClick={() => onCantar(p.name)}
+                                className="btn-cantar-small mt-1"
+                            >
+                                CANTAR
+                            </button>
+                        )}
+
+                        <div className="crown-reserved-space">
+                            {p.isDealer && <Crown size={10} fill="currentColor" className="dealer-crown-abs" />}
+                        </div>
                     </div>
                 ))}
             </div>

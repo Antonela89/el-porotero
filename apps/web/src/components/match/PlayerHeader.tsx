@@ -21,23 +21,21 @@ export const PlayerHeader = ({
     showCantar,
     onCantar
 }: ScoreHeaderProps) => (
-    <th className={`score-header-cell ${isDealer ? 'is-dealer' : ''}`}>
-        <div className="score-header-stack">
-            <div className="score-icon-slot">
-                {isDealer && <Crown size={14} fill="currentColor" />}
+    <th className={`p-4 ${isDealer ? 'text-primary' : ''}`}>
+        <div className="flex flex-col items-center gap-1">
+            <div className="h-4 flex items-center gap-1">
+                {isDealer && <Crown size={14} className="text-primary" fill="currentColor" />}
                 {isSombrero && <HatGlasses size={14} className="text-purple-400" />}
             </div>
-
-            <span className={`score-name-main ${color} ${isSombrero ? 'is-sombrero' : ''}`}>
+            <span className={`text-lg font-display ${color} ${isSombrero ? 'text-purple-400' : isDealer ? 'text-primary' : ''}`}>
                 {getShortName(name, allNames)}
             </span>
-
-            <span className="score-name-sub">{name}</span>
+            <span className="text-[9px] opacity-50 uppercase tracking-tighter">{name}</span>
 
             {showCantar && onCantar && (
                 <Button
                     variant="ghost"
-                    className="btn-cantar-small"
+                    className="text-[8px]! py-0.5! px-2! mt-1 border-pink-500/30 text-pink-400 hover:bg-pink-500"
                     onClick={onCantar}
                 >
                     CANTAR

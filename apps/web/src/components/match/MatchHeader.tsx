@@ -1,6 +1,5 @@
 import { IMatch } from '@el-porotero/shared';
-import { ArrowLeft, RotateCcw, XCircle } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { RotateCcw, XCircle } from 'lucide-react';
 import { IconButton } from '@/components';
 import { useMatchActions } from '@/hooks';
 
@@ -11,7 +10,6 @@ type MatchHeaderProps = {
 }
 
 export const MatchHeader = ({ match, onRefresh, icon }: MatchHeaderProps) => {
-    const navigate = useNavigate();
     const { cancelMatch } = useMatchActions(match._id!);
 
     const handleCancel = () => {
@@ -22,20 +20,13 @@ export const MatchHeader = ({ match, onRefresh, icon }: MatchHeaderProps) => {
 
     return (
         <header className="match-header">
-            {/* Volver */}
-            <IconButton
-                icon={<ArrowLeft size={20} />}
-                title="Volver al inicio"
-                onClick={() => navigate('/')}
-            />
-
             {/* Información Central */}
             <div className="header-info">
-                <div>
+                <div className='flex gap-2'>
                     {icon}
-                    <span>{match.gameType}</span>
+                    <span className="text-lg">{match.gameType}</span>
                 </div>
-                <span>
+                <span className='limit-label'>
                     {match.gameType === 'Mosca'
                         ? 'OBJETIVO: 0 PTS'
                         : `LÍMITE: ${match.config.limitScore} PTS`

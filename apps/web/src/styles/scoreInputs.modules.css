@@ -1,0 +1,223 @@
+/* --- Estructura Base de Inputs --- */
+.score-input-row {
+    @apply flex gap-2 items-center w-full p-2;
+}
+
+.score-input-col {
+    @apply flex gap-2 items-center flex-col w-full p-2;
+}
+
+.score-input-stack {
+    @apply flex flex-col gap-4 w-full;
+}
+
+.score-input-compact {
+    @apply score-input-field w-14 py-2;
+}
+
+/* --- Grillas de Botones --- */
+.scoring-grid {
+    @apply grid grid-cols-2 gap-3;
+}
+
+.scoring-grid-3 {
+    @apply grid grid-cols-3 gap-2;
+}
+
+/* --- Contenedores de Incremento (Puras/Impuras/Escobas) --- */
+.counter-group {
+    @apply flex flex-col gap-1.5;
+}
+
+.counter-label {
+    @apply text-[8px] text-text-muted font-bold uppercase text-center;
+}
+
+.counter-controls {
+    @apply flex items-center justify-between bg-background rounded-xl p-1 border border-white/5 shadow-inner;
+}
+
+.counter-value {
+    @apply font-display font-bold text-xl;
+}
+
+/* --- Truco Action Styles --- */
+.player-name-label {
+    @apply font-display font-bold;
+}
+
+.truco-action-item {
+    @apply flex items-center bg-background/60 rounded-xl overflow-hidden border border-white/5 transition-all;
+
+    &.inactive {
+        @apply opacity-30;
+    }
+}
+
+.truco-action-label {
+    @apply flex-1 px-4 py-2 text-xs font-bold text-text-main;
+}
+
+.truco-btn-split {
+    @apply rounded-xl border-l border-white/5;
+}
+
+.truco-total-footer {
+    @apply mt-2 bg-primary/5 p-4 rounded-3xl border-2 border-primary/20 flex flex-col items-center gap-2 justify-between shadow-lg;
+}
+
+/* --- Bársiga/Escoba Helpers --- */
+.counter-container-escoba {
+    @apply flex items-center justify-between bg-background/50 p-3 rounded-xl border border-white/5;
+}
+
+/* Base para los botones de ítems de mesa (Oros, Cartas, Setenta) */
+.table-item-btn {
+    @apply flex flex-1 flex-col items-center gap-1 p-2 rounded-xl border transition-all duration-300;
+    @apply bg-surface border-white/5 text-text-muted opacity-40;
+    /* Inactivo por defecto */
+
+    &:hover {
+        @apply opacity-80;
+    }
+}
+
+/* Variantes activas */
+.active-oro {
+    @apply opacity-100 bg-yellow-500/20 border-yellow-500 text-yellow-500 shadow-lg shadow-yellow-500/10;
+}
+
+.active-cartas {
+    @apply opacity-100 bg-blue-500/20 border-blue-500 text-blue-500 shadow-lg shadow-blue-500/10;
+}
+
+.active-setenta {
+    @apply opacity-100 bg-emerald-500/20 border-emerald-500 text-emerald-50 shadow-lg shadow-emerald-500/10;
+}
+
+
+.team-score-grid {
+    @apply grid grid-cols-3 gap-2 mb-4;
+}
+
+.velo-selector-compact {
+    @apply flex gap-1 bg-background/30 p-2 rounded-2xl border border-white/5 mb-4;
+}
+
+.individual-escobas-row {
+    @apply flex items-center justify-between py-2 border-t border-white/5;
+}
+
+.velo-selection-area {
+    @apply bg-background/50 p-3 rounded-xl border border-white/5 flex flex-col gap-3;
+}
+
+.btn-velo-item {
+    @apply flex-1 font-bold transition-all duration-300 opacity-40;
+    font-size: 10px;
+    padding-block: 0.5rem;
+}
+
+.active-velo {
+    @apply opacity-100 bg-purple-500/20 border-purple-500 text-purple-400 shadow-lg shadow-purple-500/10 scale-105;
+}
+
+.team-header-actions {
+    @apply flex items-center justify-between gap-2 mb-4;
+}
+
+.btn-team-action {
+    @apply flex-1 py-2 font-black uppercase transition-all;
+    font-size: 9px;
+}
+
+.mesa-points-container {
+    @apply flex flex-col gap-3 bg-background/30 p-3 rounded-2xl border border-white/5 mb-4;
+}
+
+.mesa-grid-3 {
+    @apply grid grid-cols-3 gap-2;
+}
+
+.individual-counter-row {
+    @apply flex items-center justify-between py-2 border-t border-white/5 mt-2;
+}
+
+.escoba-count-display {
+    @apply font-display font-bold text-xl px-2 min-w-8 text-center;
+}
+
+/* Canto Options (Barsiga) */
+.canto-grid {
+    @apply grid grid-cols-2 gap-4 p-2;
+}
+
+.canto-option {
+    @apply relative flex flex-col items-center justify-center gap-2 p-4;
+    @apply bg-surface/40 border border-white/5 rounded-[2rem] transition-all active:scale-90;
+    min-height: 140px;
+
+    &:hover {
+        @apply bg-primary/5 border-primary/20;
+    }
+}
+
+.canto-points-badge {
+    @apply absolute -top-1 -right-1 flex items-center justify-center;
+    @apply bg-primary text-background font-black text-[10px] rounded-full;
+    width: 32px;
+    height: 32px;
+    box-shadow: 0 4px 10px rgba(253, 224, 71, 0.4);
+    z-index: 10;
+}
+
+.canto-icon-box {
+    @apply w-16 h-16 flex items-center justify-center p-1 transition-transform;
+
+    .canto-option:hover & {
+        @apply scale-110;
+    }
+}
+
+.card-icon-filter {
+    @apply w-full h-full object-contain;
+    filter: invert(1) brightness(1.5);
+}
+
+.canto-label-text {
+    @apply text-[11px] font-bold text-text-muted uppercase tracking-widest text-center;
+
+    .canto-option:hover & {
+        @apply text-text-main;
+    }
+}
+
+/* --- Burako --- */
+.counter-grid-burako {
+    @apply grid grid-cols-2 gap-1;
+}
+
+.counter-item-box {
+    @apply flex flex-col gap-1;
+}
+
+.counter-display-area {
+    @apply flex items-center justify-between bg-background rounded-2xl p-1 border border-white/5;
+}
+
+.counter-number {
+    @apply font-display font-bold text-2xl leading-none;
+
+    &.primary {
+        @apply text-primary;
+    }
+
+    &.main {
+        @apply text-text-main;
+    }
+}
+
+/* Botones de acción del pie (Cerró / Muerto) */
+.btn-action-burako {
+    @apply flex-1 py-3 px-2 text-[10px] font-black uppercase tracking-tighter;
+}

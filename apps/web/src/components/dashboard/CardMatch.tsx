@@ -40,7 +40,7 @@ export const CardMatch = ({ match, onDelete, onEdit }: MatchCardProps) => {
                 </div>
 
                 <span className={`badge ${isActive ? 'status-active' : isFinished ? 'status-finished' : 'status-closed'}`}>
-                    {isActive ? 'En Juego' : 'Cerrada'}
+                    {isActive ? 'En Juego' : isFinished ? 'Finalizada' : 'Cerrada'}
                 </span>
             </div>
 
@@ -56,11 +56,7 @@ export const CardMatch = ({ match, onDelete, onEdit }: MatchCardProps) => {
                         icon={<Trash2 size={18} />}
                         variant="danger"
                         title="Borrar"
-                        onClick={() => {
-                            if (window.confirm(`¿Borrar partida de ${match.gameType}?`)) {
-                                onDelete(match._id!);
-                            }
-                        }}
+                        onClick={() => onDelete(match._id!)}
                     />
                 </div>
 

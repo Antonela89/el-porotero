@@ -83,11 +83,18 @@ export const MatchDetailPage = () => {
             )}
 
             <MatchRoundModal
+                key={roundToEdit ? `edit-${roundToEdit}` : 'new-round'}
                 isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
+                onClose={() => {
+                    setIsModalOpen(false);
+                    setRoundToEdit(null);
+                }}
                 match={match}
                 roundToEdit={roundToEdit}
-                onSuccess={() => setIsModalOpen(false)}
+                onSuccess={() => {
+                    setIsModalOpen(false);
+                    setRoundToEdit(null);
+                }}
             />
 
             <AddCantoModal

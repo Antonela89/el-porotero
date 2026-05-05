@@ -11,29 +11,28 @@ export const AppLayout = ({ children }: { children: ReactNode }) => {
     const location = useLocation();
 
     // Detectamos en qué página estamos
-    const isDashboard = location.pathname === '/';
+    const isMatch = location.pathname === '/match';
     const isStatsPage = location.pathname === '/stats';
-    const showBack = !isDashboard; // Mostramos flecha de volver si no es el home
+    const showBack = !isMatch; // Mostramos flecha de volver si no es el home
 
     return (
         <div className="layout-root">
             {/* HEADER GLOBAL */}
             <header className="layout-header">
-                <div className="actions-container">
-                    {showBack && (
+                <div className="header-left">
+                    {showBack ? (
                         <IconButton
                             icon={<ArrowLeft />}
-                            onClick={() => navigate(-1)}
-                            title={isStatsPage ? "Inicio" : "Estadísticas"}
+                            onClick={() => navigate('/')}
+                            title="Ir a Inicio"
                         />
-
+                    ) : (
+                        <span className="brand-logo">
+                            El Porotero
+                        </span>
                     )}
-                    <span className="brand-logo">
-                        El Porotero
-                    </span>
                 </div>
-
-                <div className="actions-container">
+                <div className="header-right">
                     <span className='text-text-muted'>{user?.username}</span>
                     {/* --- BOTÓN DINÁMICO: STATS o HOME --- */}
 

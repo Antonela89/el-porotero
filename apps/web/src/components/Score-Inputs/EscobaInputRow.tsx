@@ -12,20 +12,21 @@ export const EscobaInputRow = ({ score, onUpdate, onToggleExclusive }: Props) =>
     const d = score.details;
 
     return (
-        <div className="flex flex-col gap-4 w-full">
+        <div className="score-input-stack">
             {/* CONTADOR DE ESCOBAS */}
-            <div className="flex items-center justify-between bg-background/50 p-3 rounded-xl border border-white/5">
+            <div className="counter-container-escoba">
                 <div className="flex items-center gap-2">
                     <Star size={16} className="text-primary" />
-                    <span className="text-[10px] font-bold uppercase text-text-muted">Escobas</span>
+                    <span className="label-mini mb-0!">Escobas</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <IconButton
                         icon={<Minus size={16} />}
                         title="Quitar Escoba"
                         onClick={() => onUpdate({ escobas: Math.max(0, (d.escobas || 0) - 1) })}
+                        className='p-2.5!'
                     />
-                    <span className="font-display font-bold text-xl px-2 min-w-8 text-center">
+                    <span className="counter-value px-2 min-w-8 text-center">
                         {d.escobas || 0}
                     </span>
                     <IconButton
@@ -33,12 +34,13 @@ export const EscobaInputRow = ({ score, onUpdate, onToggleExclusive }: Props) =>
                         variant="primary"
                         title="Sumar Escoba"
                         onClick={() => onUpdate({ escobas: (d.escobas || 0) + 1 })}
+                        className='p-2.5!'
                     />
                 </div>
             </div>
 
             {/* ÍTEMS DE MESA (Oros, Cartas, Setenta) */}
-            <div className="grid grid-cols-3 gap-2">
+            <div className="scoring-grid-3">
                 {(['hasOros', 'hasCartas', 'hasSetenta'] as const).map((key) => {
                     const config = {
                         hasOros: { label: 'Oros', icon: <Coins size={14} />, activeClass: 'active-oro' },
@@ -49,33 +51,31 @@ export const EscobaInputRow = ({ score, onUpdate, onToggleExclusive }: Props) =>
                     const isActive = !!d[key];
 
                     return (
-                        <button
+                        <Button
                             key={key}
-                            type="button"
                             onClick={() => onToggleExclusive(key)}
                             className={`table-item-btn ${isActive ? config.activeClass : ''}`}
                         >
                             {config.icon}
                             <span className="text-[8px] font-bold uppercase">{config.label}</span>
-                        </button>
+                        </Button>
                     );
                 })}
             </div>
 
             {/* LÓGICA DE VELOS (As, 7, 12) */}
-            <div className="bg-background/50 p-3 rounded-xl border border-white/5 flex flex-col gap-3">
-                <span className="text-[9px] font-bold text-text-muted uppercase ml-1">Velos de Oro</span>
-                <div className="flex gap-2">
+            <div className="velo-selection-area">
+                <span className="label-mini ml-1">Velos de Oro</span>
+                <div className="score-input-row">
                     {['As', '7', '12'].map((card) => {
                         const key = `hasVelo${card}` as keyof IRoundDetails;
-                        const isSelected = !!d[key];
+                        const isActive = !!d[key];
 
                         return (
                             <Button
                                 key={card}
                                 variant="ghost"
-                                // Usamos la clase personalizada para el color púrpura de los velos
-                                className={`flex-1 py-2! text-xs! ${isSelected ? 'table-item-btn active-velo' : 'opacity-40'}`}
+                                className={`btn-velo-item ${isActive ? 'active-velo' : ''}`}
                                 onClick={() => onToggleExclusive(key)}
                             >
                                 {card}

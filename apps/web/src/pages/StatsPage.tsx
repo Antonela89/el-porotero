@@ -9,10 +9,10 @@ export const StatsPage = () => {
 
     if (isLoading) {
         return (
-            <div className="flex flex-col gap-8 animate-pulse">
-                <div className="h-20 w-48 bg-surface rounded-2xl" />
+            <div className="stats-skeleton-wrapper">
+                <div className="skeleton-header" />
                 <div className="stats-grid">
-                    {[1, 2, 3, 4].map(i => <div key={i} className="h-32 bg-surface rounded-4xl" />)}
+                    {[1, 2, 3, 4].map(i => <div key={i} className="skeleton-stat-card" />)}
                 </div>
             </div>
         );
@@ -21,17 +21,17 @@ export const StatsPage = () => {
     if (!stats) return null;
 
     const cards = [
-        { label: 'Partidas', val: stats.totalPlayed, icon: <Hash />, color: 'text-blue-400' },
-        { label: 'Victorias', val: stats.won, icon: <Trophy />, color: 'text-emerald-400' },
-        { label: 'Efectividad', val: `${stats.winRate}%`, icon: <Target />, color: 'text-primary' },
-        { label: 'Favorito', val: stats.favoriteGame, icon: <Flame />, color: 'text-orange-400' },
+        { label: 'Partidas', val: stats.totalPlayed, icon: <Hash />, color: 'blue' },
+        { label: 'Victorias', val: stats.won, icon: <Trophy />, color: 'emerald' },
+        { label: 'Efectividad', val: `${stats.winRate}%`, icon: <Target />, color: 'primary' },
+        { label: 'Favorito', val: stats.favoriteGame, icon: <Flame />, color: 'orange' },
     ];
 
     return (
-        <div className="flex flex-col gap-8">
-            <header>
-                <h1 className="text-3xl font-display font-bold text-text-main">Mi Rendimiento</h1>
-                <p className="text-text-muted text-sm italic">Historial acumulado de tus juegos</p>
+        <div className="stats-page-container">
+            <header className="stats-header">
+                <h1 className="stats-title">Mi Rendimiento</h1>
+                <p className="stats-subtitle">Historial acumulado de tus juegos</p>
             </header>
 
             <section className="stats-grid">
@@ -43,26 +43,25 @@ export const StatsPage = () => {
                         transition={{ delay: i * 0.05 }}
                         className="stat-card"
                     >
-                        <div className={`${card.color} opacity-80`}>
+                        <div className={`stat-icon-wrapper ${card.color}`}>
                             {card.icon}
                         </div>
-                        <div>
+                        <div className="stat-info-group">
                             <p className="stat-label-caps">{card.label}</p>
-                            <p className="text-2xl font-display font-bold text-text-main">{card.val}</p>
+                            <p className="stat-value">{card.val}</p>
                         </div>
                     </MotionDiv>
                 ))}
             </section>
 
-            {/* Gráfico de barras semántico */}
             <section className="chart-panel">
                 <h3 className="stat-label-caps mb-6">Partidas por Juego</h3>
-                <div className="flex flex-col gap-5">
+                <div className="chart-list">
                     {stats.gameHistory.map((gh) => (
-                        <div key={gh._id} className="flex flex-col gap-1.5">
-                            <div className="flex justify-between text-xs font-bold px-1">
-                                <span className="text-text-main">{gh._id}</span>
-                                <span className="text-primary">{gh.count}</span>
+                        <div key={gh._id} className="chart-row">
+                            <div className="chart-label-row">
+                                <span className="chart-label-game">{gh._id}</span>
+                                <span className="chart-label-count">{gh.count}</span>
                             </div>
                             <div className="progress-track">
                                 <MotionDiv

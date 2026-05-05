@@ -1,9 +1,9 @@
 import { RotateCcw, Check } from "lucide-react";
 import { IRoundScore, IRoundDetails, IMatch, TrucoFlowState } from '@el-porotero/shared';
-import { TRUCO_ACTIONS } from '@/constants'; // Asegurate de que la ruta sea correcta
+import { TRUCO_ACTIONS } from '@/constants';
 import { useState } from "react";
 import { useTrucoLogic } from '@/hooks';
-import { Button } from '@/components'
+import { Button, IconButton } from '@/components'
 
 interface ITrucoAction {
     id: string;
@@ -91,22 +91,20 @@ export const TrucoInputRow = ({ match, score, teamId, flowState, onUpdate, onFlo
     };
 
     return (
-        <div className="flex flex-col gap-5 w-full">
+        <div className="score-input-stack">
             {[
                 { title: 'Envido', actions: TRUCO_ACTIONS.envido as ITrucoAction[], key: 'envidoClaimedBy' as const, color: 'text-indigo-400' },
                 { title: 'Truco', actions: TRUCO_ACTIONS.truco as ITrucoAction[], key: 'trucoClaimedBy' as const, color: 'text-primary' }
             ].map(group => {
-                const isClaimedByOpponent = flowState[group.key] !== null && flowState[group.key] !== teamId;
+                const isBlocked = flowState[group.key] !== null && flowState[group.key] !== teamId;
                 const isClaimedByMe = flowState[group.key] === teamId;
 
                 return (
-                    <div key={group.title} className={`flex flex-col gap-2 transition-all duration-500 ${isClaimedByOpponent ? 'opacity-10 grayscale pointer-events-none' : ''}`}>
-                        <div className="flex justify-between items-center px-1">
-                            <span className={`text-[10px] font-black uppercase tracking-[0.2em] ${group.color}`}>
-                                {group.title}
-                            </span>
+                    <div key={group.title} className={`counter-group ${isBlocked ? 'opacity-10 grayscale pointer-events-none' : ''}`}>
+                        <div className="flex justify-between items-center p-1">
+                            <span className={`label-mini ${group.color}`}>{group.title}</span>
                             {isClaimedByMe && (
-                                <span className="text-[9px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
+                                <span className="text-[10px] bg-emerald-400 text-background p-0.5 rounded-full font-bold flex items-center gap-1">
                                     <Check size={10} /> ANOTADO
                                 </span>
                             )}
@@ -120,32 +118,35 @@ export const TrucoInputRow = ({ match, score, teamId, flowState, onUpdate, onFlo
                                 );
 
                                 return (
-                                    <div key={action.id} className={`flex items-center bg-background/60 rounded-xl overflow-hidden border border-white/5 ${isOtherActiveInGroup ? 'opacity-30' : ''}`}>
-                                        <span className="flex-1 px-4 py-2 text-xs font-bold text-text-main">
+                                    <div key={action.id} className={`flex items-center p-1 bg-background/60 rounded-xl border border-white/5 ${isOtherActiveInGroup ? 'opacity-30' : ''}`}>
+                                        <span className="flex-1 p-1 text-xs font-bold text-text-main">
                                             {action.label}
                                         </span>
 
-                                        <Button
-                                            variant={selections[action.label] === 'q' ? 'success' : 'ghost'}
-                                            className="rounded-none! border-l px-4! py-2! min-w-20"
-                                            onClick={() => handleToggle(action, 'q')}
-                                        >
-                                            <div className="flex flex-col items-center">
-                                                <span className="text-[7px] uppercase opacity-70">Quiero</span>
-                                                <span className="text-sm font-display">+{action.q === 'Falta' ? faltaValue : action.q}</span>
-                                            </div>
-                                        </Button>
+                                        <div className="flex gap-0.5">
+                                            <Button
+                                                variant={selections[action.label] === 'q' ? 'success' : 'ghost'}
+                                                className="truco-btn-split"
+                                                size="sx"
+                                                onClick={() => handleToggle(action, 'q')}
+                                            >
+                                                <div className="flex flex-col items-center">
+                                                    <span className="text-[7px] uppercase opacity-70">Quiero</span>
+                                                    <span className="text-sm font-display">+{action.q === 'Falta' ? faltaValue : action.q}</span>
+                                                </div>
+                                            </Button>
 
-                                        <Button
-                                            variant={selections[action.label] === 'nq' ? 'danger' : 'ghost'}
-                                            className="rounded-none! border-l px-4! py-2! min-w-20"
-                                            onClick={() => handleToggle(action, 'nq')}
-                                        >
-                                            <div className="flex flex-col items-center">
-                                                <span className="text-[7px] uppercase opacity-70">No Q.</span>
-                                                <span className="text-sm font-display">+{action.nq}</span>
-                                            </div>
-                                        </Button>
+                                            <Button
+                                                variant={selections[action.label] === 'nq' ? 'danger' : 'ghost'}
+                                                className="truco-btn-split"
+                                                onClick={() => handleToggle(action, 'nq')}
+                                            >
+                                                <div className="flex flex-col items-center">
+                                                    <span className="text-[7px] uppercase opacity-70">No Q.</span>
+                                                    <span className="text-sm font-display">+{action.nq}</span>
+                                                </div>
+                                            </Button>
+                                        </div>
                                     </div>
                                 )
                             })}
@@ -155,26 +156,26 @@ export const TrucoInputRow = ({ match, score, teamId, flowState, onUpdate, onFlo
             })}
 
             {/* TOTAL ACUMULADO */}
-            <div className="mt-2 bg-primary/5 p-4 rounded-3xl border-2 border-primary/20 flex items-center justify-between shadow-lg">
-                <div className="flex flex-col">
-                    <span className="text-[9px] text-text-muted uppercase font-black tracking-widest">Total acumulado equipo</span>
-                    <span className="text-4xl font-display font-bold text-primary">
+            <div className="truco-total-footer">
+                <span className="text-[10px] text-text-muted mt-1 uppercase">Total acumulado</span>
+                <div className="flex w-full items-center justify-between">
+                    <span className="flex-1 text-4xl font-display font-bold text-primary">
                         {score.pointsAdded || 0} <span className="text-xs font-body opacity-40">pts</span>
                     </span>
+
+                    <IconButton
+                        icon={<RotateCcw size={20} />}
+                        title="Limpiar puntos"
+                        className="p-4! active:rotate-180 duration-500"
+                        onClick={() => {
+                            if (window.confirm("¿Limpiar puntos?")) {
+                                setSelections({});
+                                onUpdate({ pointsAdded: 0 });
+                                onFlowChange({ envidoClaimedBy: null, trucoClaimedBy: null });
+                            }
+                        }}
+                    />
                 </div>
-                <button
-                    type="button"
-                    onClick={() => {
-                        if (window.confirm("¿Limpiar puntos de esta mano?")) {
-                            setSelections({});
-                            onUpdate({ pointsAdded: 0 });
-                            onFlowChange({ envidoClaimedBy: null, trucoClaimedBy: null });
-                        }
-                    }}
-                    className="p-4 bg-surface text-text-muted hover:text-white rounded-2xl transition-all active:rotate-180 duration-500"
-                >
-                    <RotateCcw size={24} />
-                </button>
             </div>
         </div>
     );

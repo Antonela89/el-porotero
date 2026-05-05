@@ -1,0 +1,41 @@
+.layout-root {
+    @apply flex flex-col h-dvh bg-background text-text-main overflow-hidden font-body;
+}
+
+.layout-header {
+    @apply px-4 py-3 flex justify-between items-center border-b border-white/5 bg-surface/20 backdrop-blur-md shrink-0 z-40;
+}
+
+.header-left {
+    @apply flex items-center gap-2;
+}
+
+.header-right {
+    @apply flex items-center gap-3 ml-auto;
+
+    & span {
+        @apply text-[16px];
+    }
+}
+
+.user-tag {
+    @apply text-[10px] font-bold text-text-muted uppercase tracking-tighter hidden;
+}
+
+.brand-logo {
+    @apply font-display font-bold text-primary tracking-tighter text-lg sm:text-xl truncate;
+}
+
+.layout-main {
+    @apply flex-1 flex flex-col overflow-hidden relative p-4;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+}
+
+.custom-scrollbar {
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
