@@ -57,17 +57,36 @@
 }
 
 .match-card-header {
-    @apply flex justify-between items-start;
+    @apply w-full gap-4 flex flex-col justify-between items-start;
 }
 
 .match-card-info {
+    @apply w-full flex justify-between items-center;
+
     & h3 {
         @apply text-2xl font-display font-black text-primary uppercase tracking-tighter;
+    }
+
+    /* --- BADGES DE ESTADO --- */
+    .status-badge {
+        @apply px-3 py-2 rounded-full text-[9px] font-black uppercase tracking-widest border transition-colors;
+
+        &.active {
+            @apply bg-primary/10 text-primary border-primary/20;
+        }
+
+        &.finished {
+            @apply bg-secondary/10 text-secondary border-secondary/20;
+        }
+
+        &.closed {
+            @apply bg-white/5 text-text-muted border-white/10;
+        }
     }
 }
 
 .match-card-meta {
-    @apply flex items-center gap-4 text-text-muted text-xs mt-1 font-medium;
+    @apply flex w-full items-center gap-4 text-text-muted text-xs font-medium;
 
     & span {
         @apply flex items-center gap-1.5;
@@ -75,33 +94,34 @@
 }
 
 .match-card-winner {
-    @apply text-emerald-400 font-bold flex items-center gap-1.5 bg-emerald-400/10 px-2 py-0.5 rounded-lg;
+    @apply flex flex-1 text-emerald-400 font-bold flex items-center gap-1.5 bg-emerald-400/10 p-2 p-0.5 rounded-lg;
 }
 
 .match-card-footer {
-    @apply flex items-center justify-between border-t border-white/5 pt-4 mt-auto;
+    @apply flex items-center justify-between border-t border-white/5 pt-4 mt-auto gap-2;
+
+    @media (max-width: 340px) {
+        @apply flex-col items-stretch;
+
+        & .match-card-actions {
+            @apply justify-center mb-2;
+        }
+    }
+}
+
+.btn-continuar-card {
+    @apply bg-secondary text-white rounded-xl py-3 px-4 text-sm font-bold flex items-center justify-center gap-2;
+
+    @media (max-width: 340px) {
+        @apply w-full;
+    }
 }
 
 .match-card-actions {
     @apply flex gap-3;
 }
 
-/* --- BADGES DE ESTADO --- */
-.status-badge {
-    @apply px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border transition-colors;
 
-    &.active {
-        @apply bg-primary/10 text-primary border-primary/20;
-    }
-
-    &.finished {
-        @apply bg-secondary/10 text-secondary border-secondary/20;
-    }
-
-    &.closed {
-        @apply bg-white/5 text-text-muted border-white/10;
-    }
-}
 
 /* --- ESTADOS DE CARGA --- */
 .dashboard-empty-state {

@@ -27,21 +27,20 @@ export const CardMatch = ({ match, onDelete, onEdit }: MatchCardProps) => {
                     <h3>
                         {match.gameType}
                     </h3>
-                    <div className="match-card-meta">
-                        <span>
-                            <Users size={14} /> {match.players.length}
-                        </span>
-                        {match.winner && (
-                            <span className="match-card-winner">
-                                <Trophy size={14} /> {match.winner}
-                            </span>
-                        )}
-                    </div>
+                    <span className={`status-badge ${isActive ? 'active' : isFinished ? 'finished' : 'closed'}`}>
+                        {isActive ? 'En Juego' : isFinished ? 'Finalizada' : 'Cerrada'}
+                    </span>
                 </div>
-
-                <span className={`status-badge ${isActive ? 'active' : isFinished ? 'finished' : 'closed'}`}>
-                    {isActive ? 'En Juego' : isFinished ? 'Finalizada' : 'Cerrada'}
-                </span>
+                <div className="match-card-meta">
+                    <span>
+                        <Users size={14} /> {match.players.length}
+                    </span>
+                    {match.winner && (
+                        <span className="match-card-winner">
+                            <Trophy size={14} /> {match.winner}
+                        </span>
+                    )}
+                </div>
             </div>
 
             <div className="match-card-footer">
@@ -63,7 +62,7 @@ export const CardMatch = ({ match, onDelete, onEdit }: MatchCardProps) => {
                 <Button
                     onClick={() => navigate(`/match/${match._id}`)}
                     variant='secondary'
-                    className="rounded-xl! py-3! px-4! text-sm!"
+                    className="btn-continuar-card"
                 >
                     Continuar <ChevronRight size={18} />
                 </Button>

@@ -1,11 +1,14 @@
 .auth-page {
-    @apply flex items-center justify-center bg-background px-6 py-3;
+    @apply flex flex-col items-center justify-start bg-background px-6 py-10 overflow-y-auto;
     min-height: 100dvh;
+    @apply custom-scrollbar;
+    scroll-behavior: smooth;
+    overscroll-behavior-y: contain;
 }
 
 
 .auth-container {
-    @apply flex flex-col items-center gap-6 w-full max-w-md;
+    @apply flex flex-col items-center gap-6 w-full max-w-md my-auto;
     animation: var(--animation-auth-entrance);
 }
 
