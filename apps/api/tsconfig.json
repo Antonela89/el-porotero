@@ -9,9 +9,9 @@
             "@/*": [
                 "./src/*"
             ],
-            // "@shared/*": [
-            //     "../../packages/shared/*"
-            // ]
+            "@shared/*": [
+                "../../packages/shared/*"
+            ]
         },
     },
     "include": [

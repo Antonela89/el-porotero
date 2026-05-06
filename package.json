@@ -8,9 +8,15 @@
     "packages/*"
   ],
   "scripts": {
-    "build:api": "npm install && npm run build -w @el-porotero/shared && npm run build -w api",
+    "dev:api": "npm run dev -w api",
+    "dev:web": "npm run dev -w web",
+    "dev": "concurrently \"npm run dev:api\" \"npm run dev:web\"",
+    "build:shared": "npm run build -w @el-porotero/shared",
+    "build:web": "npm run build:shared && npm run build -w web",
+    "build:api": "npm run build:shared && npm run build -w api",
     "build": "npm run build:api",
-    "start": "node apps/api/dist/server.js"
+    "start": "node apps/api/dist/server.js",
+    "clean": "rm -rf node_modules apps/*/node_modules packages/*/node_modules apps/*/dist packages/*/dist"
   },
   "repository": {
     "type": "git",
@@ -26,6 +32,7 @@
   "homepage": "https://github.com/Antonela89/el-porotero#readme",
   "devDependencies": {
     "@types/node": "^25.6.0",
+    "concurrently": "^9.2.1",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3"
   }
