@@ -1,4 +1,4 @@
-import { Crown, HatGlasses } from 'lucide-react';
+import { Crown, HatGlasses, Megaphone } from 'lucide-react';
 import { getShortName } from '@/utils';
 import { Button } from '@/components';
 
@@ -30,15 +30,15 @@ export const PlayerHeader = ({
             <span className={`text-lg font-display ${color} ${isSombrero ? 'text-purple-400' : isDealer ? 'text-primary' : ''}`}>
                 {getShortName(name, allNames)}
             </span>
-            <span className="text-[9px] opacity-50 uppercase tracking-tighter">{name}</span>
+            <span className="score-name-sub">{name}</span>
 
             {showCantar && onCantar && (
                 <Button
                     variant="ghost"
-                    className="text-[8px]! py-0.5! px-2! mt-1 border-pink-500/30 text-pink-400 hover:bg-pink-500"
+                    className="btn-cantar-small"
                     onClick={onCantar}
                 >
-                    CANTAR
+                    <Megaphone size={12} />
                 </Button>
             )}
         </div>

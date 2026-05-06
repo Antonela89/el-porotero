@@ -7,6 +7,7 @@ interface ConfirmDialogProps {
     onConfirm: () => void;
     title: string;
     description: string;
+    reset?: boolean
 }
 
 export const ConfirmDialog = ({
@@ -14,7 +15,8 @@ export const ConfirmDialog = ({
     onClose,
     onConfirm,
     title,
-    description
+    description, 
+    reset
 }: ConfirmDialogProps) => {
 
     const modalFooter = (
@@ -34,7 +36,7 @@ export const ConfirmDialog = ({
                     onClose();
                 }}
             >
-                Eliminar
+                {reset ? 'Resetear' : 'Eliminar'}
             </Button>
         </div>
     );

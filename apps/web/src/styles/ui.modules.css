@@ -32,7 +32,8 @@
 }
 
 .btn-ghost {
-    @apply btn-base bg-surface text-text-muted border border-white/5;
+    @apply btn-base bg-white/5 text-text-main/60 border border-white/5;
+    &:active { @apply bg-white/10; }
 
     @media (hover: hover) {
         &:hover {

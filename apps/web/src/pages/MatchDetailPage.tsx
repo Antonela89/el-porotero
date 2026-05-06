@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Plus } from 'lucide-react';
-import { MatchRoundModal, MatchHeader, MatchScoreboard, WinnerDisplay, ConfirmDialog, AddCantoModal, IconButton } from '@/components';
+import { MatchRoundModal, MatchHeader, MatchScoreboard, WinnerDisplay, ConfirmDialog, AddCantoModal } from '@/components';
 import { GAMES_MAP } from '@/constants';
 import { useMatch, useMatchActions } from '@/hooks';
 import { IMatch } from '@el-porotero/shared';
@@ -32,11 +31,18 @@ export const MatchDetailPage = () => {
 
     return (
         <div className="match-page">
-            <MatchHeader match={match} onRefresh={refetch} icon={
-                <div className={gameInfo.color}>
-                    {gameInfo.icon}
-                </div>
-            } />
+            <MatchHeader
+                match={match}
+                onRefresh={refetch}
+                onAddRound={() => {
+                    setRoundToEdit(null);
+                    setIsModalOpen(true)
+                }}
+                icon={
+                    <div className={gameInfo.color}>
+                        {gameInfo.icon}
+                    </div>
+                } />
 
             <main className="match-scroller">
                 {gameInfo.isDescending && (
@@ -52,6 +58,8 @@ export const MatchDetailPage = () => {
                     onReengage={(name) => actions.reengage.mutate(name)}
                     onCantar={setCantoPlayer}
                 />
+
+                <div className="h-3" />
             </main>
 
             <ConfirmDialog
@@ -67,19 +75,6 @@ export const MatchDetailPage = () => {
 
             {match.status === 'finished' && (
                 <WinnerDisplay winner={match.winner} handleRevancha={handleRevancha} match={match} />
-            )}
-
-            {match.status === 'active' && (
-                <IconButton
-                    icon={<Plus size={32} />}
-                    variant="primary"
-                    title="Anotar Ronda"
-                    className="fab-main"
-                    onClick={() => {
-                        setRoundToEdit(null);
-                        setIsModalOpen(true);
-                    }}
-                />
             )}
 
             <MatchRoundModal

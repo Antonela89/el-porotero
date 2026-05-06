@@ -51,9 +51,13 @@ export const AppLayout = ({ children }: { children: ReactNode }) => {
             </header>
 
             <main className="layout-main">
-                <div className="main-scroller">
-                    {children}
-                </div>
+                {isMatchPage ? (
+                    children
+                ) : (
+                    <div className="main-scroller">
+                        {children}
+                    </div>
+                )}
             </main>
         </div>
     );

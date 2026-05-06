@@ -4,7 +4,7 @@
 }
 
 .match-scroller {
-    @apply flex-1 overflow-y-auto px-2 py-2;
+    @apply flex-1 overflow-y-auto px-2;
     scrollbar-width: none;
 
     &::-webkit-scrollbar {
@@ -59,7 +59,7 @@
 
 .score-header-cell {
     @apply p-2 text-center align-middle relative;
-    height: 90px;
+    height: 110px;
 }
 
 .score-cell {
@@ -72,6 +72,20 @@
 
 .score-header-stack {
     @apply flex flex-col items-center justify-end h-full gap-2;
+}
+
+.score-name-sub {
+    @apply hidden; 
+    @apply text-[9px] opacity-50 uppercase tracking-tighter;
+
+    @media (min-width: 1024px) {
+        @apply block;
+    }
+}
+
+
+.score-header-stack {
+    @apply flex flex-col items-center justify-center h-full gap-0.5;
 }
 
 .score-icon-slot {
@@ -88,20 +102,24 @@
 }
 
 .btn-cantar-small {
-    @apply bg-pink-500/10 text-pink-400 border border-pink-500/20 rounded-full px-1.5 py-0.5;
-    @apply text-[7px] font-black uppercase tracking-tighter transition-all;
-
-    &:hover {
-        @apply bg-pink-500 text-white scale-110;
-    }
+    @apply flex items-center justify-center bg-pink-500/10 text-pink-400 border border-pink-500/20 rounded-lg transition-all mt-1;
+    width: 24px;
+    height: 24px;
+    padding: 0;
 
     &:active {
-        @apply scale-90;
+        @apply scale-90 bg-pink-500 text-white border-pink-500;
+    }
+
+    @media (hover: hover) {
+        &:hover {
+            @apply bg-pink-500/20 border-pink-500/40 text-pink-300;
+        }
     }
 }
 
 .player-initials {
-    @apply text-[12px] font-black uppercase transition-colors;
+    @apply text-[12px] font-black uppercase transition-colors h-4 flex gap-1;
     line-height: 1;
 }
 
@@ -197,7 +215,7 @@
 }
 
 .score-meta-text {
-    @apply text-[10px] text-text-muted pb-2;
+    @apply text-[10px] text-text-muted p-2 text-wrap;
 }
 
 /* --- ANOTADOR (MODAL DE RONDA) --- */

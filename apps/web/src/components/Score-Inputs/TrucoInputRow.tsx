@@ -1,4 +1,4 @@
-import { RotateCcw, Check } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 import { IRoundScore, IRoundDetails, IMatch, TrucoFlowState } from '@el-porotero/shared';
 import { TRUCO_ACTIONS } from '@/constants';
 import { useState } from "react";
@@ -40,64 +40,42 @@ export const TrucoInputRow = ({ match, score, teamId, flowState, onUpdate, onFlo
         const isTrucoGroup = action.id.includes('truco') || action.id.includes('retruco') || action.id.includes('vale');
         const categoryKey = isTrucoGroup ? 'trucoClaimedBy' : 'envidoClaimedBy';
 
-        // Bloqueo: si el otro equipo ya anotó acá, no hacemos nada
         if (flowState[categoryKey] && flowState[categoryKey] !== teamId) return;
 
         const label = action.label;
         const isCurrent = selections[label] === type;
-        const getPoints = (val: string | number) => val === 'Falta' ? faltaValue : Number(val);
-        const points = type === 'q' ? getPoints(action.q) : Number(action.nq);
 
-        let newPoints = score.pointsAdded || 0;
+        const nextSelections = { ...selections };
 
         if (isTrucoGroup) {
-            const groupActions = TRUCO_ACTIONS.truco;
-            const currentSelectionKey = Object.keys(selections).find(k =>
-                selections[k] !== null && groupActions.some(a => a.label === k)
-            );
-
-
-            if (currentSelectionKey) {
-                const oldAction = groupActions.find(a => a.label === currentSelectionKey);
-                const oldType = selections[currentSelectionKey]!;
-                const oldPoints = oldType === 'q' ? getPoints(oldAction!.q) : Number(oldAction!.nq);
-                newPoints -= oldPoints;
-            }
-
-            if (isCurrent) {
-                // DES-SELECCIONAR
-                setSelections(prev => ({ ...prev, [label]: null }));
-                onFlowChange({ [categoryKey]: null });
-            } else {
-
-                const nextSelections = { ...selections };
-                groupActions.forEach(a => nextSelections[a.label] = null); // Limpiamos el grupo
-                nextSelections[label] = type;
-
-                setSelections(nextSelections);
-                newPoints += points;
-                onFlowChange({ [categoryKey]: teamId });
-            }
+            TRUCO_ACTIONS.truco.forEach(a => {
+                if (a.label !== label) nextSelections[a.label] = null;
+            });
+            nextSelections[label] = isCurrent ? null : type;
         } else {
-            if (isCurrent) {
-                setSelections(prev => ({ ...prev, [label]: null }));
-                newPoints -= points;
-                const hasOtherEnvidos = Object.keys(selections).some(k =>
-                    k !== label && selections[k] !== null && TRUCO_ACTIONS.envido.some(a => a.label === k)
-                );
-                if (!hasOtherEnvidos) onFlowChange({ [categoryKey]: null });
-            } else {
-                if (selections[label]) {
-                    const oldPoints = selections[label] === 'q' ? getPoints(action.q) : Number(action.nq);
-                    newPoints -= oldPoints;
-                }
-                setSelections(prev => ({ ...prev, [label]: type }));
-                newPoints += points;
-                onFlowChange({ [categoryKey]: teamId });
-            }
+            nextSelections[label] = isCurrent ? null : type;
         }
 
-        onUpdate({ pointsAdded: newPoints });
+        const getPoints = (val: string | number) => val === 'Falta' ? faltaValue : Number(val);
+
+        const newTotal = Object.entries(nextSelections).reduce((acc, [key, val]) => {
+            if (!val) return acc;
+            const act = [...TRUCO_ACTIONS.envido, ...TRUCO_ACTIONS.truco].find(a => a.label === key);
+            if (!act) return acc;
+
+            return acc + (val === 'q' ? getPoints(act.q) : Number(act.nq));
+        }, 0);
+
+        const hasRemainingInCat = Object.keys(nextSelections).some(k => {
+            const inCat = isTrucoGroup
+                ? TRUCO_ACTIONS.truco.some(a => a.label === k)
+                : TRUCO_ACTIONS.envido.some(a => a.label === k);
+            return inCat && nextSelections[k] !== null;
+        });
+
+        setSelections(nextSelections);
+        onFlowChange({ [categoryKey]: hasRemainingInCat ? teamId : null });
+        onUpdate({ pointsAdded: newTotal });
     };
 
     return (
@@ -114,13 +92,13 @@ export const TrucoInputRow = ({ match, score, teamId, flowState, onUpdate, onFlo
                         <div className="flex justify-between items-center p-1">
                             <span className={`label-mini ${group.color}`}>{group.title}</span>
                             {isClaimedByMe && (
-                                <span className="text-[10px] bg-emerald-400 text-background p-0.5 rounded-full font-bold flex items-center gap-1">
-                                    <Check size={10} /> ANOTADO
+                                <span className="text-[8px] text-emerald-400 font-bold uppercase tracking-tighter">
+                                    Sumando para equipo
                                 </span>
                             )}
                         </div>
 
-                        <div className="flex flex-col gap-2">
+                        <div className="truco-group-container">
                             {group.actions.map((action) => {
                                 const status = selections[action.label];
                                 const isOtherActiveInGroup = TRUCO_ACTIONS.truco && status === null && Object.keys(selections).some(k =>
@@ -138,10 +116,14 @@ export const TrucoInputRow = ({ match, score, teamId, flowState, onUpdate, onFlo
                                                 variant={selections[action.label] === 'q' ? 'success' : 'ghost'}
                                                 className="truco-btn-split"
                                                 size="sx"
-                                                onClick={() => handleToggle(action, 'q')}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleToggle(action, 'q')
+                                                }
+                                                }
                                             >
-                                                <div className="flex flex-col items-center">
-                                                    <span className="text-[7px] uppercase opacity-70">Quiero</span>
+                                                <div className="truco-btn-content">
+                                                    <span className="text-[7px] uppercase opacity-70 grow">Quiero</span>
                                                     <span className="text-sm font-display">+{action.q === 'Falta' ? faltaValue : action.q}</span>
                                                 </div>
                                             </Button>
@@ -149,10 +131,14 @@ export const TrucoInputRow = ({ match, score, teamId, flowState, onUpdate, onFlo
                                             <Button
                                                 variant={selections[action.label] === 'nq' ? 'danger' : 'ghost'}
                                                 className="truco-btn-split"
-                                                onClick={() => handleToggle(action, 'nq')}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleToggle(action, 'nq')
+                                                }
+                                                }
                                             >
-                                                <div className="flex flex-col items-center">
-                                                    <span className="text-[7px] uppercase opacity-70">No Q.</span>
+                                                <div className="truco-btn-content">
+                                                    <span className="text-[7px] uppercase opacity-70 grow">No Quiero</span>
                                                     <span className="text-sm font-display">+{action.nq}</span>
                                                 </div>
                                             </Button>
@@ -188,6 +174,7 @@ export const TrucoInputRow = ({ match, score, teamId, flowState, onUpdate, onFlo
                 onConfirm={handleClean}
                 title="¿Limpiar los puntos?"
                 description="Los puntos de la ronda volverán a 0. Esta acción no se puede deshacer."
+                reset
             />
         </div>
     );

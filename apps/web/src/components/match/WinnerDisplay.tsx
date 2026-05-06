@@ -32,10 +32,9 @@ export const WinnerDisplay = ({ winner, handleRevancha, match }: WinnerDisplayPr
             animate={{ y: 0, opacity: 1 }}
             className="winner-card"
         >
-            <Trophy size={48} />
+            <Trophy size={40} />
 
             <div className="flex flex-col items-center">
-                <span className="winner-sublabel">¡Tenemos un ganador!</span>
                 <h2 className="winner-label-primary">{winnerLabel}</h2>
             </div>
 

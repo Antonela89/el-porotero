@@ -54,12 +54,25 @@
     }
 }
 
+.truco-group-container {
+    @apply flex flex-col gap-2 transition-all duration-500;
+    
+    &.is-blocked {
+        @apply opacity-10 grayscale pointer-events-none;
+    }
+}
+
 .truco-action-label {
     @apply flex-1 px-4 py-2 text-xs font-bold text-text-main;
 }
 
 .truco-btn-split {
-    @apply rounded-xl border-l border-white/5;
+    @apply w-1/2 rounded-xl border-l border-white/5 p-2;
+}
+
+.truco-btn-content {
+    @apply flex flex-col items-center;
+    height: 40px; 
 }
 
 .truco-total-footer {

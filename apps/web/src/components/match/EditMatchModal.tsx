@@ -12,19 +12,16 @@ interface EditMatchModalProps {
 }
 
 export const EditMatchModal = ({ match, isOpen, onClose, onSuccess }: EditMatchModalProps) => {
-    // CORRECCIÓN: Usamos updateMatch, no saveRound
     const { updateMatch } = useMatchActions(match._id!);
 
     const [players, setPlayers] = useState<IPlayer[]>([...match.players]);
     const [status, setStatus] = useState(match.status);
 
     const handleSave = () => {
-        // Enviamos el payload que espera la mutación updateMatch
         updateMatch.mutate(
             { players, status },
             {
                 onSuccess: (data) => {
-                    // 'data' es el match actualizado que devuelve el hook/api
                     onSuccess(data);
                     onClose();
                 }

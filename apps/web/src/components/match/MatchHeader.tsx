@@ -1,16 +1,17 @@
 import { useState } from 'react';
 import { IMatch } from '@el-porotero/shared';
-import { RotateCcw, XCircle } from 'lucide-react';
+import { RotateCcw, XCircle, Plus } from 'lucide-react';
 import { IconButton, ConfirmDialog } from '@/components';
 import { useMatchActions } from '@/hooks';
 
 type MatchHeaderProps = {
     match: IMatch;
     onRefresh: () => void;
+    onAddRound: () => void;
     icon: React.ReactNode;
 }
 
-export const MatchHeader = ({ match, onRefresh, icon }: MatchHeaderProps) => {
+export const MatchHeader = ({ match, onRefresh, onAddRound, icon }: MatchHeaderProps) => {
     const { cancelMatch } = useMatchActions(match._id!);
     const [showCancelModal, setShowCancelModal] = useState(false);
 
@@ -38,13 +39,21 @@ export const MatchHeader = ({ match, onRefresh, icon }: MatchHeaderProps) => {
             {/* Acciones */}
             <div className="header-actions">
                 {match.status === 'active' && (
-                    <IconButton
-                        icon={<XCircle size={20} />}
-                        variant="danger"
-                        title="Cancelar Partida"
-                        onClick={() => setShowCancelModal(true)}
-                        disabled={cancelMatch.isPending}
-                    />
+                    <>
+                        <IconButton
+                            icon={<Plus size={20} />}
+                            variant="primary"
+                            title="Anotar Ronda"
+                            onClick={onAddRound}
+                        />
+                        <IconButton
+                            icon={<XCircle size={20} />}
+                            variant="danger"
+                            title="Cancelar Partida"
+                            onClick={() => setShowCancelModal(true)}
+                            disabled={cancelMatch.isPending}
+                        />
+                    </>
                 )}
                 <IconButton
                     variant='secondary'

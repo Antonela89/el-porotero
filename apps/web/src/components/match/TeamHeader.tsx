@@ -1,4 +1,4 @@
-import { Crown } from 'lucide-react';
+import { Crown, Megaphone } from 'lucide-react';
 import { getShortName } from '@/utils';
 
 interface TeamHeaderProps {
@@ -21,7 +21,7 @@ export const TeamHeader = ({ teamId, allNames, players, color, showCantar, onCan
                 {players.map((p) => (
                     <div
                         key={p.name}
-                        className={`player-initials ${p.isDealer ? 'is-dealer' : 'not-dealer'}`}
+                        className={`flex-col player-initials ${p.isDealer ? 'is-dealer' : 'not-dealer'}`}
                     >
                         <span className="player-initials">
                             {getShortName(p.name, allNames)}
@@ -30,14 +30,15 @@ export const TeamHeader = ({ teamId, allNames, players, color, showCantar, onCan
                         {showCantar && onCantar && (
                             <button
                                 onClick={() => onCantar(p.name)}
-                                className="btn-cantar-small mt-1"
+                                className="btn-cantar-small"
+                                title={`Canto de ${p.name}`}
                             >
-                                CANTAR
+                                <Megaphone size={11} />
                             </button>
                         )}
 
                         <div className="crown-reserved-space">
-                            {p.isDealer && <Crown size={10} fill="currentColor" className="dealer-crown-abs" />}
+                            {p.isDealer && <Crown size={10} fill="currentColor" className="text-primary" />}
                         </div>
                     </div>
                 ))}

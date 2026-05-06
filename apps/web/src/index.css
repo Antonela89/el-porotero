@@ -67,6 +67,15 @@
     & svg {
         @apply stroke-[3px];
     }
+
+    @media (max-width: 340px) {
+        .fab-main {
+            width: 3.5rem;
+            height: 3.5rem;
+            bottom: 1rem;
+            right: 1rem;
+        }
+    }
 }
 
 @utility sticky-round-col {
