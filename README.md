@@ -85,12 +85,22 @@ Es necesario configurar los archivos `.env` tanto en `apps/api` como en `apps/we
 
 - `VITE_API_URL`: URL base de la API.
 
-## Scripts Disponibles
+### Entorno de Desarrollo
+Para iniciar simultáneamente el servidor de la API y el cliente de Vite, el proyecto utiliza 
+la herramienta concurrently, permitiendo monitorear ambos servicios desde una única terminal:
+
+```bash
+npm run dev
+```
+
+### Scripts Disponibles
 
 Todos los comandos pueden ejecutarse desde la raíz del monorepo:
 
 - `npm run dev`: Inicia tanto el backend como el frontend en modo desarrollo.
 - `npm run build`: Compila todos los paquetes y aplicaciones para producción.
+- `npm run build:api`: Compila el paquete compartido y el servidor.
+- `npm run build:web`: Compila el paquete compartido y genera el bundle estático del frontend.
 - `npm run lint`: Ejecuta el análisis estático de código con ESLint.
 - `npm run test`: Ejecuta las pruebas unitarias y de integración.
 
