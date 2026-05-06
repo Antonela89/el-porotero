@@ -1,11 +1,11 @@
 .auth-page {
-    @apply flex items-center justify-center bg-background p-6;
+    @apply flex items-center justify-center bg-background px-6 py-3;
     min-height: 100dvh;
 }
 
 
 .auth-container {
-    @apply flex flex-col items-center gap-10 w-full max-w-md;
+    @apply flex flex-col items-center gap-6 w-full max-w-md;
     animation: var(--animation-auth-entrance);
 }
 
@@ -24,7 +24,7 @@
 
 /* --- TARJETA DE FORMULARIO --- */
 .auth-card {
-    @apply w-full bg-surface p-8 rounded-[2.5rem] border border-white/5 flex flex-col gap-6;
+    @apply w-full bg-surface p-4 rounded-[2.5rem] border border-white/5 flex flex-col gap-6;
     box-shadow: var(--shadow-auth-card);
 }
 
@@ -47,7 +47,7 @@
 
 /* --- LINKS DE NAVEGACIÓN (Login/Register) --- */
 .auth-link {
-    @apply text-sm text-center text-text-muted mt-2;
+    @apply text-sm text-center text-text-muted mt-1 mb-1;
 
     & span {
         @apply text-primary font-bold transition-all cursor-pointer inline-block;
