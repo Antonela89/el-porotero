@@ -1,0 +1,3584 @@
+{
+  "info": {
+    "_postman_id": "40942fec-8cd9-466c-b149-905baa6270d0",
+    "name": "el-porotero",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "27770697",
+    "_collection_link": "https://go.postman.co/collection/27770697-40942fec-8cd9-466c-b149-905baa6270d0?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"username\": \"text-example\",\r\n  \"email\": \"test@example.com\",\r\n  \"password\": \"password123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "201",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"username\": \"text-example\",\r\n  \"email\": \"test@example.com\",\r\n  \"password\": \"password123\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/auth/register",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "75"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"4b-UGi//uXUNFt11I8XnUVe6kuL07E\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 06 May 2026 23:56:40 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Usuario creado con éxito\",\n    \"userId\": \"69fbd5389d536389f1f23fbe\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Login exitoso y Token recibido\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "    pm.expect(res.token).to.be.a('string');\r",
+                  "    pm.environment.set(\"auth_token\", res.token);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "packages": {},
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"test@example.com\",\r\n  \"password\": \"password123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"email\": \"test@example.com\",\r\n  \"password\": \"password123\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/auth/login",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "316"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"13c-3Cf3OpVRixflz2vCE9DZflP5uFA\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 06 May 2026 23:57:05 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Login exitoso\",\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWZiZDUzODlkNTM2Mzg5ZjFmMjNmYmUiLCJ1c2VybmFtZSI6InRleHQtZXhhbXBsZSIsImlhdCI6MTc3ODExMTgyNSwiZXhwIjoxNzc4MTk4MjI1fQ.LghvObyzVc0iRDfihzFecVXsgYawDzssCxyeTIKbNLs\",\n    \"user\": {\n        \"id\": \"69fbd5389d536389f1f23fbe\",\n        \"username\": \"text-example\"\n    }\n}"
+            }
+          ]
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              "pm.test(\"No permite acceso sin token\", function () {\r",
+              "    pm.response.to.have.status(401);\r",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Matches",
+      "item": [
+        {
+          "name": "Loba / Chinchon / Uno",
+          "item": [
+            {
+              "name": "Crear Partida - Loba",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const res = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Partida de Loba creada con éxito\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "    pm.expect(res.gameType).to.eql(\"Loba\");\r",
+                      "    pm.expect(res.config.limitScore).to.eql(101);\r",
+                      "    pm.environment.set(\"matchId_Loba\", res._id);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"gameType\": \"Loba\",\r\n    \"players\": [\r\n        { \"name\": \"ANTO\", \"team\": \"None\" },\r\n        { \"name\": \"CARLOS\", \"team\": \"None\" }\r\n    ],\r\n    \"limitScore\": 101,\r\n    \"isTeamGame\": false\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/matches",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "matches"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "201",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"gameType\": \"Loba\",\r\n    \"players\": [\r\n        { \"name\": \"ANTO\", \"team\": \"None\" },\r\n        { \"name\": \"CARLOS\", \"team\": \"None\" }\r\n    ],\r\n    \"limitScore\": 101,\r\n    \"isTeamGame\": false\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/matches",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "matches"
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "X-Powered-By",
+                      "value": "Express"
+                    },
+                    {
+                      "key": "Vary",
+                      "value": "Origin"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Credentials",
+                      "value": "true"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "568"
+                    },
+                    {
+                      "key": "ETag",
+                      "value": "W/\"238-AWmmQXNlUmBV4pQ9mfAQVKYL+F0\""
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Wed, 06 May 2026 23:58:24 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"gameType\": \"Loba\",\n    \"status\": \"active\",\n    \"adminId\": \"69fbd5389d536389f1f23fbe\",\n    \"currentDealerIndex\": 0,\n    \"isTeamGame\": false,\n    \"config\": {\n        \"limitScore\": 101,\n        \"startingScore\": 0,\n        \"isDescending\": false\n    },\n    \"players\": [\n        {\n            \"name\": \"ANTO\",\n            \"team\": \"None\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbd5a09d536389f1f23fc0\"\n        },\n        {\n            \"name\": \"CARLOS\",\n            \"team\": \"None\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbd5a09d536389f1f23fc1\"\n        }\n    ],\n    \"winner\": null,\n    \"_id\": \"69fbd5a09d536389f1f23fbf\",\n    \"rounds\": [],\n    \"tempCantos\": [],\n    \"createdAt\": \"2026-05-06T23:58:24.855Z\",\n    \"updatedAt\": \"2026-05-06T23:58:24.855Z\",\n    \"__v\": 0\n}"
+                },
+                {
+                  "name": "401",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"gameType\": \"Loba\",\r\n    \"players\": [\r\n        { \"name\": \"ANTO\", \"team\": \"None\" },\r\n        { \"name\": \"CARLOS\", \"team\": \"None\" }\r\n    ],\r\n    \"limitScore\": 101,\r\n    \"isTeamGame\": false\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/matches",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "matches"
+                      ]
+                    }
+                  },
+                  "status": "Unauthorized",
+                  "code": 401,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "X-Powered-By",
+                      "value": "Express"
+                    },
+                    {
+                      "key": "Vary",
+                      "value": "Origin"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Credentials",
+                      "value": "true"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "50"
+                    },
+                    {
+                      "key": "ETag",
+                      "value": "W/\"32-Y1hf5J39GPFm/RL432D9hj3N8Po\""
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Wed, 06 May 2026 23:58:49 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"message\": \"No hay token, autorización denegada\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "Anotar Ronda - Loba",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"scores\": [\r\n    {\r\n      \"playerName\": \"ANTO\",\r\n      \"pointsAdded\": 40\r\n    },\r\n    {\r\n      \"playerName\": \"CARLOS\",\r\n      \"details\": { \"isCerrar\": true } \r\n    }\r\n  ]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/matches/{{matchId_Loba}}/round",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "matches",
+                    "{{matchId_Loba}}",
+                    "round"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "200",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"scores\": [\r\n    {\r\n      \"playerName\": \"ANTO\",\r\n      \"pointsAdded\": 40\r\n    },\r\n    {\r\n      \"playerName\": \"CARLOS\",\r\n      \"details\": { \"isCerrar\": true } \r\n    }\r\n  ]\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/matches/{{matchId_Loba}}/round",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "matches",
+                        "{{matchId_Loba}}",
+                        "round"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "X-Powered-By",
+                      "value": "Express"
+                    },
+                    {
+                      "key": "Vary",
+                      "value": "Origin"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Credentials",
+                      "value": "true"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "858"
+                    },
+                    {
+                      "key": "ETag",
+                      "value": "W/\"35a-Bgx6NzumwfdwsX3h/veRbb5EGf4\""
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Wed, 06 May 2026 23:59:43 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"config\": {\n        \"limitScore\": 101,\n        \"startingScore\": 0,\n        \"isDescending\": false\n    },\n    \"_id\": \"69fbd5a09d536389f1f23fbf\",\n    \"gameType\": \"Loba\",\n    \"status\": \"active\",\n    \"adminId\": \"69fbd5389d536389f1f23fbe\",\n    \"currentDealerIndex\": 1,\n    \"isTeamGame\": false,\n    \"players\": [\n        {\n            \"name\": \"ANTO\",\n            \"team\": \"None\",\n            \"score\": 40,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbd5a09d536389f1f23fc0\"\n        },\n        {\n            \"name\": \"CARLOS\",\n            \"team\": \"None\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbd5a09d536389f1f23fc1\"\n        }\n    ],\n    \"winner\": null,\n    \"rounds\": [\n        {\n            \"roundNumber\": 1,\n            \"dealerIndex\": 0,\n            \"scores\": [\n                {\n                    \"playerName\": \"ANTO\",\n                    \"pointsAdded\": 40,\n                    \"_id\": \"69fbd5ee9d536389f1f23fc5\"\n                },\n                {\n                    \"playerName\": \"CARLOS\",\n                    \"pointsAdded\": 0,\n                    \"details\": {\n                        \"isCerrar\": true\n                    },\n                    \"_id\": \"69fbd5ee9d536389f1f23fc6\"\n                }\n            ],\n            \"timestamp\": \"2026-05-06T23:59:42.956Z\",\n            \"_id\": \"69fbd5ee9d536389f1f23fc4\"\n        }\n    ],\n    \"tempCantos\": [],\n    \"createdAt\": \"2026-05-06T23:58:24.855Z\",\n    \"updatedAt\": \"2026-05-06T23:59:42.959Z\",\n    \"__v\": 1\n}"
+                }
+              ]
+            },
+            {
+              "name": "Anotar Ronda - Loba -10",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Anto debería tener 30 puntos netos\", function () {\r",
+                      "    const anto = pm.response.json().players.find(p => p.name === \"Anto\");\r",
+                      "    pm.expect(anto.score).to.eql(30); // (40 - 10 del corte)\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"scores\": [\r\n    {\r\n      \"playerName\": \"ANTO\",\r\n      \"details\": { \"isCorteMinus10\": true } \r\n    },\r\n    {\r\n      \"playerName\": \"CARLOS\",\r\n      \"pointsAdded\": 60,\r\n      \"details\": {}\r\n    }\r\n  ]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/matches/{{matchId_Loba}}/round",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "matches",
+                    "{{matchId_Loba}}",
+                    "round"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "200",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"scores\": [\r\n    {\r\n      \"playerName\": \"ANTO\",\r\n      \"details\": { \"isCorteMinus10\": true } \r\n    },\r\n    {\r\n      \"playerName\": \"CARLOS\",\r\n      \"pointsAdded\": 60,\r\n      \"details\": {}\r\n    }\r\n  ]\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/matches/{{matchId_Loba}}/round",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "matches",
+                        "{{matchId_Loba}}",
+                        "round"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "X-Powered-By",
+                      "value": "Express"
+                    },
+                    {
+                      "key": "Vary",
+                      "value": "Origin"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Credentials",
+                      "value": "true"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "1157"
+                    },
+                    {
+                      "key": "ETag",
+                      "value": "W/\"485-2rflARdKvo6aMsndh5CHorgWwUk\""
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 07 May 2026 00:00:09 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"config\": {\n        \"limitScore\": 101,\n        \"startingScore\": 0,\n        \"isDescending\": false\n    },\n    \"_id\": \"69fbd5a09d536389f1f23fbf\",\n    \"gameType\": \"Loba\",\n    \"status\": \"active\",\n    \"adminId\": \"69fbd5389d536389f1f23fbe\",\n    \"currentDealerIndex\": 0,\n    \"isTeamGame\": false,\n    \"players\": [\n        {\n            \"name\": \"ANTO\",\n            \"team\": \"None\",\n            \"score\": 30,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbd5a09d536389f1f23fc0\"\n        },\n        {\n            \"name\": \"CARLOS\",\n            \"team\": \"None\",\n            \"score\": 60,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbd5a09d536389f1f23fc1\"\n        }\n    ],\n    \"winner\": null,\n    \"rounds\": [\n        {\n            \"roundNumber\": 1,\n            \"dealerIndex\": 0,\n            \"scores\": [\n                {\n                    \"playerName\": \"ANTO\",\n                    \"pointsAdded\": 40,\n                    \"_id\": \"69fbd5ee9d536389f1f23fc5\"\n                },\n                {\n                    \"playerName\": \"CARLOS\",\n                    \"pointsAdded\": 0,\n                    \"details\": {\n                        \"isCerrar\": true\n                    },\n                    \"_id\": \"69fbd5ee9d536389f1f23fc6\"\n                }\n            ],\n            \"timestamp\": \"2026-05-06T23:59:42.956Z\",\n            \"_id\": \"69fbd5ee9d536389f1f23fc4\"\n        },\n        {\n            \"roundNumber\": 2,\n            \"dealerIndex\": 1,\n            \"scores\": [\n                {\n                    \"playerName\": \"ANTO\",\n                    \"pointsAdded\": -10,\n                    \"details\": {\n                        \"isCorteMinus10\": true\n                    },\n                    \"_id\": \"69fbd6099d536389f1f23fcd\"\n                },\n                {\n                    \"playerName\": \"CARLOS\",\n                    \"pointsAdded\": 60,\n                    \"_id\": \"69fbd6099d536389f1f23fce\"\n                }\n            ],\n            \"timestamp\": \"2026-05-07T00:00:09.343Z\",\n            \"_id\": \"69fbd6099d536389f1f23fcc\"\n        }\n    ],\n    \"tempCantos\": [],\n    \"createdAt\": \"2026-05-06T23:58:24.855Z\",\n    \"updatedAt\": \"2026-05-07T00:00:09.344Z\",\n    \"__v\": 2\n}"
+                }
+              ]
+            },
+            {
+              "name": "Eliminar un juego",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/matches/{{matchId_Loba}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "matches",
+                    "{{matchId_Loba}}"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "401",
+                  "originalRequest": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/matches/{{matchId_Loba}}",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "matches",
+                        "{{matchId_Loba}}"
+                      ]
+                    }
+                  },
+                  "status": "Unauthorized",
+                  "code": 401,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "X-Powered-By",
+                      "value": "Express"
+                    },
+                    {
+                      "key": "Vary",
+                      "value": "Origin"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Credentials",
+                      "value": "true"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "30"
+                    },
+                    {
+                      "key": "ETag",
+                      "value": "W/\"1e-yKNCw023pgXRkWhD2v34bWL829M\""
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 07 May 2026 00:00:39 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"message\": \"Token no válido\"\n}"
+                },
+                {
+                  "name": "200",
+                  "originalRequest": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/matches/{{matchId_Loba}}",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "matches",
+                        "{{matchId_Loba}}"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "X-Powered-By",
+                      "value": "Express"
+                    },
+                    {
+                      "key": "Vary",
+                      "value": "Origin"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Credentials",
+                      "value": "true"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "45"
+                    },
+                    {
+                      "key": "ETag",
+                      "value": "W/\"2d-9sDjdkThY/5xacE108XF2kP0sw8\""
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 07 May 2026 00:01:03 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"message\": \"Partida eliminada correctamente\"\n}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Mosca",
+          "item": [
+            {
+              "name": "Crear Partida - Mosca",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const jsonData = pm.response.json();\r",
+                      "\r",
+                      "if (pm.response.code === 201 && jsonData._id) {\r",
+                      "    pm.environment.set(\"matchId_Mosca\", jsonData._id);\r",
+                      "    console.log(\"✅ Match ID guardado:\", jsonData._id);\r",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"gameType\": \"Mosca\",\r\n  \"players\": [\r\n    { \"name\": \"ANTO\", \"position\": 0, \"team\": \"None\" },\r\n    { \"name\": \"CHAT\", \"position\": 1, \"team\": \"None\" }\r\n  ]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/matches",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "matches"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "201",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"gameType\": \"Mosca\",\r\n  \"players\": [\r\n    { \"name\": \"ANTO\", \"position\": 0, \"team\": \"None\" },\r\n    { \"name\": \"CHAT\", \"position\": 1, \"team\": \"None\" }\r\n  ]\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/matches",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "matches"
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "X-Powered-By",
+                      "value": "Express"
+                    },
+                    {
+                      "key": "Vary",
+                      "value": "Origin"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Credentials",
+                      "value": "true"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "552"
+                    },
+                    {
+                      "key": "ETag",
+                      "value": "W/\"228-+Zm49VZCP8wAMclbGb7mG37yo94\""
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 07 May 2026 00:01:34 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"gameType\": \"Mosca\",\n    \"status\": \"active\",\n    \"adminId\": \"69fbd5389d536389f1f23fbe\",\n    \"currentDealerIndex\": 0,\n    \"isTeamGame\": false,\n    \"config\": {\n        \"startingScore\": 15,\n        \"isDescending\": true\n    },\n    \"players\": [\n        {\n            \"name\": \"ANTO\",\n            \"team\": \"None\",\n            \"score\": 15,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbd65e9d536389f1f23fd8\"\n        },\n        {\n            \"name\": \"CHAT\",\n            \"team\": \"None\",\n            \"score\": 15,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbd65e9d536389f1f23fd9\"\n        }\n    ],\n    \"winner\": null,\n    \"_id\": \"69fbd65e9d536389f1f23fd7\",\n    \"rounds\": [],\n    \"tempCantos\": [],\n    \"createdAt\": \"2026-05-07T00:01:34.554Z\",\n    \"updatedAt\": \"2026-05-07T00:01:34.554Z\",\n    \"__v\": 0\n}"
+                }
+              ]
+            },
+            {
+              "name": "Anotar Ronda - Mosca",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const res = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"La Mosca restó puntos correctamente\", function () {\r",
+                      "    const anto = res.players.find(p => p.name === \"ANTO\");\r",
+                      "    // 15 de inicio - 2 bazas = 13\r",
+                      "    pm.expect(anto.score).to.eql(13);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"El Dealer rotó\", function () {\r",
+                      "    pm.expect(res.currentDealerIndex).to.eql(1);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"scores\": [\r\n    {\r\n      \"playerName\": \"ANTO\",\r\n      \"pointsAdded\": 0,\r\n      \"details\": { \"bazas\": 2, \"paso\": false }\r\n    },\r\n    {\r\n      \"playerName\": \"CHAT\",\r\n      \"pointsAdded\": 0,\r\n      \"details\": { \"bazas\": 3, \"paso\": false }\r\n    }\r\n  ]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/matches/{{matchId_Mosca}}/round",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "matches",
+                    "{{matchId_Mosca}}",
+                    "round"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "400",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"scores\": [\r\n    {\r\n      \"playerName\": \"Anto\",\r\n      \"pointsAdded\": 0,\r\n      \"details\": { \"bazas\": 2, \"paso\": false }\r\n    },\r\n    {\r\n      \"playerName\": \"Chat\",\r\n      \"pointsAdded\": 0,\r\n      \"details\": { \"bazas\": 3, \"paso\": false }\r\n    }\r\n  ]\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/matches/{{matchId_Mosca}}/round",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "matches",
+                        "{{matchId_Mosca}}",
+                        "round"
+                      ]
+                    }
+                  },
+                  "status": "Bad Request",
+                  "code": 400,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "X-Powered-By",
+                      "value": "Express"
+                    },
+                    {
+                      "key": "Vary",
+                      "value": "Origin"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Credentials",
+                      "value": "true"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "55"
+                    },
+                    {
+                      "key": "ETag",
+                      "value": "W/\"37-TD1DUSoLJDC/m9fmbW1/ImfCZlU\""
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 07 May 2026 00:02:45 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"message\": \"El jugador Anto no pertenece a esta mesa.\"\n}"
+                },
+                {
+                  "name": "200",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"scores\": [\r\n    {\r\n      \"playerName\": \"ANTO\",\r\n      \"pointsAdded\": 0,\r\n      \"details\": { \"bazas\": 2, \"paso\": false }\r\n    },\r\n    {\r\n      \"playerName\": \"CHAT\",\r\n      \"pointsAdded\": 0,\r\n      \"details\": { \"bazas\": 3, \"paso\": false }\r\n    }\r\n  ]\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/matches/{{matchId_Mosca}}/round",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "matches",
+                        "{{matchId_Mosca}}",
+                        "round"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "X-Powered-By",
+                      "value": "Express"
+                    },
+                    {
+                      "key": "Vary",
+                      "value": "Origin"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Credentials",
+                      "value": "true"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "881"
+                    },
+                    {
+                      "key": "ETag",
+                      "value": "W/\"371-cSFBwTaMGpRfwkkGJgtEjGiE2ew\""
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 07 May 2026 00:03:42 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"config\": {\n        \"startingScore\": 15,\n        \"isDescending\": true\n    },\n    \"_id\": \"69fbd65e9d536389f1f23fd7\",\n    \"gameType\": \"Mosca\",\n    \"status\": \"active\",\n    \"adminId\": \"69fbd5389d536389f1f23fbe\",\n    \"currentDealerIndex\": 1,\n    \"isTeamGame\": false,\n    \"players\": [\n        {\n            \"name\": \"ANTO\",\n            \"team\": \"None\",\n            \"score\": 13,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbd65e9d536389f1f23fd8\"\n        },\n        {\n            \"name\": \"CHAT\",\n            \"team\": \"None\",\n            \"score\": 15,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbd65e9d536389f1f23fd9\"\n        }\n    ],\n    \"winner\": null,\n    \"rounds\": [\n        {\n            \"roundNumber\": 1,\n            \"dealerIndex\": 0,\n            \"scores\": [\n                {\n                    \"playerName\": \"ANTO\",\n                    \"pointsAdded\": -2,\n                    \"details\": {\n                        \"bazas\": 2,\n                        \"paso\": false\n                    },\n                    \"_id\": \"69fbd6de9d536389f1f23fe2\"\n                },\n                {\n                    \"playerName\": \"CHAT\",\n                    \"pointsAdded\": 0,\n                    \"details\": {\n                        \"bazas\": 3,\n                        \"paso\": false\n                    },\n                    \"_id\": \"69fbd6de9d536389f1f23fe3\"\n                }\n            ],\n            \"timestamp\": \"2026-05-07T00:03:42.324Z\",\n            \"_id\": \"69fbd6de9d536389f1f23fe1\"\n        }\n    ],\n    \"tempCantos\": [],\n    \"createdAt\": \"2026-05-07T00:01:34.554Z\",\n    \"updatedAt\": \"2026-05-07T00:03:42.325Z\",\n    \"__v\": 1\n}"
+                }
+              ]
+            },
+            {
+              "name": "Anotar Ronda - Mosca - Victoria Instantánea",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Partida debería finalizar por 5 bazas\", function () {\r",
+                      "    const res = pm.response.json();\r",
+                      "    pm.expect(res.status).to.eql(\"finished\");\r",
+                      "    pm.expect(res.winner).to.eql(\"Anto\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"scores\": [\r\n    {\r\n      \"playerName\": \"ANTO\",\r\n      \"pointsAdded\": 0,\r\n      \"details\": { \"bazas\": 5, \"paso\": false }\r\n    },\r\n    {\r\n      \"playerName\": \"CHAT\",\r\n      \"pointsAdded\": 0,\r\n      \"details\": { \"bazas\": 0, \"paso\": false }\r\n    }\r\n  ]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/matches/{{matchId_Mosca}}/round",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "matches",
+                    "{{matchId_Mosca}}",
+                    "round"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "200",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"scores\": [\r\n    {\r\n      \"playerName\": \"ANTO\",\r\n      \"pointsAdded\": 0,\r\n      \"details\": { \"bazas\": 5, \"paso\": false }\r\n    },\r\n    {\r\n      \"playerName\": \"CHAT\",\r\n      \"pointsAdded\": 0,\r\n      \"details\": { \"bazas\": 0, \"paso\": false }\r\n    }\r\n  ]\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/matches/{{matchId_Mosca}}/round",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "matches",
+                        "{{matchId_Mosca}}",
+                        "round"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "X-Powered-By",
+                      "value": "Express"
+                    },
+                    {
+                      "key": "Vary",
+                      "value": "Origin"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Credentials",
+                      "value": "true"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "1210"
+                    },
+                    {
+                      "key": "ETag",
+                      "value": "W/\"4ba-Vn4evsto1nJuzYQXB8xqPDrKSOU\""
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 07 May 2026 00:04:34 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"config\": {\n        \"startingScore\": 15,\n        \"isDescending\": true\n    },\n    \"_id\": \"69fbd65e9d536389f1f23fd7\",\n    \"gameType\": \"Mosca\",\n    \"status\": \"active\",\n    \"adminId\": \"69fbd5389d536389f1f23fbe\",\n    \"currentDealerIndex\": 0,\n    \"isTeamGame\": false,\n    \"players\": [\n        {\n            \"name\": \"ANTO\",\n            \"team\": \"None\",\n            \"score\": 13,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbd65e9d536389f1f23fd8\"\n        },\n        {\n            \"name\": \"CHAT\",\n            \"team\": \"None\",\n            \"score\": 20,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbd65e9d536389f1f23fd9\"\n        }\n    ],\n    \"winner\": null,\n    \"rounds\": [\n        {\n            \"roundNumber\": 1,\n            \"dealerIndex\": 0,\n            \"scores\": [\n                {\n                    \"playerName\": \"ANTO\",\n                    \"pointsAdded\": -2,\n                    \"details\": {\n                        \"bazas\": 2,\n                        \"paso\": false\n                    },\n                    \"_id\": \"69fbd6de9d536389f1f23fe2\"\n                },\n                {\n                    \"playerName\": \"CHAT\",\n                    \"pointsAdded\": 0,\n                    \"details\": {\n                        \"bazas\": 3,\n                        \"paso\": false\n                    },\n                    \"_id\": \"69fbd6de9d536389f1f23fe3\"\n                }\n            ],\n            \"timestamp\": \"2026-05-07T00:03:42.324Z\",\n            \"_id\": \"69fbd6de9d536389f1f23fe1\"\n        },\n        {\n            \"roundNumber\": 2,\n            \"dealerIndex\": 1,\n            \"scores\": [\n                {\n                    \"playerName\": \"ANTO\",\n                    \"pointsAdded\": 0,\n                    \"details\": {\n                        \"bazas\": 5,\n                        \"paso\": false\n                    },\n                    \"_id\": \"69fbd7119d536389f1f23fea\"\n                },\n                {\n                    \"playerName\": \"CHAT\",\n                    \"pointsAdded\": 5,\n                    \"details\": {\n                        \"bazas\": 0,\n                        \"paso\": false\n                    },\n                    \"_id\": \"69fbd7119d536389f1f23feb\"\n                }\n            ],\n            \"timestamp\": \"2026-05-07T00:04:33.986Z\",\n            \"_id\": \"69fbd7119d536389f1f23fe9\"\n        }\n    ],\n    \"tempCantos\": [],\n    \"createdAt\": \"2026-05-07T00:01:34.554Z\",\n    \"updatedAt\": \"2026-05-07T00:04:33.988Z\",\n    \"__v\": 2\n}"
+                }
+              ]
+            },
+            {
+              "name": "Consultar Juego",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/matches/{{matchId_Mosca}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "matches",
+                    "{{matchId_Mosca}}"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "200",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/matches/{{matchId_Mosca}}",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "matches",
+                        "{{matchId_Mosca}}"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "X-Powered-By",
+                      "value": "Express"
+                    },
+                    {
+                      "key": "Vary",
+                      "value": "Origin"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Credentials",
+                      "value": "true"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "1244"
+                    },
+                    {
+                      "key": "ETag",
+                      "value": "W/\"4dc-tqiq06ZuGN1jyb7538AOwqI+6/Y\""
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 07 May 2026 00:06:38 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"config\": {\n        \"startingScore\": 15,\n        \"isDescending\": true\n    },\n    \"_id\": \"69fbd65e9d536389f1f23fd7\",\n    \"gameType\": \"Mosca\",\n    \"status\": \"active\",\n    \"adminId\": {\n        \"_id\": \"69fbd5389d536389f1f23fbe\",\n        \"username\": \"text-example\"\n    },\n    \"currentDealerIndex\": 0,\n    \"isTeamGame\": false,\n    \"players\": [\n        {\n            \"name\": \"ANTO\",\n            \"team\": \"None\",\n            \"score\": 13,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbd65e9d536389f1f23fd8\"\n        },\n        {\n            \"name\": \"CHAT\",\n            \"team\": \"None\",\n            \"score\": 20,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbd65e9d536389f1f23fd9\"\n        }\n    ],\n    \"winner\": null,\n    \"rounds\": [\n        {\n            \"roundNumber\": 1,\n            \"dealerIndex\": 0,\n            \"scores\": [\n                {\n                    \"playerName\": \"ANTO\",\n                    \"pointsAdded\": -2,\n                    \"details\": {\n                        \"bazas\": 2,\n                        \"paso\": false\n                    },\n                    \"_id\": \"69fbd6de9d536389f1f23fe2\"\n                },\n                {\n                    \"playerName\": \"CHAT\",\n                    \"pointsAdded\": 0,\n                    \"details\": {\n                        \"bazas\": 3,\n                        \"paso\": false\n                    },\n                    \"_id\": \"69fbd6de9d536389f1f23fe3\"\n                }\n            ],\n            \"timestamp\": \"2026-05-07T00:03:42.324Z\",\n            \"_id\": \"69fbd6de9d536389f1f23fe1\"\n        },\n        {\n            \"roundNumber\": 2,\n            \"dealerIndex\": 1,\n            \"scores\": [\n                {\n                    \"playerName\": \"ANTO\",\n                    \"pointsAdded\": 0,\n                    \"details\": {\n                        \"bazas\": 5,\n                        \"paso\": false\n                    },\n                    \"_id\": \"69fbd7119d536389f1f23fea\"\n                },\n                {\n                    \"playerName\": \"CHAT\",\n                    \"pointsAdded\": 5,\n                    \"details\": {\n                        \"bazas\": 0,\n                        \"paso\": false\n                    },\n                    \"_id\": \"69fbd7119d536389f1f23feb\"\n                }\n            ],\n            \"timestamp\": \"2026-05-07T00:04:33.986Z\",\n            \"_id\": \"69fbd7119d536389f1f23fe9\"\n        }\n    ],\n    \"tempCantos\": [],\n    \"createdAt\": \"2026-05-07T00:01:34.554Z\",\n    \"updatedAt\": \"2026-05-07T00:04:33.988Z\",\n    \"__v\": 2\n}"
+                }
+              ]
+            },
+            {
+              "name": "Eliminar un juego",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/matches/{{matchId_Mosca}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "matches",
+                    "{{matchId_Mosca}}"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "200",
+                  "originalRequest": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/matches/{{matchId_Mosca}}",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "matches",
+                        "{{matchId_Mosca}}"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "X-Powered-By",
+                      "value": "Express"
+                    },
+                    {
+                      "key": "Vary",
+                      "value": "Origin"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Credentials",
+                      "value": "true"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "45"
+                    },
+                    {
+                      "key": "ETag",
+                      "value": "W/\"2d-9sDjdkThY/5xacE108XF2kP0sw8\""
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 07 May 2026 00:07:49 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"message\": \"Partida eliminada correctamente\"\n}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Truco",
+          "item": [
+            {
+              "name": "- Individual",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();\r",
+                      "if (response._id) {\r",
+                      "    pm.environment.set(\"matchId_Truco\", response._id);\r",
+                      "}\r",
+                      "\r",
+                      "pm.test(\"Truco Individual: Límite automático 18 pts (9 y 9)\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "    pm.expect(res.config.limitScore).to.eql(18);\r",
+                      "    pm.environment.set(\"matchId_Truco\", res._id); \r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"gameType\": \"Truco\",\r\n    \"players\": [\r\n        { \"name\": \"ANTO\", \"team\": \"None\" },\r\n        { \"name\": \"CARLOS\", \"team\": \"None\" }\r\n    ],\r\n    \"isTeamGame\": false\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/matches",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "matches"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "500",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"gameType\": \"Truco\",\r\n  \"players\": [\r\n      { \"name\": \"CARLOS\", \"team\": \"A\" },\r\n      { \"name\": \"ANTO\", \"team\": \"B\" }\r\n  ],\r\n  \"isTeamGame\": true\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/matches",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "matches"
+                      ]
+                    }
+                  },
+                  "status": "Internal Server Error",
+                  "code": 500,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "X-Powered-By",
+                      "value": "Express"
+                    },
+                    {
+                      "key": "Vary",
+                      "value": "Origin"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Credentials",
+                      "value": "true"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "47"
+                    },
+                    {
+                      "key": "ETag",
+                      "value": "W/\"2f-2+jbjCJep1/27OydiWp/4kqYVNI\""
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 07 May 2026 00:08:10 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"message\": \"Error al crear partida\",\n    \"error\": {}\n}"
+                },
+                {
+                  "name": "201",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"gameType\": \"Truco\",\r\n    \"players\": [\r\n        { \"name\": \"ANTO\", \"team\": \"None\" },\r\n        { \"name\": \"CARLOS\", \"team\": \"None\" }\r\n    ],\r\n    \"isTeamGame\": false\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/matches",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "matches"
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "X-Powered-By",
+                      "value": "Express"
+                    },
+                    {
+                      "key": "Vary",
+                      "value": "Origin"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Credentials",
+                      "value": "true"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "568"
+                    },
+                    {
+                      "key": "ETag",
+                      "value": "W/\"238-MI2reHMZqR/4J30fzAGrqvNfeeQ\""
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 07 May 2026 00:20:17 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"gameType\": \"Truco\",\n    \"status\": \"active\",\n    \"adminId\": \"69fbd5389d536389f1f23fbe\",\n    \"currentDealerIndex\": 0,\n    \"isTeamGame\": false,\n    \"config\": {\n        \"limitScore\": 18,\n        \"startingScore\": 0,\n        \"isDescending\": false\n    },\n    \"players\": [\n        {\n            \"name\": \"ANTO\",\n            \"team\": \"None\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdac19d536389f1f24000\"\n        },\n        {\n            \"name\": \"CARLOS\",\n            \"team\": \"None\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdac19d536389f1f24001\"\n        }\n    ],\n    \"winner\": null,\n    \"_id\": \"69fbdac19d536389f1f23fff\",\n    \"rounds\": [],\n    \"tempCantos\": [],\n    \"createdAt\": \"2026-05-07T00:20:17.803Z\",\n    \"updatedAt\": \"2026-05-07T00:20:17.803Z\",\n    \"__v\": 0\n}"
+                }
+              ]
+            },
+            {
+              "name": "anotar ronda",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"scores\": [\r\n      { \"playerName\": \"CARLOS\", \"pointsAdded\": 3, \"details\": { \"envido\": \"quiero\" } },\r\n      { \"playerName\": \"ANTO\", \"pointsAdded\": 0, \"details\": {} }\r\n  ]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/matches/{{matchId_Truco}}/round",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "matches",
+                    "{{matchId_Truco}}",
+                    "round"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "400 - Error de Ruta",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"scores\": [\r\n      { \"playerName\": \"CARLOS\", \"pointsAdded\": 3, \"details\": { \"envido\": \"quiero\" } },\r\n      { \"playerName\": \"ANTO\", \"pointsAdded\": 0, \"details\": {} }\r\n  ]\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/matches/{{matchId_Mosca}}/round",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "matches",
+                        "{{matchId_Mosca}}",
+                        "round"
+                      ]
+                    }
+                  },
+                  "status": "Not Found",
+                  "code": 404,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "X-Powered-By",
+                      "value": "Express"
+                    },
+                    {
+                      "key": "Vary",
+                      "value": "Origin"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Credentials",
+                      "value": "true"
+                    },
+                    {
+                      "key": "Content-Security-Policy",
+                      "value": "default-src 'none'"
+                    },
+                    {
+                      "key": "X-Content-Type-Options",
+                      "value": "nosniff"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "text/html; charset=utf-8"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "158"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 07 May 2026 00:20:38 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "<!DOCTYPE html>\n<html lang=\"en\">\n    <head>\n        <meta charset=\"utf-8\">\n        <title>Error</title>\n    </head>\n    <body>\n        <pre>Cannot POST /api/matches//round</pre>\n    </body>\n</html>"
+                },
+                {
+                  "name": "400 - Partida No Encontrada",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"scores\": [\r\n      { \"playerName\": \"CARLOS\", \"pointsAdded\": 3, \"details\": { \"envido\": \"quiero\" } },\r\n      { \"playerName\": \"ANTO\", \"pointsAdded\": 0, \"details\": {} }\r\n  ]\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/matches/{{matchId_Truco}}/round",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "matches",
+                        "{{matchId_Truco}}",
+                        "round"
+                      ]
+                    }
+                  },
+                  "status": "Not Found",
+                  "code": 404,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "X-Powered-By",
+                      "value": "Express"
+                    },
+                    {
+                      "key": "Vary",
+                      "value": "Origin"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Credentials",
+                      "value": "true"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "35"
+                    },
+                    {
+                      "key": "ETag",
+                      "value": "W/\"23-EO327D/Cnzm/E6nioR9UmJIh4fI\""
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 07 May 2026 00:21:08 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"message\": \"Partida no encontrada\"\n}"
+                },
+                {
+                  "name": "200",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"scores\": [\r\n      { \"playerName\": \"CARLOS\", \"pointsAdded\": 3, \"details\": { \"envido\": \"quiero\" } },\r\n      { \"playerName\": \"ANTO\", \"pointsAdded\": 0, \"details\": {} }\r\n  ]\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/matches/{{matchId_Truco}}/round",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "matches",
+                        "{{matchId_Truco}}",
+                        "round"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "X-Powered-By",
+                      "value": "Express"
+                    },
+                    {
+                      "key": "Vary",
+                      "value": "Origin"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Credentials",
+                      "value": "true"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "858"
+                    },
+                    {
+                      "key": "ETag",
+                      "value": "W/\"35a-se2HC/g7DurwKHAaykDpsMGLHmM\""
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 07 May 2026 00:22:15 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"config\": {\n        \"limitScore\": 18,\n        \"startingScore\": 0,\n        \"isDescending\": false\n    },\n    \"_id\": \"69fbdac19d536389f1f23fff\",\n    \"gameType\": \"Truco\",\n    \"status\": \"active\",\n    \"adminId\": \"69fbd5389d536389f1f23fbe\",\n    \"currentDealerIndex\": 1,\n    \"isTeamGame\": false,\n    \"players\": [\n        {\n            \"name\": \"ANTO\",\n            \"team\": \"None\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdac19d536389f1f24000\"\n        },\n        {\n            \"name\": \"CARLOS\",\n            \"team\": \"None\",\n            \"score\": 3,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdac19d536389f1f24001\"\n        }\n    ],\n    \"winner\": null,\n    \"rounds\": [\n        {\n            \"roundNumber\": 1,\n            \"dealerIndex\": 0,\n            \"scores\": [\n                {\n                    \"playerName\": \"CARLOS\",\n                    \"pointsAdded\": 3,\n                    \"details\": {\n                        \"envido\": \"quiero\"\n                    },\n                    \"_id\": \"69fbdb369d536389f1f24005\"\n                },\n                {\n                    \"playerName\": \"ANTO\",\n                    \"pointsAdded\": 0,\n                    \"_id\": \"69fbdb369d536389f1f24006\"\n                }\n            ],\n            \"timestamp\": \"2026-05-07T00:22:14.943Z\",\n            \"_id\": \"69fbdb369d536389f1f24004\"\n        }\n    ],\n    \"tempCantos\": [],\n    \"createdAt\": \"2026-05-07T00:20:17.803Z\",\n    \"updatedAt\": \"2026-05-07T00:22:14.944Z\",\n    \"__v\": 1\n}"
+                }
+              ]
+            },
+            {
+              "name": "Equipo 2vs2",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const res = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Truco 2vs2: Límite automático 24 pts (12 y 12)\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "    pm.expect(res.config.limitScore).to.eql(24);\r",
+                      "    pm.environment.set(\"matchId_Truco_2/2\", res._id);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"gameType\": \"Truco\",\r\n    \"players\": [\r\n        { \"name\": \"ANTO\", \"team\": \"A\" },\r\n        { \"name\": \"CARLOS\", \"team\": \"B\" },\r\n        { \"name\": \"ESTEBAN\", \"team\": \"A\" },\r\n        { \"name\": \"MARCOS\", \"team\": \"B\" }\r\n    ],\r\n    \"isTeamGame\": true\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/matches",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "matches"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "500",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"gameType\": \"Truco\",\r\n  \"players\": [\r\n      { \"name\": \"CARLOS\", \"team\": \"A\" },\r\n      { \"name\": \"ANTO\", \"team\": \"B\" }\r\n  ],\r\n  \"isTeamGame\": true\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/matches",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "matches"
+                      ]
+                    }
+                  },
+                  "status": "Internal Server Error",
+                  "code": 500,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "X-Powered-By",
+                      "value": "Express"
+                    },
+                    {
+                      "key": "Vary",
+                      "value": "Origin"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Credentials",
+                      "value": "true"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "47"
+                    },
+                    {
+                      "key": "ETag",
+                      "value": "W/\"2f-2+jbjCJep1/27OydiWp/4kqYVNI\""
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 07 May 2026 00:08:10 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"message\": \"Error al crear partida\",\n    \"error\": {}\n}"
+                },
+                {
+                  "name": "201",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"gameType\": \"Truco\",\r\n    \"players\": [\r\n        { \"name\": \"ANTO\", \"team\": \"A\" },\r\n        { \"name\": \"CARLOS\", \"team\": \"B\" },\r\n        { \"name\": \"ESTEBAN\", \"team\": \"A\" },\r\n        { \"name\": \"MARCOS\", \"team\": \"B\" }\r\n    ],\r\n    \"isTeamGame\": true\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/matches",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "matches"
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": "",
+                  "header": [
+                    {
+                      "key": "X-Powered-By",
+                      "value": "Express"
+                    },
+                    {
+                      "key": "Vary",
+                      "value": "Origin"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Credentials",
+                      "value": "true"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "770"
+                    },
+                    {
+                      "key": "ETag",
+                      "value": "W/\"302-++XtU7I61HOrgMoxn1YellYtilQ\""
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 07 May 2026 00:23:16 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [
+                    {
+                      "expires": "Invalid Date",
+                      "domain": "",
+                      "path": ""
+                    }
+                  ],
+                  "body": "{\n    \"gameType\": \"Truco\",\n    \"status\": \"active\",\n    \"adminId\": \"69fbd5389d536389f1f23fbe\",\n    \"currentDealerIndex\": 0,\n    \"isTeamGame\": true,\n    \"config\": {\n        \"limitScore\": 24,\n        \"startingScore\": 0,\n        \"isDescending\": false\n    },\n    \"players\": [\n        {\n            \"name\": \"ANTO\",\n            \"team\": \"A\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdb749d536389f1f24008\"\n        },\n        {\n            \"name\": \"CARLOS\",\n            \"team\": \"B\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdb749d536389f1f24009\"\n        },\n        {\n            \"name\": \"ESTEBAN\",\n            \"team\": \"A\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdb749d536389f1f2400a\"\n        },\n        {\n            \"name\": \"MARCOS\",\n            \"team\": \"B\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdb749d536389f1f2400b\"\n        }\n    ],\n    \"winner\": null,\n    \"_id\": \"69fbdb749d536389f1f24007\",\n    \"rounds\": [],\n    \"tempCantos\": [],\n    \"createdAt\": \"2026-05-07T00:23:16.904Z\",\n    \"updatedAt\": \"2026-05-07T00:23:16.904Z\",\n    \"__v\": 0\n}"
+                }
+              ]
+            },
+            {
+              "name": "Equipo 3vs3",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const res = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Truco 3vs3: Límite automático 30 pts (15 y 15)\", function () {\r",
+                      "    pm.response.to.have.status(201);\r",
+                      "    pm.expect(res.config.limitScore).to.eql(30);\r",
+                      "    pm.environment.set(\"matchId_Truco_3/3\", res._id);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"gameType\": \"Truco\",\r\n    \"players\": [\r\n        { \"name\": \"A1\", \"team\": \"A\" }, { \"name\": \"B1\", \"team\": \"B\" },\r\n        { \"name\": \"A2\", \"team\": \"A\" }, { \"name\": \"B2\", \"team\": \"B\" },\r\n        { \"name\": \"A3\", \"team\": \"A\" }, { \"name\": \"B3\", \"team\": \"B\" }\r\n    ],\r\n    \"isTeamGame\": true\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/matches",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "matches"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "500",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"gameType\": \"Truco\",\r\n  \"players\": [\r\n      { \"name\": \"CARLOS\", \"team\": \"A\" },\r\n      { \"name\": \"ANTO\", \"team\": \"B\" }\r\n  ],\r\n  \"isTeamGame\": true\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/matches",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "matches"
+                      ]
+                    }
+                  },
+                  "status": "Internal Server Error",
+                  "code": 500,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "X-Powered-By",
+                      "value": "Express"
+                    },
+                    {
+                      "key": "Vary",
+                      "value": "Origin"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Credentials",
+                      "value": "true"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "47"
+                    },
+                    {
+                      "key": "ETag",
+                      "value": "W/\"2f-2+jbjCJep1/27OydiWp/4kqYVNI\""
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 07 May 2026 00:08:10 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"message\": \"Error al crear partida\",\n    \"error\": {}\n}"
+                },
+                {
+                  "name": "201",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"gameType\": \"Truco\",\r\n    \"players\": [\r\n        { \"name\": \"A1\", \"team\": \"A\" }, { \"name\": \"B1\", \"team\": \"B\" },\r\n        { \"name\": \"A2\", \"team\": \"A\" }, { \"name\": \"B2\", \"team\": \"B\" },\r\n        { \"name\": \"A3\", \"team\": \"A\" }, { \"name\": \"B3\", \"team\": \"B\" }\r\n    ],\r\n    \"isTeamGame\": true\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/matches",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "matches"
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": "",
+                  "header": [
+                    {
+                      "key": "X-Powered-By",
+                      "value": "Express"
+                    },
+                    {
+                      "key": "Vary",
+                      "value": "Origin"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Credentials",
+                      "value": "true"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "955"
+                    },
+                    {
+                      "key": "ETag",
+                      "value": "W/\"3bb-YUguSfliHek+uqlFaxg5VRzLEjE\""
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 07 May 2026 00:24:16 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [
+                    {
+                      "expires": "Invalid Date",
+                      "domain": "",
+                      "path": ""
+                    }
+                  ],
+                  "body": "{\n    \"gameType\": \"Truco\",\n    \"status\": \"active\",\n    \"adminId\": \"69fbd5389d536389f1f23fbe\",\n    \"currentDealerIndex\": 0,\n    \"isTeamGame\": true,\n    \"config\": {\n        \"limitScore\": 30,\n        \"startingScore\": 0,\n        \"isDescending\": false\n    },\n    \"players\": [\n        {\n            \"name\": \"A1\",\n            \"team\": \"A\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdbaf9d536389f1f2400d\"\n        },\n        {\n            \"name\": \"B1\",\n            \"team\": \"B\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdbaf9d536389f1f2400e\"\n        },\n        {\n            \"name\": \"A2\",\n            \"team\": \"A\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdbaf9d536389f1f2400f\"\n        },\n        {\n            \"name\": \"B2\",\n            \"team\": \"B\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdbaf9d536389f1f24010\"\n        },\n        {\n            \"name\": \"A3\",\n            \"team\": \"A\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdbaf9d536389f1f24011\"\n        },\n        {\n            \"name\": \"B3\",\n            \"team\": \"B\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdbaf9d536389f1f24012\"\n        }\n    ],\n    \"winner\": null,\n    \"_id\": \"69fbdbaf9d536389f1f2400c\",\n    \"rounds\": [],\n    \"tempCantos\": [],\n    \"createdAt\": \"2026-05-07T00:24:15.935Z\",\n    \"updatedAt\": \"2026-05-07T00:24:15.935Z\",\n    \"__v\": 0\n}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Escoba /  Barsiga",
+          "item": [
+            {
+              "name": "Crear Partida - Barsiga",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const res = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Mesa de Bársiga configurada a 61 puntos\", function () {\r",
+                      "    pm.res.to.have.status(201);\r",
+                      "    pm.expect(res.gameType).to.eql(\"Barsiga\");\r",
+                      "    pm.expect(res.res.limitScore).to.eql(61);\r",
+                      "    pm.environment.set(\"matchId_Barsiga\", res._id);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"gameType\": \"Barsiga\",\r\n    \"players\": [\r\n        { \"name\": \"ANTO\", \"team\": \"A\" },\r\n        { \"name\": \"CARLOS\", \"team\": \"B\" },\r\n        { \"name\": \"ESTEBAN\", \"team\": \"A\" },\r\n        { \"name\": \"MARCOS\", \"team\": \"B\" }\r\n    ],\r\n    \"isTeamGame\": true\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/matches",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "matches"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "200",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"gameType\": \"Barsiga\",\r\n    \"players\": [\r\n        { \"name\": \"ANTO\", \"team\": \"A\" },\r\n        { \"name\": \"CARLOS\", \"team\": \"B\" },\r\n        { \"name\": \"ESTEBAN\", \"team\": \"A\" },\r\n        { \"name\": \"MARCOS\", \"team\": \"B\" }\r\n    ],\r\n    \"isTeamGame\": true\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/matches",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "matches"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "X-Powered-By",
+                      "value": "Express"
+                    },
+                    {
+                      "key": "Vary",
+                      "value": "Origin"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Credentials",
+                      "value": "true"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "3156"
+                    },
+                    {
+                      "key": "ETag",
+                      "value": "W/\"c54-zps5iegCVaW+Ip8Qq9LtXZMwN0I\""
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 07 May 2026 00:24:42 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "[\n    {\n        \"config\": {\n            \"limitScore\": 30,\n            \"startingScore\": 0,\n            \"isDescending\": false\n        },\n        \"_id\": \"69fbdbaf9d536389f1f2400c\",\n        \"gameType\": \"Truco\",\n        \"status\": \"active\",\n        \"adminId\": \"69fbd5389d536389f1f23fbe\",\n        \"currentDealerIndex\": 0,\n        \"isTeamGame\": true,\n        \"players\": [\n            {\n                \"name\": \"A1\",\n                \"team\": \"A\",\n                \"score\": 0,\n                \"isOut\": false,\n                \"reengageCount\": 0,\n                \"_id\": \"69fbdbaf9d536389f1f2400d\"\n            },\n            {\n                \"name\": \"B1\",\n                \"team\": \"B\",\n                \"score\": 0,\n                \"isOut\": false,\n                \"reengageCount\": 0,\n                \"_id\": \"69fbdbaf9d536389f1f2400e\"\n            },\n            {\n                \"name\": \"A2\",\n                \"team\": \"A\",\n                \"score\": 0,\n                \"isOut\": false,\n                \"reengageCount\": 0,\n                \"_id\": \"69fbdbaf9d536389f1f2400f\"\n            },\n            {\n                \"name\": \"B2\",\n                \"team\": \"B\",\n                \"score\": 0,\n                \"isOut\": false,\n                \"reengageCount\": 0,\n                \"_id\": \"69fbdbaf9d536389f1f24010\"\n            },\n            {\n                \"name\": \"A3\",\n                \"team\": \"A\",\n                \"score\": 0,\n                \"isOut\": false,\n                \"reengageCount\": 0,\n                \"_id\": \"69fbdbaf9d536389f1f24011\"\n            },\n            {\n                \"name\": \"B3\",\n                \"team\": \"B\",\n                \"score\": 0,\n                \"isOut\": false,\n                \"reengageCount\": 0,\n                \"_id\": \"69fbdbaf9d536389f1f24012\"\n            }\n        ],\n        \"winner\": null,\n        \"rounds\": [],\n        \"tempCantos\": [],\n        \"createdAt\": \"2026-05-07T00:24:15.935Z\",\n        \"updatedAt\": \"2026-05-07T00:24:15.935Z\",\n        \"__v\": 0\n    },\n    {\n        \"config\": {\n            \"limitScore\": 24,\n            \"startingScore\": 0,\n            \"isDescending\": false\n        },\n        \"_id\": \"69fbdb749d536389f1f24007\",\n        \"gameType\": \"Truco\",\n        \"status\": \"active\",\n        \"adminId\": \"69fbd5389d536389f1f23fbe\",\n        \"currentDealerIndex\": 0,\n        \"isTeamGame\": true,\n        \"players\": [\n            {\n                \"name\": \"ANTO\",\n                \"team\": \"A\",\n                \"score\": 0,\n                \"isOut\": false,\n                \"reengageCount\": 0,\n                \"_id\": \"69fbdb749d536389f1f24008\"\n            },\n            {\n                \"name\": \"CARLOS\",\n                \"team\": \"B\",\n                \"score\": 0,\n                \"isOut\": false,\n                \"reengageCount\": 0,\n                \"_id\": \"69fbdb749d536389f1f24009\"\n            },\n            {\n                \"name\": \"ESTEBAN\",\n                \"team\": \"A\",\n                \"score\": 0,\n                \"isOut\": false,\n                \"reengageCount\": 0,\n                \"_id\": \"69fbdb749d536389f1f2400a\"\n            },\n            {\n                \"name\": \"MARCOS\",\n                \"team\": \"B\",\n                \"score\": 0,\n                \"isOut\": false,\n                \"reengageCount\": 0,\n                \"_id\": \"69fbdb749d536389f1f2400b\"\n            }\n        ],\n        \"winner\": null,\n        \"rounds\": [],\n        \"tempCantos\": [],\n        \"createdAt\": \"2026-05-07T00:23:16.904Z\",\n        \"updatedAt\": \"2026-05-07T00:23:16.904Z\",\n        \"__v\": 0\n    },\n    {\n        \"config\": {\n            \"limitScore\": 18,\n            \"startingScore\": 0,\n            \"isDescending\": false\n        },\n        \"_id\": \"69fbdac19d536389f1f23fff\",\n        \"gameType\": \"Truco\",\n        \"status\": \"active\",\n        \"adminId\": \"69fbd5389d536389f1f23fbe\",\n        \"currentDealerIndex\": 1,\n        \"isTeamGame\": false,\n        \"players\": [\n            {\n                \"name\": \"ANTO\",\n                \"team\": \"None\",\n                \"score\": 0,\n                \"isOut\": false,\n                \"reengageCount\": 0,\n                \"_id\": \"69fbdac19d536389f1f24000\"\n            },\n            {\n                \"name\": \"CARLOS\",\n                \"team\": \"None\",\n                \"score\": 3,\n                \"isOut\": false,\n                \"reengageCount\": 0,\n                \"_id\": \"69fbdac19d536389f1f24001\"\n            }\n        ],\n        \"winner\": null,\n        \"rounds\": [\n            {\n                \"roundNumber\": 1,\n                \"dealerIndex\": 0,\n                \"scores\": [\n                    {\n                        \"playerName\": \"CARLOS\",\n                        \"pointsAdded\": 3,\n                        \"details\": {\n                            \"envido\": \"quiero\"\n                        },\n                        \"_id\": \"69fbdb369d536389f1f24005\"\n                    },\n                    {\n                        \"playerName\": \"ANTO\",\n                        \"pointsAdded\": 0,\n                        \"_id\": \"69fbdb369d536389f1f24006\"\n                    }\n                ],\n                \"timestamp\": \"2026-05-07T00:22:14.943Z\",\n                \"_id\": \"69fbdb369d536389f1f24004\"\n            }\n        ],\n        \"tempCantos\": [],\n        \"createdAt\": \"2026-05-07T00:20:17.803Z\",\n        \"updatedAt\": \"2026-05-07T00:22:14.944Z\",\n        \"__v\": 1\n    },\n    {\n        \"config\": {\n            \"limitScore\": 18,\n            \"startingScore\": 0,\n            \"isDescending\": false\n        },\n        \"_id\": \"69fbda939d536389f1f23ffc\",\n        \"gameType\": \"Truco\",\n        \"status\": \"active\",\n        \"adminId\": \"69fbd5389d536389f1f23fbe\",\n        \"currentDealerIndex\": 0,\n        \"isTeamGame\": false,\n        \"players\": [\n            {\n                \"name\": \"ANTO\",\n                \"team\": \"None\",\n                \"score\": 0,\n                \"isOut\": false,\n                \"reengageCount\": 0,\n                \"_id\": \"69fbda939d536389f1f23ffd\"\n            },\n            {\n                \"name\": \"CARLOS\",\n                \"team\": \"None\",\n                \"score\": 0,\n                \"isOut\": false,\n                \"reengageCount\": 0,\n                \"_id\": \"69fbda939d536389f1f23ffe\"\n            }\n        ],\n        \"winner\": null,\n        \"rounds\": [],\n        \"tempCantos\": [],\n        \"createdAt\": \"2026-05-07T00:19:31.131Z\",\n        \"updatedAt\": \"2026-05-07T00:19:31.131Z\",\n        \"__v\": 0\n    }\n]"
+                },
+                {
+                  "name": "201",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"gameType\": \"Barsiga\",\r\n    \"players\": [\r\n        { \"name\": \"ANTO\", \"team\": \"A\" },\r\n        { \"name\": \"CARLOS\", \"team\": \"B\" },\r\n        { \"name\": \"ESTEBAN\", \"team\": \"A\" },\r\n        { \"name\": \"MARCOS\", \"team\": \"B\" }\r\n    ],\r\n    \"isTeamGame\": true\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/matches",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "matches"
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "X-Powered-By",
+                      "value": "Express"
+                    },
+                    {
+                      "key": "Vary",
+                      "value": "Origin"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Credentials",
+                      "value": "true"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "772"
+                    },
+                    {
+                      "key": "ETag",
+                      "value": "W/\"304-orylY8nxjoCtPlBX0zAgIOnEqa8\""
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 07 May 2026 00:29:02 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"gameType\": \"Barsiga\",\n    \"status\": \"active\",\n    \"adminId\": \"69fbd5389d536389f1f23fbe\",\n    \"currentDealerIndex\": 0,\n    \"isTeamGame\": true,\n    \"config\": {\n        \"limitScore\": 61,\n        \"startingScore\": 0,\n        \"isDescending\": false\n    },\n    \"players\": [\n        {\n            \"name\": \"ANTO\",\n            \"team\": \"A\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdcce9d536389f1f24036\"\n        },\n        {\n            \"name\": \"CARLOS\",\n            \"team\": \"B\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdcce9d536389f1f24037\"\n        },\n        {\n            \"name\": \"ESTEBAN\",\n            \"team\": \"A\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdcce9d536389f1f24038\"\n        },\n        {\n            \"name\": \"MARCOS\",\n            \"team\": \"B\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdcce9d536389f1f24039\"\n        }\n    ],\n    \"winner\": null,\n    \"_id\": \"69fbdcce9d536389f1f24035\",\n    \"rounds\": [],\n    \"tempCantos\": [],\n    \"createdAt\": \"2026-05-07T00:29:02.011Z\",\n    \"updatedAt\": \"2026-05-07T00:29:02.011Z\",\n    \"__v\": 0\n}"
+                }
+              ]
+            },
+            {
+              "name": "Registrar Canto - Flor",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const res = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Canto registrado: Suma puntos individual y al equipo\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "    \r",
+                      "    const player = res.players.find(p => p.name === \"ANTO\");\r",
+                      "    pm.expect(player.score).to.eql(3);\r",
+                      "    pm.expect(res.tempCantos).to.be.an('array');\r",
+                      "    pm.expect(res.tempCantos[0].playerName).to.eql(\"ANTO\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"playerName\": \"ANTO\",\r\n    \"points\": 3\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/matches/{{matchId_Barsiga}}/round/canto",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "matches",
+                    "{{matchId_Barsiga}}",
+                    "round",
+                    "canto"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "200",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"playerName\": \"ANTO\",\r\n    \"points\": 3\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/matches/{{matchId_Barsiga}}/round/canto",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "matches",
+                        "{{matchId_Barsiga}}",
+                        "round",
+                        "canto"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "X-Powered-By",
+                      "value": "Express"
+                    },
+                    {
+                      "key": "Vary",
+                      "value": "Origin"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Credentials",
+                      "value": "true"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "837"
+                    },
+                    {
+                      "key": "ETag",
+                      "value": "W/\"345-Njqh2TFu3F5fEYFHLr8vNFzmJU4\""
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 07 May 2026 00:30:39 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"config\": {\n        \"limitScore\": 61,\n        \"startingScore\": 0,\n        \"isDescending\": false\n    },\n    \"_id\": \"69fbdcce9d536389f1f24035\",\n    \"gameType\": \"Barsiga\",\n    \"status\": \"active\",\n    \"adminId\": \"69fbd5389d536389f1f23fbe\",\n    \"currentDealerIndex\": 0,\n    \"isTeamGame\": true,\n    \"players\": [\n        {\n            \"name\": \"ANTO\",\n            \"team\": \"A\",\n            \"score\": 3,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdcce9d536389f1f24036\"\n        },\n        {\n            \"name\": \"CARLOS\",\n            \"team\": \"B\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdcce9d536389f1f24037\"\n        },\n        {\n            \"name\": \"ESTEBAN\",\n            \"team\": \"A\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdcce9d536389f1f24038\"\n        },\n        {\n            \"name\": \"MARCOS\",\n            \"team\": \"B\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdcce9d536389f1f24039\"\n        }\n    ],\n    \"winner\": null,\n    \"rounds\": [],\n    \"tempCantos\": [\n        {\n            \"playerName\": \"ANTO\",\n            \"points\": 3,\n            \"_id\": \"69fbdd2f9d536389f1f2403e\"\n        }\n    ],\n    \"createdAt\": \"2026-05-07T00:29:02.011Z\",\n    \"updatedAt\": \"2026-05-07T00:30:39.639Z\",\n    \"__v\": 1\n}"
+                }
+              ]
+            },
+            {
+              "name": "Registrar Canto - Barsiga",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const res = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Bársiga acumulada correctamente\", function () {\r",
+                      "    const player = res.players.find(p => p.name === \"ANTO\");\r",
+                      "    pm.expect(player.score).to.eql(13);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"playerName\": \"ANTO\",\r\n    \"points\": 10\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/matches/{{matchId_Barsiga}}/round/canto",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "matches",
+                    "{{matchId_Barsiga}}",
+                    "round",
+                    "canto"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "200",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"playerName\": \"ANTO\",\r\n    \"points\": 10\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/matches/{{matchId_Barsiga}}/round/canto",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "matches",
+                        "{{matchId_Barsiga}}",
+                        "round",
+                        "canto"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "X-Powered-By",
+                      "value": "Express"
+                    },
+                    {
+                      "key": "Vary",
+                      "value": "Origin"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Credentials",
+                      "value": "true"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "905"
+                    },
+                    {
+                      "key": "ETag",
+                      "value": "W/\"389-3GcSKAmMRgc7qdBaiDEVkjVPZi4\""
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 07 May 2026 00:31:03 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"config\": {\n        \"limitScore\": 61,\n        \"startingScore\": 0,\n        \"isDescending\": false\n    },\n    \"_id\": \"69fbdcce9d536389f1f24035\",\n    \"gameType\": \"Barsiga\",\n    \"status\": \"active\",\n    \"adminId\": \"69fbd5389d536389f1f23fbe\",\n    \"currentDealerIndex\": 0,\n    \"isTeamGame\": true,\n    \"players\": [\n        {\n            \"name\": \"ANTO\",\n            \"team\": \"A\",\n            \"score\": 13,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdcce9d536389f1f24036\"\n        },\n        {\n            \"name\": \"CARLOS\",\n            \"team\": \"B\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdcce9d536389f1f24037\"\n        },\n        {\n            \"name\": \"ESTEBAN\",\n            \"team\": \"A\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdcce9d536389f1f24038\"\n        },\n        {\n            \"name\": \"MARCOS\",\n            \"team\": \"B\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdcce9d536389f1f24039\"\n        }\n    ],\n    \"winner\": null,\n    \"rounds\": [],\n    \"tempCantos\": [\n        {\n            \"playerName\": \"ANTO\",\n            \"points\": 3,\n            \"_id\": \"69fbdd2f9d536389f1f2403e\"\n        },\n        {\n            \"playerName\": \"ANTO\",\n            \"points\": 10,\n            \"_id\": \"69fbdd479d536389f1f24044\"\n        }\n    ],\n    \"createdAt\": \"2026-05-07T00:29:02.011Z\",\n    \"updatedAt\": \"2026-05-07T00:31:03.018Z\",\n    \"__v\": 2\n}"
+                }
+              ]
+            },
+            {
+              "name": "Ver Juego",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/matches/{{matchId_Barsiga}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "matches",
+                    "{{matchId_Barsiga}}"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "200",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/matches/{{matchId_Barsiga}}",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "matches",
+                        "{{matchId_Barsiga}}"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "X-Powered-By",
+                      "value": "Express"
+                    },
+                    {
+                      "key": "Vary",
+                      "value": "Origin"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Credentials",
+                      "value": "true"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "939"
+                    },
+                    {
+                      "key": "ETag",
+                      "value": "W/\"3ab-Pr/MLlyRQZBWu12Cen8posBfhb8\""
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 07 May 2026 00:32:10 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"config\": {\n        \"limitScore\": 61,\n        \"startingScore\": 0,\n        \"isDescending\": false\n    },\n    \"_id\": \"69fbdcce9d536389f1f24035\",\n    \"gameType\": \"Barsiga\",\n    \"status\": \"active\",\n    \"adminId\": {\n        \"_id\": \"69fbd5389d536389f1f23fbe\",\n        \"username\": \"text-example\"\n    },\n    \"currentDealerIndex\": 0,\n    \"isTeamGame\": true,\n    \"players\": [\n        {\n            \"name\": \"ANTO\",\n            \"team\": \"A\",\n            \"score\": 13,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdcce9d536389f1f24036\"\n        },\n        {\n            \"name\": \"CARLOS\",\n            \"team\": \"B\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdcce9d536389f1f24037\"\n        },\n        {\n            \"name\": \"ESTEBAN\",\n            \"team\": \"A\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdcce9d536389f1f24038\"\n        },\n        {\n            \"name\": \"MARCOS\",\n            \"team\": \"B\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbdcce9d536389f1f24039\"\n        }\n    ],\n    \"winner\": null,\n    \"rounds\": [],\n    \"tempCantos\": [\n        {\n            \"playerName\": \"ANTO\",\n            \"points\": 3,\n            \"_id\": \"69fbdd2f9d536389f1f2403e\"\n        },\n        {\n            \"playerName\": \"ANTO\",\n            \"points\": 10,\n            \"_id\": \"69fbdd479d536389f1f24044\"\n        }\n    ],\n    \"createdAt\": \"2026-05-07T00:29:02.011Z\",\n    \"updatedAt\": \"2026-05-07T00:31:03.018Z\",\n    \"__v\": 2\n}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Burako",
+          "item": [
+            {
+              "name": "Crear Partida - Equipo",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const res = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Límite automático de Burako por equipos es 5000\", function () {\r",
+                      "    pm.expect(res.config.limitScore).to.eql(5000);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"gameType\": \"Burako\",\r\n    \"players\": [\r\n        { \"name\": \"A1\", \"team\": \"A\" }, { \"name\": \"B1\", \"team\": \"B\" },\r\n        { \"name\": \"A2\", \"team\": \"A\" }, { \"name\": \"B2\", \"team\": \"B\" }\r\n    ],\r\n    \"isTeamGame\": true\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/matches",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "matches"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "201",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"gameType\": \"Burako\",\r\n    \"players\": [\r\n        { \"name\": \"A1\", \"team\": \"A\" }, { \"name\": \"B1\", \"team\": \"B\" },\r\n        { \"name\": \"A2\", \"team\": \"A\" }, { \"name\": \"B2\", \"team\": \"B\" }\r\n    ],\r\n    \"isTeamGame\": true\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/matches",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "matches"
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "X-Powered-By",
+                      "value": "Express"
+                    },
+                    {
+                      "key": "Vary",
+                      "value": "Origin"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Credentials",
+                      "value": "true"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "758"
+                    },
+                    {
+                      "key": "ETag",
+                      "value": "W/\"2f6-ImMQwOJ3GWkK2zs5gbUDjfMKdlQ\""
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 07 May 2026 00:32:58 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"gameType\": \"Burako\",\n    \"status\": \"active\",\n    \"adminId\": \"69fbd5389d536389f1f23fbe\",\n    \"currentDealerIndex\": 0,\n    \"isTeamGame\": true,\n    \"config\": {\n        \"limitScore\": 5000,\n        \"startingScore\": 0,\n        \"isDescending\": false\n    },\n    \"players\": [\n        {\n            \"name\": \"A1\",\n            \"team\": \"A\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbddba9d536389f1f2404c\"\n        },\n        {\n            \"name\": \"B1\",\n            \"team\": \"B\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbddba9d536389f1f2404d\"\n        },\n        {\n            \"name\": \"A2\",\n            \"team\": \"A\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbddba9d536389f1f2404e\"\n        },\n        {\n            \"name\": \"B2\",\n            \"team\": \"B\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbddba9d536389f1f2404f\"\n        }\n    ],\n    \"winner\": null,\n    \"_id\": \"69fbddba9d536389f1f2404b\",\n    \"rounds\": [],\n    \"tempCantos\": [],\n    \"createdAt\": \"2026-05-07T00:32:58.512Z\",\n    \"updatedAt\": \"2026-05-07T00:32:58.512Z\",\n    \"__v\": 0\n}"
+                }
+              ]
+            },
+            {
+              "name": "Crear Partida - Individual",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const res = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Límite automático de Burako individual es 3000\", function () {\r",
+                      "    pm.expect(res.config.limitScore).to.eql(3000);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{auth_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"gameType\": \"Burako\",\r\n    \"players\": [\r\n        { \"name\": \"A1\"},\r\n        { \"name\": \"A2\"}\r\n    ],\r\n    \"isTeamGame\": false\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/matches",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "matches"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "201",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"gameType\": \"Burako\",\r\n    \"players\": [\r\n        { \"name\": \"A1\"},\r\n        { \"name\": \"A2\"}\r\n    ],\r\n    \"isTeamGame\": false\r\n}\r\n",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/matches",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "matches"
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": null,
+                  "header": [
+                    {
+                      "key": "X-Powered-By",
+                      "value": "Express"
+                    },
+                    {
+                      "key": "Vary",
+                      "value": "Origin"
+                    },
+                    {
+                      "key": "Access-Control-Allow-Credentials",
+                      "value": "true"
+                    },
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json; charset=utf-8"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "565"
+                    },
+                    {
+                      "key": "ETag",
+                      "value": "W/\"235-7/DUVumDdrCFKNYWBtohxANh7Fg\""
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 07 May 2026 00:33:29 GMT"
+                    },
+                    {
+                      "key": "Connection",
+                      "value": "keep-alive"
+                    },
+                    {
+                      "key": "Keep-Alive",
+                      "value": "timeout=5"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"gameType\": \"Burako\",\n    \"status\": \"active\",\n    \"adminId\": \"69fbd5389d536389f1f23fbe\",\n    \"currentDealerIndex\": 0,\n    \"isTeamGame\": false,\n    \"config\": {\n        \"limitScore\": 5000,\n        \"startingScore\": 0,\n        \"isDescending\": false\n    },\n    \"players\": [\n        {\n            \"name\": \"A1\",\n            \"team\": \"None\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbddd99d536389f1f24051\"\n        },\n        {\n            \"name\": \"A2\",\n            \"team\": \"None\",\n            \"score\": 0,\n            \"isOut\": false,\n            \"reengageCount\": 0,\n            \"_id\": \"69fbddd99d536389f1f24052\"\n        }\n    ],\n    \"winner\": null,\n    \"_id\": \"69fbddd99d536389f1f24050\",\n    \"rounds\": [],\n    \"tempCantos\": [],\n    \"createdAt\": \"2026-05-07T00:33:29.622Z\",\n    \"updatedAt\": \"2026-05-07T00:33:29.622Z\",\n    \"__v\": 0\n}"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{auth_token}}",
+            "type": "string"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              "pm.test(\"La estructura del Match es correcta\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData).to.be.an('object');\r",
+              "    pm.expect(jsonData).to.have.property('_id');\r",
+              "    pm.expect(jsonData).to.have.property('gameType');\r",
+              "    pm.expect(jsonData).to.have.property('players').that.is.an('array');\r",
+              "    pm.expect(jsonData).to.have.property('status');\r",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Stats",
+      "item": [
+        {
+          "name": "Estadisticas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Estructura de Stats válida\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "    pm.expect(res).to.have.property('winRate').that.is.a('number');\r",
+                  "    pm.expect(res.gameHistory).to.be.an('array');\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{auth_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/stats",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "stats"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/stats",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "stats"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "88"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"58-nzQcqO8yv5RNuGct5bLObnqHXiI\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 07 May 2026 00:34:08 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"totalPlayed\": 0,\n    \"won\": 0,\n    \"lost\": 0,\n    \"winRate\": 0,\n    \"favoriteGame\": \"Ninguno\",\n    \"gameHistory\": []\n}"
+            }
+          ]
+        }
+      ],
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{auth_token}}",
+            "type": "string"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Errors",
+      "item": [
+        {
+          "name": "Registro Email Duplicado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Rechaza email existente con 400\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "    pm.expect(pm.response.json().message).to.contain(\"ya existen\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"username\": \"text-example\",\r\n  \"email\": \"test@example.com\",\r\n  \"password\": \"password123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "400",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"username\": \"text-example\",\r\n  \"email\": \"test@example.com\",\r\n  \"password\": \"password123\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/auth/register",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "43"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"2b-T75ixNRnxV7+dADz8vOJW2aJ0vU\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 07 May 2026 00:34:45 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"El usuario o email ya existen\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Acceso sin Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Deniega acceso sin JWT con 401\", function () {\r",
+                  "    pm.response.to.have.status(401);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/matches",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "matches"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "401",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/matches",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "matches"
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "50"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"32-Y1hf5J39GPFm/RL432D9hj3N8Po\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 07 May 2026 00:34:59 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"No hay token, autorización denegada\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          "const jsonData = pm.response.json();\r",
+          "if (jsonData._id) {\r",
+          "    pm.environment.set(\"matchId\", jsonData._id);\r",
+          "}\r",
+          "\r",
+          "pm.test(\"Tiempo de respuesta aceptable\", function () {\r",
+          "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+          "});\r",
+          "\r",
+          "pm.test(\"El servidor no crasheó\", function () {\r",
+          "    pm.expect(pm.response.code).to.not.be.oneOf([500, 502, 503]);\r",
+          "});"
+        ]
+      }
+    }
+  ]
+}

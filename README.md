@@ -104,15 +104,24 @@ Todos los comandos pueden ejecutarse desde la raíz del monorepo:
 - `npm run lint`: Ejecuta el análisis estático de código con ESLint.
 - `npm run test`: Ejecuta las pruebas unitarias y de integración.
 
-## API y Automatización de Pruebas
+## Pruebas y QA (Postman)
 
-La API está documentada y lista para pruebas mediante una colección de **Postman** incluida en el directorio `/docs`.
+El proyecto incluye una suite de pruebas automatizadas para garantizar la integridad de las reglas de los juegos y la seguridad de los datos.
 
-### Características de la Colección:
+### Instrucciones de uso:
+1. Navega a la carpeta `docs/postman/`.
+2. Importa el archivo `el-porotero-v1.json` en tu Postman.
+3. Importa el ambiente `local-env.json` y asegúrate de tener seleccionada la variable `base_url`.
+4. **Flujo Automatizado**: 
+   - Ejecuta la petición `01. Auth / Login`. El script guardará el token JWT automáticamente.
+   - Ya puedes ejecutar cualquier petición de `Matches` o `Stats` sin configurar nada más.
 
-- **Scripts de Pre-solicitud**: Gestión automática de variables de entorno para JWT.
-- **Tests Automatizados**: Validación de esquemas de respuesta y códigos de estado HTTP.
-- **Flujos de Trabajo**: Encadenamiento de peticiones (Login -> Create Match -> Add Round).
+### Cobertura de Tests:
+- **Contratos de API**: Validación de esquemas JSON para coincidir con el paquete `shared`.
+- **Reglas de Juego**: Verificación de cálculos para Loba (acumulativo) y Mosca (descendente).
+- **Seguridad**: Verificación de middleware de protección en todas las rutas privadas.
+
+[Ejecutar en Postman](https://martian-eclipse-514495.postman.co/workspace/Team-Workspace~f2d65b89-0cb6-4194-8df8-5f8f94fde9ff/collection/27770697-40942fec-8cd9-466c-b149-905baa6270d0?action=share&source=copy-link&creator=27770697).
 
 ## Seguridad
 
@@ -123,8 +132,8 @@ La API está documentada y lista para pruebas mediante una colección de **Postm
 
 ## Despliegue
 
-La aplicación está preparada para ser desplegada en arquitecturas modernas (Docker, Vercel/Railway). Se recomienda el uso de un proxy inverso para la gestión del tráfico SSL y la terminación de certificados.
+La aplicación está preparada para ser desplegada en arquitecturas modernas (Docker, Vercel/Railway). 
 
 ---
 
-© 2026 El Porotero - Documentación técnica oficial.
+© 2026 El Porotero - Documentación técnica oficial - Antonela Borgogno.

@@ -1,0 +1,53 @@
+{
+    "name": "El Porotero - Local",
+    "values": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:3000/api",
+            "enabled": true
+        },
+        {
+            "key": "auth_token",
+            "value": "",
+            "type": "secret",
+            "enabled": true
+        },
+        {
+            "key": "matchId_Loba",
+            "value": "",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "matchId_Mosca",
+            "value": "",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "matchId_Truco",
+            "value": "",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "matchId_Truco_2/2",
+            "value": "",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "matchId_Truco_3/3",
+            "value": "",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "matchId_Barsiga",
+            "value": "",
+            "type": "default",
+            "enabled": true
+        }
+    ],
+    "_postman_variable_scope": "environment"
+}
