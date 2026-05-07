@@ -123,7 +123,7 @@
 }
 
 .input-player {
-    @apply bg-transparent flex-1 pl-3 py-2 outline-none uppercase;
+    @apply bg-transparent flex-1 py-2 outline-none uppercase;
 }
 
 .team-badge {
