@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useParams, useNavigate } from 'react-router-dom';
 import { MatchRoundModal, MatchHeader, MatchScoreboard, WinnerDisplay, ConfirmDialog, AddCantoModal } from '@/components';
 import { GAMES_MAP } from '@/constants';
@@ -30,81 +31,91 @@ export const MatchDetailPage = () => {
     };
 
     return (
-        <div className="match-page">
-            <MatchHeader
-                match={match}
-                onRefresh={refetch}
-                onAddRound={() => {
-                    setRoundToEdit(null);
-                    setIsModalOpen(true)
-                }}
-                icon={
-                    <div className={gameInfo.color}>
-                        {gameInfo.icon}
-                    </div>
-                } />
+        <>
+            <Helmet>
+                <title>El Porotero | Mis Partidas</title>
+                <meta name="description" content="Gestioná tus partidas de Truco, Loba y Bársiga en tiempo real." />
+                <meta property="og:title" content="El Porotero Online" />
+                <meta property="og:description" content="El anotador profesional para timbiar con amigos." />
+                <meta property="og:image" content="/og-image.jpg" /> {/* Imagen 1200x630px en public/ */}
+            </Helmet>
 
-            <main className="match-scroller">
-                {gameInfo.isDescending && (
-                    <div className="game-mode-banner">
-                        Modo Descendente: El primero en llegar a 0 gana
-                    </div>
-                )}
-
-                <MatchScoreboard
+            <div className="match-page">
+                <MatchHeader
                     match={match}
-                    onEditRound={(num) => { setRoundToEdit(num); setIsModalOpen(true); }}
-                    onDeleteRound={setRoundToDelete}
-                    onReengage={(name) => actions.reengage.mutate(name)}
-                    onCantar={setCantoPlayer}
+                    onRefresh={refetch}
+                    onAddRound={() => {
+                        setRoundToEdit(null);
+                        setIsModalOpen(true)
+                    }}
+                    icon={
+                        <div className={gameInfo.color}>
+                            {gameInfo.icon}
+                        </div>
+                    } />
+
+                <main className="match-scroller">
+                    {gameInfo.isDescending && (
+                        <div className="game-mode-banner">
+                            Modo Descendente: El primero en llegar a 0 gana
+                        </div>
+                    )}
+
+                    <MatchScoreboard
+                        match={match}
+                        onEditRound={(num) => { setRoundToEdit(num); setIsModalOpen(true); }}
+                        onDeleteRound={setRoundToDelete}
+                        onReengage={(name) => actions.reengage.mutate(name)}
+                        onCantar={setCantoPlayer}
+                    />
+
+                    <div className="h-3" />
+                </main>
+
+                <ConfirmDialog
+                    isOpen={roundToDelete !== null}
+                    onClose={() => setRoundToDelete(null)}
+                    onConfirm={() => {
+                        actions.deleteRound.mutate(roundToDelete!);
+                        setRoundToDelete(null);
+                    }}
+                    title="¿Borrar ronda?"
+                    description={`Se eliminará la ronda ${roundToDelete} y se recalcularán los puntos.`}
                 />
 
-                <div className="h-3" />
-            </main>
+                {match.status === 'finished' && (
+                    <WinnerDisplay winner={match.winner} handleRevancha={handleRevancha} match={match} />
+                )}
 
-            <ConfirmDialog
-                isOpen={roundToDelete !== null}
-                onClose={() => setRoundToDelete(null)}
-                onConfirm={() => {
-                    actions.deleteRound.mutate(roundToDelete!);
-                    setRoundToDelete(null);
-                }}
-                title="¿Borrar ronda?"
-                description={`Se eliminará la ronda ${roundToDelete} y se recalcularán los puntos.`}
-            />
+                <MatchRoundModal
+                    key={roundToEdit ? `edit-${roundToEdit}` : 'new-round'}
+                    isOpen={isModalOpen}
+                    onClose={() => {
+                        setIsModalOpen(false);
+                        setRoundToEdit(null);
+                    }}
+                    match={match}
+                    roundToEdit={roundToEdit}
+                    onSuccess={() => {
+                        setIsModalOpen(false);
+                        setRoundToEdit(null);
+                    }}
+                />
 
-            {match.status === 'finished' && (
-                <WinnerDisplay winner={match.winner} handleRevancha={handleRevancha} match={match} />
-            )}
-
-            <MatchRoundModal
-                key={roundToEdit ? `edit-${roundToEdit}` : 'new-round'}
-                isOpen={isModalOpen}
-                onClose={() => {
-                    setIsModalOpen(false);
-                    setRoundToEdit(null);
-                }}
-                match={match}
-                roundToEdit={roundToEdit}
-                onSuccess={() => {
-                    setIsModalOpen(false);
-                    setRoundToEdit(null);
-                }}
-            />
-
-            <AddCantoModal
-                isOpen={!!cantoPlayer}
-                onClose={() => setCantoPlayer(null)}
-                playerName={cantoPlayer}
-                onConfirm={(points) => {
-                    if (cantoPlayer) {
-                        actions.addCanto.mutate({
-                            playerName: cantoPlayer,
-                            points
-                        });
-                    }
-                }}
-            />
-        </div>
+                <AddCantoModal
+                    isOpen={!!cantoPlayer}
+                    onClose={() => setCantoPlayer(null)}
+                    playerName={cantoPlayer}
+                    onConfirm={(points) => {
+                        if (cantoPlayer) {
+                            actions.addCanto.mutate({
+                                playerName: cantoPlayer,
+                                points
+                            });
+                        }
+                    }}
+                />
+            </div>
+        </>
     );
 };

@@ -39,7 +39,7 @@ export const WinnerDisplay = ({ winner, handleRevancha, match }: WinnerDisplayPr
             </div>
 
             <Button
-                variant="ghost"
+                variant="secondary"
                 className="btn-rematch"
                 onClick={() => handleRevancha(match)}
             >

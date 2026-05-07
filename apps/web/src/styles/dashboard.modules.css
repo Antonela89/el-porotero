@@ -4,7 +4,7 @@
 }
 
 .dashboard-header {
-    @apply flex flex-col justify-center items-center w-full py-8;
+    @apply flex flex-col justify-center items-center w-full;
 }
 
 .dashboard-welcome {

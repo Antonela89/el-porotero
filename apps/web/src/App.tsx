@@ -2,7 +2,7 @@ import { AuthProvider } from '@/context/AuthProvider';
 import { AppRouter } from '@/routes/AppRouter';
 import { Toaster } from 'sonner';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+// import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { handleApiError } from '@/utils'
 import './index.css';
 
@@ -26,7 +26,7 @@ function App() {
         <AppRouter />
         <Toaster position="top-center" expand={true} richColors theme="dark" />
       </AuthProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </QueryClientProvider>
   );
 }

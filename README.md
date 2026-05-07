@@ -54,6 +54,17 @@ Este repositorio utiliza una estructura de **Monorepo** gestionada a través de 
 - **Dynamic Viewport Height**: Uso de `h-dvh` para garantizar que los botones de acción (como "Confirmar Ronda") siempre estén visibles, independientemente de la barra de navegación del navegador o el teclado en pantalla.
 - **Pureza de Diseño**: Interfaz optimizada para una resolución base de 360px, con iniciales de jugadores calculadas dinámicamente (`getShortName`) para evitar el desbordamiento horizontal en mesas de hasta 6 integrantes.
 
+## Galería de Interfaz
+
+| Acceso Seguro | Historial de Partidas | Nuevo Juego | Anotador de Uno |
+| :---: | :---: | :---: | :---: |
+| <img src="./docs/screenshots/login.png" width="200" /> | <img src="./docs/screenshots/dashboard.png" width="200" /> | <img src="./docs/screenshots/new-match.png" width="200" /> | <img src="./docs/screenshots/match.png" width="200" /> |
+
+### Detalles de Diseño
+- **Paleta de Colores**: Concepto *Bodegón Nocturno* (Oscuros profundos con acentos en Amarillo Poroto).
+- **Responsive Pro**: Optimizado específicamente para resoluciones de 320px (iPhone SE) hasta 4K.
+- **Micro-interacciones**: Feedback háptico visual mediante escalado de componentes en estados activos
+
 ## Instalación y Configuración
 
 ### Requisitos Previos
@@ -121,7 +132,8 @@ El proyecto incluye una suite de pruebas automatizadas para garantizar la integr
 - **Reglas de Juego**: Verificación de cálculos para Loba (acumulativo) y Mosca (descendente).
 - **Seguridad**: Verificación de middleware de protección en todas las rutas privadas.
 
-[Ejecutar en Postman](https://martian-eclipse-514495.postman.co/workspace/Team-Workspace~f2d65b89-0cb6-4194-8df8-5f8f94fde9ff/collection/27770697-40942fec-8cd9-466c-b149-905baa6270d0?action=share&source=copy-link&creator=27770697).
+[Ejecutar en Postman](https://martian-eclipse-514495.postman.co/workspace/Team-Workspace~f2d65b89-0cb6-4194-8df8-5f8f94fde9ff/collection/27770697-40942fec-8cd9-466c-b149-905baa6270d0?action=share&source=copy-link&creator=27770697)
+[Documentacion On-Line](https://martian-eclipse-514495.docs.buildwithfern.com/el-porotero/auth/login)
 
 ## Seguridad
 

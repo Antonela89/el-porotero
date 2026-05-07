@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { IconButton, Button, GameSelector, Input } from '@/components';
 import { X, UserPlus, Play, Users, Edit2, Check } from 'lucide-react';
@@ -37,127 +38,138 @@ export const NewMatchPage = () => {
     };
 
     return (
-        <div className="new-match-layout">
-            <header className="new-match-header">
-                <h1>Nueva Mesa</h1>
-                <IconButton icon={<X size={20} />} title="Cerrar" onClick={() => navigate('/')} />
-            </header>
+        <>
+            <Helmet>
+                <title>El Porotero | Mis Partidas</title>
+                <meta name="description" content="Gestioná tus partidas de Truco, Loba y Bársiga en tiempo real." />
+                <meta property="og:title" content="El Porotero Online" />
+                <meta property="og:description" content="El anotador profesional para timbiar con amigos." />
+                <meta property="og:image" content="/og-image.jpg" /> {/* Imagen 1200x630px en public/ */}
+            </Helmet>
 
-            <main className="new-match-main">
-                {/* Selector de Juego */}
-                <section className="new-match-section">
-                    <label className="label-caps">Juego</label>
-                    <GameSelector value={gameType} onChange={(val) => updateGame(val as GameType)} />
-                </section>
+            <div className="new-match-layout">
+                <header className="new-match-header">
+                    <h1>Nueva Mesa</h1>
+                    <IconButton icon={<X size={20} />} title="Cerrar" onClick={() => navigate('/')} />
+                </header>
 
-                {/* Selector de Límite (Loba/Chinchón) */}
-                {hasLimitOptions && (
+                <main className="new-match-main">
+                    {/* Selector de Juego */}
                     <section className="new-match-section">
-                        <label className="label-caps">Límite de Puntos</label>
-                        <div className="limit-selector-group">
-                            {[100, 101].map(val => (
-                                <button
-                                    key={val}
-                                    onClick={() => setLimitScore(val)}
-                                    className={`limit-btn ${limitScore === val ? 'active' : ''}`}
-                                >
-                                    {val} PUNTOS
-                                </button>
-                            ))}
-                        </div>
+                        <label className="label-caps">Juego</label>
+                        <GameSelector value={gameType} onChange={(val) => updateGame(val as GameType)} />
                     </section>
-                )}
 
-                {isTeamGame && (
-                    <div className="info-box py-3 flex items-center justify-center gap-2">
-                        <Users size={14} />
-                        PARTIDA POR EQUIPOS (INTERCALADO)
-                    </div>
-                )}
-
-                {/* Lista de Jugadores */}
-                <section className="new-match-section">
-                    <label className="label-caps">Integrantes ({players.length}/{currentGame?.maxPlayers || 6})</label>
-                    <div className="player-list-container">
-                        {players.length === 0 ? (
-                            <div className="empty-table-placeholder">
-                                <Users size={32} />
-                                <p>Mesa vacía</p>
+                    {/* Selector de Límite (Loba/Chinchón) */}
+                    {hasLimitOptions && (
+                        <section className="new-match-section">
+                            <label className="label-caps">Límite de Puntos</label>
+                            <div className="limit-selector-group">
+                                {[100, 101].map(val => (
+                                    <button
+                                        key={val}
+                                        onClick={() => setLimitScore(val)}
+                                        className={`limit-btn ${limitScore === val ? 'active' : ''}`}
+                                    >
+                                        {val} PUNTOS
+                                    </button>
+                                ))}
                             </div>
-                        ) : (
-                            players.map((p, i) => (
-                                <div key={i} className="player-row-card">
-                                    <div>
-                                        <span className="player-number">{i + 1}</span>
-                                        {editingIndex === i ? (
-                                            <Input
-                                                autoFocus
-                                                value={tempEditName}
-                                                containerClassName="flex-1"
-                                                className="player-edit-input"
-                                                onChange={e => setTempEditName(e.target.value)}
-                                                onKeyDown={e => e.key === 'Enter' && handleSaveEdit(i)}
-                                            />
-                                        ) : (
-                                            <div className="player-row">
-                                                <span className="player-row-name">{p.name}</span>
-                                                {p.team !== 'None' && (
-                                                    <span className={`team-badge team-${p.team.toLowerCase()}`}>
-                                                        EQ {p.team}
-                                                    </span>
-                                                )}
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div className="player-row-actions">
-                                        {editingIndex === i ? (
-                                            <IconButton icon={<Check size={16} />} variant="primary" title="Guardar" onClick={() => handleSaveEdit(i)} />
-                                        ) : (
-                                            <IconButton icon={<Edit2 size={16} />} variant="info" title="Editar" onClick={() => { setEditingIndex(i); setTempEditName(p.name); }} />
-                                        )}
-                                        <IconButton icon={<X size={16} />} variant="danger" title="Quitar" onClick={() => removePlayer(i)} />
-                                    </div>
+                        </section>
+                    )}
+
+                    {isTeamGame && (
+                        <div className="info-box py-3 flex items-center justify-center gap-2">
+                            <Users size={14} />
+                            PARTIDA POR EQUIPOS (INTERCALADO)
+                        </div>
+                    )}
+
+                    {/* Lista de Jugadores */}
+                    <section className="new-match-section">
+                        <label className="label-caps">Integrantes ({players.length}/{currentGame?.maxPlayers || 6})</label>
+                        <div className="player-list-container">
+                            {players.length === 0 ? (
+                                <div className="empty-table-placeholder">
+                                    <Users size={32} />
+                                    <p>Mesa vacía</p>
                                 </div>
-                            ))
-                        )}
-                    </div>
-                </section>
-            </main>
+                            ) : (
+                                players.map((p, i) => (
+                                    <div key={i} className="player-row-card">
+                                        <div>
+                                            <span className="player-number">{i + 1}</span>
+                                            {editingIndex === i ? (
+                                                <Input
+                                                    autoFocus
+                                                    value={tempEditName}
+                                                    containerClassName="flex-1"
+                                                    className="player-edit-input"
+                                                    onChange={e => setTempEditName(e.target.value)}
+                                                    onKeyDown={e => e.key === 'Enter' && handleSaveEdit(i)}
+                                                />
+                                            ) : (
+                                                <div className="player-row">
+                                                    <span className="player-row-name">{p.name}</span>
+                                                    {p.team !== 'None' && (
+                                                        <span className={`team-badge team-${p.team.toLowerCase()}`}>
+                                                            EQ {p.team}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="player-row-actions">
+                                            {editingIndex === i ? (
+                                                <IconButton icon={<Check size={16} />} variant="primary" title="Guardar" onClick={() => handleSaveEdit(i)} />
+                                            ) : (
+                                                <IconButton icon={<Edit2 size={16} />} variant="info" title="Editar" onClick={() => { setEditingIndex(i); setTempEditName(p.name); }} />
+                                            )}
+                                            <IconButton icon={<X size={16} />} variant="danger" title="Quitar" onClick={() => removePlayer(i)} />
+                                        </div>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                        <div className='h-30'></div>
+                    </section>
+                </main>
 
-            <footer className="new-match-footer">
-                {canAddMore ? (
-                    <div className="player-input-row">
-                        <Input
-                            placeholder="Sumar jugador..."
-                            className="input-player"
-                            value={playerName}
-                            onChange={e => setPlayerName(e.target.value)}
-                            onKeyDown={e => e.key === 'Enter' && playerName.trim() && (addPlayer(playerName), setPlayerName(''))}
-                        />
-                        <IconButton
-                            icon={<UserPlus size={20} />}
-                            variant="primary"
-                            title="Sumar"
-                            onClick={() => { if (playerName.trim()) { addPlayer(playerName); setPlayerName(''); } }}
-                            disabled={!playerName.trim()}
-                        />
-                    </div>
-                ) : (
-                    <div className="warning-box">
-                        Mesa completa para {gameType}
-                    </div>
-                )}
+                <footer className="new-match-footer">
+                    {canAddMore ? (
+                        <div className="player-input-row">
+                            <Input
+                                placeholder="Sumar jugador..."
+                                className="input-player"
+                                value={playerName}
+                                onChange={e => setPlayerName(e.target.value)}
+                                onKeyDown={e => e.key === 'Enter' && playerName.trim() && (addPlayer(playerName), setPlayerName(''))}
+                            />
+                            <IconButton
+                                icon={<UserPlus size={20} />}
+                                variant="primary"
+                                title="Sumar"
+                                onClick={() => { if (playerName.trim()) { addPlayer(playerName); setPlayerName(''); } }}
+                                disabled={!playerName.trim()}
+                            />
+                        </div>
+                    ) : (
+                        <div className="warning-box">
+                            Mesa completa para {gameType}
+                        </div>
+                    )}
 
-                <Button
-                    onClick={() => createMatch({ gameType, players: players.map((p, i) => ({ ...p, position: i })), limitScore, isTeamGame })}
-                    disabled={!isPlayerCountValid || isPending}
-                    loading={isPending}
-                    className="w-full py-5!"
-                >
-                    <Play size={20} fill="currentColor" />
-                    {isPlayerCountValid ? `¡A Jugar! (${limitScore} pts)` : 'Esperando jugadores...'}
-                </Button>
-            </footer>
-        </div>
+                    <Button
+                        onClick={() => createMatch({ gameType, players: players.map((p, i) => ({ ...p, position: i })), limitScore, isTeamGame })}
+                        disabled={!isPlayerCountValid || isPending}
+                        loading={isPending}
+                        className="w-full"
+                    >
+                        <Play size={20} fill="currentColor" />
+                        {isPlayerCountValid ? `¡A Jugar! (${limitScore} pts)` : 'Esperando jugadores...'}
+                    </Button>
+                </footer>
+            </div>
+        </>
     );
 };
