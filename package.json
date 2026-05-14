@@ -4,15 +4,12 @@
   "description": "",
   "main": "apps/api/dist/server.js",
   "scripts": {
-    "dev:api": "npm run dev -w api",
-    "dev:web": "npm run dev -w web",
-    "dev": "concurrently \"npm run dev:api\" \"npm run dev:web\"",
-    "build:shared": "npm run build -w @el-porotero/shared",
-    "build:web": "npm run build:shared && npm run build -w web",
-    "build:api": "npm run build:shared && npm run build -w api",
-    "build": "npm run build:api",
+    "dev": "pnpm -r --parallel dev",
+    "build": "pnpm -r build",
+    "build:web": "pnpm --filter @el-porotero/shared build && pnpm --filter web build",
+    "build:api": "pnpm --filter @el-porotero/shared build && pnpm --filter api build",
     "start": "node apps/api/dist/server.js",
-    "clean": "rm -rf node_modules apps/*/node_modules packages/*/node_modules apps/*/dist packages/*/dist"
+    "clean": "pnpm -r exec rm -rf node_modules dist .vite"
   },
   "repository": {
     "type": "git",
@@ -28,7 +25,6 @@
   "homepage": "https://github.com/Antonela89/el-porotero#readme",
   "devDependencies": {
     "@types/node": "^25.6.0",
-    "concurrently": "^9.2.1",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3"
   }
