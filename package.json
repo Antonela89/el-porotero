@@ -3,10 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "apps/api/dist/server.js",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "scripts": {
     "dev:api": "npm run dev -w api",
     "dev:web": "npm run dev -w web",
