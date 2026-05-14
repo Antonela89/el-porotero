@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams, useNavigate } from 'react-router-dom';
-import { MatchRoundModal, MatchHeader, MatchScoreboard, WinnerDisplay, ConfirmDialog, AddCantoModal } from '@/components';
+import { MatchRoundModal, MatchHeader, MatchScoreboard, WinnerDisplay, ConfirmDialog, AddCantoModal, AddPointsFAB, LoadingSpinner } from '@/components';
 import { GAMES_MAP } from '@/constants';
 import { useMatch, useMatchActions } from '@/hooks';
 import { IMatch } from '@el-porotero/shared';
@@ -22,7 +22,8 @@ export const MatchDetailPage = () => {
 
     const gameInfo = match ? GAMES_MAP[match.gameType] : null;
 
-    if (loading || !match || !gameInfo) return <div className="p-20 text-center animate-pulse">Cargando partida...</div>;
+    if (loading || !gameInfo) return <LoadingSpinner />;
+    if (!match) return <div className="p-20 text-center">Partida no encontrada.</div>;
 
     const handleRevancha = (m: IMatch) => {
         navigate('/new-match', {
@@ -44,17 +45,13 @@ export const MatchDetailPage = () => {
                 <MatchHeader
                     match={match}
                     onRefresh={refetch}
-                    onAddRound={() => {
-                        setRoundToEdit(null);
-                        setIsModalOpen(true)
-                    }}
                     icon={
                         <div className={gameInfo.color}>
                             {gameInfo.icon}
                         </div>
                     } />
 
-                <main className="flex-1 pb-24">
+                <main className="flex-1 overflow-y-auto px-4 pt-16 pb-28">
                     {gameInfo.isDescending && (
                         <div className="game-mode-banner">
                             Modo Descendente
@@ -114,6 +111,11 @@ export const MatchDetailPage = () => {
                     }}
                 />
             </div>
+
+            <AddPointsFAB
+                isVisible={match.status === 'active'}
+                onClick={() => { setRoundToEdit(null); setIsModalOpen(true); }}
+            />
         </>
     );
 };

@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@import "./styles/theme.modules.css";
+@import "./styles/theme.module.css";
 
 /* Base de botones */
 @utility btn-base {
@@ -130,12 +130,12 @@
 }
 
 @layer components {
-    @import "./styles/ui.modules.css";
-    @import "./styles/layout.modules.css";
-    @import "./styles/auth.modules.css";
-    @import "./styles/dashboard.modules.css";
-    @import "./styles/newMatch.modules.css";
-    @import "./styles/match.modules.css";
-    @import "./styles/scoreInputs.modules.css";
-    @import "./styles/stats.modules.css";
+    @import "./styles/ui.module.css";
+    @import "./styles/layout.module.css";
+    @import "./styles/auth.module.css";
+    @import "./styles/dashboard.module.css";
+    @import "./styles/newMatch.module.css";
+    @import "./styles/match.module.css";
+    @import "./styles/scoreInputs.module.css";
+    @import "./styles/stats.module.css";
 }

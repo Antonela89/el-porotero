@@ -89,7 +89,7 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
             {match.rounds.length > 0 && (
                 <button
                     onClick={() => setIsHistoryOpen(true)}
-                    className="flex items-center justify-between w-full p-4 mt-2 bg-slate-800/50 rounded-2xl border border-slate-700/50 text-slate-400 active:scale-[0.98] transition-all"
+                    className="history-trigge"
                 >
                     <div className="flex items-center gap-3">
                         <div className="p-2 bg-slate-700 rounded-lg">

@@ -30,8 +30,8 @@ export const AppRouter = () => {
                         <Route path="/" element={<DashboardPage />} />
                         <Route path="/stats" element={<StatsPage />} />
                         <Route path="/new-match" element={<NewMatchPage />} />
-                        <Route path="/match/:id" element={<MatchDetailPage />} />
                     </Route>
+                    <Route path="/match/:id" element={<MatchDetailPage />} />
                 </Route>
 
                 {/* Fallback */}

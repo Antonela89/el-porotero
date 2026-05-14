@@ -18,11 +18,15 @@
 
 /* --- HEADER DE PARTIDA --- */
 .match-header {
-    @apply flex w-full items-center justify-between mb-4 px-4 py-2;
+    @apply bg-background flex fixed top-0 w-full items-center justify-between px-4 py-2 border-b border-white/5;
 }
 
-.header-info {
-    @apply flex flex-col justify-center items-center gap-1;
+.header-info-center {
+    @apply flex flex-1 justify-center items-center gap-1 px-2;
+}
+
+.header-title-col {
+    @apply flex flex-col justify-center items-center gap-0.5;
 
     & .limit-label {
         @apply text-[10px] text-text-muted font-bold uppercase tracking-tighter;
@@ -312,4 +316,87 @@
 
 .label-mini {
     @apply text-[10px] text-text-muted mb-1 block uppercase font-black tracking-widest;
+}
+
+/* --- SCOREBOARD V2 LAYOUT --- */
+.scoreboard-wrapper {
+    @apply flex flex-col gap-4 p-4 pb-20;
+}
+
+/* Grilla para modo individual */
+.player-grid {
+    @apply grid grid-cols-2 gap-3;
+}
+
+/* Stack para modo equipos */
+.team-stack {
+    @apply flex flex-col gap-4;
+}
+
+/* --- CARDS DE JUGADOR --- */
+.player-card {
+    @apply bg-surface border border-white/5 rounded-[2rem] p-5 flex flex-col relative;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+}
+
+.player-card-header {
+    @apply flex justify-between items-start mb-1;
+}
+
+.player-card-name {
+    @apply text-[10px] font-black uppercase tracking-widest text-text-muted;
+}
+
+.player-card-score {
+    @apply text-5xl font-display font-black leading-none my-1 text-text-main;
+}
+
+.player-card-status {
+    @apply text-[9px] font-bold uppercase tracking-tighter mt-2 py-1 px-2 rounded-lg bg-white/5 self-start;
+}
+
+/* --- CARDS DE EQUIPO --- */
+.team-card {
+    @apply bg-surface border-l-4 rounded-[2rem] overflow-hidden flex flex-col;
+    border-color: var(--team-accent);
+}
+
+.team-card-header {
+    @apply px-5 py-3 flex justify-between items-center bg-white/[0.02] border-b border-white/5;
+}
+
+.team-info {
+    @apply w-full flex flex-col;
+}
+
+.team-label {
+    @apply text-[10px] font-black uppercase tracking-widest;
+    color: var(--team-accent);
+}
+
+.team-score-big {
+    @apply text-5xl font-display font-black leading-none text-text-main;
+}
+
+.team-players-footer {
+    @apply p-4 flex justify-around items-center bg-white/[0.01];
+}
+
+/* --- HISTORIAL (DRAWER) --- */
+.history-trigger {
+    @apply btn-base bg-surface border border-white/5 p-4 text-text-muted mt-2;
+}
+
+.history-drawer {
+    @apply fixed bottom-0 left-0 right-0 bg-surface z-50 rounded-t-[2.5rem] border-t border-white/10 flex flex-col;
+    height: 75dvh;
+    box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.5);
+}
+
+.drawer-overlay {
+    @apply fixed inset-0 bg-background/80 backdrop-blur-sm z-40;
+}
+
+.drawer-handle {
+    @apply w-12 h-1.5 bg-white/10 rounded-full mx-auto my-4 shrink-0;
 }

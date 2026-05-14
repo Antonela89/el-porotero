@@ -14,6 +14,7 @@ export * from './match/MesaPointsSelector';
 export * from './match/PlayerScoreCard';
 export * from './match/HistoryDrawer';
 export * from './match/TeamScoreCard';
+export * from './match/AddPointsFAB';
 
 // Componentes atómicos
 export * from './UI/IconButton';

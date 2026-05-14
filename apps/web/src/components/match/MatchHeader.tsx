@@ -1,75 +1,82 @@
 import { useState } from 'react';
 import { IMatch } from '@el-porotero/shared';
-import { RotateCcw, XCircle, Plus } from 'lucide-react';
+import { MoreVertical, ArrowLeft, RotateCcw, Trash2 } from 'lucide-react';
 import { IconButton, ConfirmDialog } from '@/components';
+import { useNavigate } from 'react-router-dom';
 import { useMatchActions } from '@/hooks';
 
 type MatchHeaderProps = {
     match: IMatch;
     onRefresh: () => void;
-    onAddRound: () => void;
     icon: React.ReactNode;
 }
 
-export const MatchHeader = ({ match, onRefresh, onAddRound, icon }: MatchHeaderProps) => {
+export const MatchHeader = ({ match, onRefresh, icon }: MatchHeaderProps) => {
     const { cancelMatch } = useMatchActions(match._id!);
     const [showCancelModal, setShowCancelModal] = useState(false);
+    const [showMenu, setShowMenu] = useState(false);
+    const navigate = useNavigate();
 
     const handleConfirmCancel = () => {
         cancelMatch.mutate();
-        setShowCancelModal(true);
+        setShowCancelModal(false);
     };
 
     return (
         <header className="match-header">
-            {/* Información Central */}
-            <div className="header-info">
-                <div className='flex gap-2'>
-                    {icon}
+            <IconButton
+                icon={<ArrowLeft size={22} />}
+                variant="ghost"
+                onClick={() => navigate('/dashboard')}
+                title="Volver"
+            />
+            <div className="header-info-center">
+                {icon}
+                <div className='header-title-col'>
                     <span className="text-lg">{match.gameType}</span>
+                    <span className='limit-label'>
+                        {match.gameType === 'Mosca'
+                            ? 'OBJETIVO: 0 PTS'
+                            : `LÍMITE: ${match.config.limitScore} PTS`
+                        }
+                    </span>
                 </div>
-                <span className='limit-label'>
-                    {match.gameType === 'Mosca'
-                        ? 'OBJETIVO: 0 PTS'
-                        : `LÍMITE: ${match.config.limitScore} PTS`
-                    }
-                </span>
             </div>
 
             {/* Acciones */}
             <div className="header-actions">
-                {match.status === 'active' && (
-                    <>
-                        <IconButton
-                            icon={<Plus size={20} />}
-                            variant="primary"
-                            title="Anotar Ronda"
-                            onClick={onAddRound}
-                        />
-                        <IconButton
-                            icon={<XCircle size={20} />}
-                            variant="danger"
-                            title="Cancelar Partida"
-                            onClick={() => setShowCancelModal(true)}
-                            disabled={cancelMatch.isPending}
-                        />
-                    </>
-                )}
                 <IconButton
-                    variant='secondary'
                     icon={<RotateCcw size={20} />}
-                    title="Refrescar Puntajes"
                     onClick={onRefresh}
-                />
-            </div>
+                    variant="ghost"
+                    title="Cargar Ronda"
 
+                />
+                <IconButton
+                    icon={<MoreVertical size={20} />}
+                    variant="ghost"
+                    onClick={() => setShowMenu(!showMenu)}
+                    title="Opciones"
+                />
+
+                {showMenu && (
+                    <div className="absolute right-0 mt-2 w-48 bg-surface border border-white/10 rounded-xl shadow-xl z-50 p-2">
+                        <button
+                            className="flex items-center gap-2 w-full p-3 text-sm text-rose-400 font-bold"
+                            onClick={() => { setShowCancelModal(true); setShowMenu(false); }}
+                        >
+                            <Trash2 size={16} /> Cancelar Partida
+                        </button>
+                    </div>
+                )}
+            </div>
 
             <ConfirmDialog
                 isOpen={showCancelModal}
                 onClose={() => setShowCancelModal(false)}
                 onConfirm={handleConfirmCancel}
-                title="¿Borrar Partida?"
-                description="Esta acción no se puede deshacer."
+                title="Cancelar Partida?"
+                description="Se perderá el progreso actual. Esta acción no se puede deshacer."
             />
         </header>
     );
