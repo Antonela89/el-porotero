@@ -1,8 +1,9 @@
-import { Trash2, Edit2, Asterisk } from 'lucide-react';
-import { AnimatePresence } from 'framer-motion';
-import { IMatch, IRound } from '@el-porotero/shared';
-import { useTrucoLogic } from '@/hooks';
-import { IconButton, Button, PlayerHeader, TrucoTotalCell, TeamHeader } from '@/components';
+import { useState } from 'react';
+import { History, ChevronUp } from 'lucide-react';
+// import { AnimatePresence, motion } from 'framer-motion';
+import { IMatch } from '@el-porotero/shared';
+// import { useTrucoLogic } from '@/hooks';
+import { PlayerScoreCard, HistoryDrawer, TeamScoreCard } from '@/components';
 
 interface MatchScoreboardProps {
     match: IMatch;
@@ -13,153 +14,107 @@ interface MatchScoreboardProps {
 }
 
 export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage, onCantar }: MatchScoreboardProps) => {
-    const { getStatus } = useTrucoLogic(match);
+    const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+    // const { getStatus } = useTrucoLogic(match);
     const allPlayerNames = match.players.map(p => p.name);
 
-    const isLoseOnLimit = ['Loba', 'Chinchon'].includes(match.gameType);
-    const limitLabel = isLoseOnLimit ? 'Para Salir' : 'Para Ganar';
+    const isLoseOnLimit = ['Loba', 'Chinchon', 'Uno'].includes(match.gameType);
+    // const limitLabel = isLoseOnLimit ? 'Para Salir' : 'Para Ganar';
     const isTeamLayout = match.isTeamGame || match.gameType === 'Truco';
     const isMosca = match.gameType === 'Mosca';
-    const isTruco = match.gameType === 'Truco';
+    // const isTruco = match.gameType === 'Truco';
 
     const sombreroIndex = (isMosca && match.players.length === 5)
         ? (match.currentDealerIndex + 1) % match.players.length : -1;
 
     // Helpers
-    const sumTeamRound = (round: IRound, team: 'A' | 'B') =>
-        round.scores.filter(s => match.players.find(p => p.name === s.playerName)?.team === team)
-            .reduce((acc, s) => acc + (s.pointsAdded || 0), 0);
+    // const sumTeamRound = (round: IRound, team: 'A' | 'B') =>
+    //     round.scores.filter(s => match.players.find(p => p.name === s.playerName)?.team === team)
+    //         .reduce((acc, s) => acc + (s.pointsAdded || 0), 0);
 
     return (
-        <main className="scoreboard-container">
-            <table className="scoreboard-table">
-                <thead>
-                    <tr className="score-header-row">
-                        <th className="sticky-round-col">Ronda</th>
-                        <AnimatePresence>
+        <main className="p-4 flex flex-col gap-4">
+            {/* 1. SECCIÓN DE PUNTAJES (Cards) */}
+            <div className={isTeamLayout ? "flex flex-col gap-4" : "grid grid-cols-2 gap-3"}>
+                {isTeamLayout ? (
+                    // --- MODO EQUIPOS ---
+                    ['A', 'B'].map(t => {
+                        const teamPlayers = match.players
+                            .map((p, i) => ({ ...p, globalIndex: i }))
+                            .filter(p => p.team === t)
+                            .map(p => ({
+                                name: p.name,
+                                isDealer: p.globalIndex === match.currentDealerIndex
+                            }));
 
-                            {isTeamLayout ? (
-                                // --- MODO EQUIPOS CON DEALER INDIVIDUAL ---
-                                ['A', 'B'].map((t) => {
-                                    const teamPlayers = match.players.filter(p => p.team === t);
-                                    // Mapeamos los jugadores del equipo para saber quién reparte
-                                    const playersWithDealerStatus = teamPlayers.map(p => ({
-                                        name: p.name,
-                                        isDealer: match.players.indexOf(p) === match.currentDealerIndex
-                                    }));
+                        const teamTotalScore = match.players
+                            .filter(p => p.team === t)
+                            .reduce((acc, p) => acc + p.score, 0);
 
-                                    return (
-                                        <TeamHeader
-                                            key={t}
-                                            allNames={allPlayerNames}
-                                            teamId={t as 'A' | 'B'}
-                                            players={playersWithDealerStatus}
-                                            color={t === 'A' ? 'text-indigo-400' : 'text-rose-400'}
-                                            showCantar={match.gameType === 'Barsiga' && match.status === 'active'}
-                                            onCantar={onCantar}
-                                        />
-                                    );
-                                })
-                            ) : (
-                                // --- MODO INDIVIDUAL ---
-                                match.players.map((p, i) => (
-                                    <PlayerHeader
-                                        key={p.name}
-                                        name={p.name}
-                                        allNames={allPlayerNames}
-                                        isDealer={i === match.currentDealerIndex}
-                                        isSombrero={i === sombreroIndex}
-                                        showCantar={match.gameType === 'Barsiga' && match.status === 'active'}
-                                        onCantar={() => onCantar(p.name)}
-                                    />
-                                ))
-                            )}
-                        </AnimatePresence>
-                    </tr>
-                </thead>
+                        return (
+                            <TeamScoreCard
+                                key={t}
+                                teamId={t as 'A' | 'B'}
+                                score={teamTotalScore}
+                                players={teamPlayers}
+                                allNames={allPlayerNames}
+                                limitScore={match.config.limitScore}
+                                gameType={match.gameType}
+                                onCantar={onCantar}
+                            />
+                        );
+                    })
+                ) : (
+                    // --- MODO INDIVIDUAL ---
+                    match.players.map((p, i) => (
+                        <PlayerScoreCard
+                            key={p.name}
+                            name={p.name}
+                            score={p.score}
+                            limitScore={match.config.limitScore}
+                            isDealer={i === match.currentDealerIndex}
+                            isSombrero={i === sombreroIndex}
+                            isOut={p.isOut}
+                            isReengage={p.reengageCount > 0 ? true : false}
+                            isLoseOnLimit={isLoseOnLimit}
+                            onReengage={() => onReengage(p.name)}
+                            showCantar={match.gameType === 'Barsiga'}
+                            onCantar={() => onCantar(p.name)}
+                        />
+                    ))
+                )}
+            </div>
 
-                <tbody>
-                    {match.rounds.map((round) => (
-                        <tr key={round.roundNumber} className="score-row">
-                            <td className="round-number-col">
-                                <div className="row-actions">
-                                    <IconButton icon={<Edit2 size={14} />} variant="info" title="Editar" onClick={() => onEditRound(round.roundNumber)} />
-                                    <IconButton icon={<Trash2 size={14} />} variant="danger" title="Borrar" onClick={() => onDeleteRound(round.roundNumber)} />
-                                </div>
-                            </td>
-                            {isTeamLayout ? (
-                                <>
-                                    <td className="score-cell-mono team-a">{sumTeamRound(round, 'A')}</td>
-                                    <td className="score-cell-mono team-b">{sumTeamRound(round, 'B')}</td>
-                                </>
-                            ) : (
-                                match.players.map(p => {
-                                    const score = round.scores.find(s => s.playerName === p.name);
-                                    return (
-                                        <td key={p.name} className="score-cell-mono">
-                                            <div className="cell-content">
-                                                {score?.pointsAdded || 0}
-                                                {score?.details?.isReengage && <Asterisk size={10} className="text-secondary" />}
-                                            </div>
-                                        </td>
-                                    );
-                                })
-                            )}
-                        </tr>
-                    ))}
+            {/* 2. ACCESO AL HISTORIAL (Activador del Drawer) */}
+            {match.rounds.length > 0 && (
+                <button
+                    onClick={() => setIsHistoryOpen(true)}
+                    className="flex items-center justify-between w-full p-4 mt-2 bg-slate-800/50 rounded-2xl border border-slate-700/50 text-slate-400 active:scale-[0.98] transition-all"
+                >
+                    <div className="flex items-center gap-3">
+                        <div className="p-2 bg-slate-700 rounded-lg">
+                            <History size={18} className="text-indigo-400" />
+                        </div>
+                        <div className="flex flex-col items-start">
+                            <span className="text-sm font-bold text-slate-200">Ver Rondas</span>
+                            <span className="text-[10px] uppercase opacity-50">{match.rounds.length} registradas</span>
+                        </div>
+                    </div>
+                    <ChevronUp size={20} />
+                </button>
+            )}
 
-                    {/* FILA DE TOTALES */}
-                    <tr className="total-row">
-                        <td className="sticky-round-col">Total</td>
-                        {isTeamLayout ? (
-                            ['A', 'B'].map(t => {
-                                const teamTotal = match.players.filter(p => p.team === t).reduce((acc, p) => acc + p.score, 0);
-                                return match.gameType === 'Truco'
-                                    ? <TrucoTotalCell key={t} total={teamTotal} status={getStatus(teamTotal)} />
-                                    : <td key={t} className={`p-5 text-4xl font-display ${t === 'A' ? 'text-indigo-400' : 'text-rose-400'}`}>{teamTotal}</td>
-                            })
-                        ) : (
-                            match.players.map(p => (
-                                <td key={p.name} className="score-cell">
-                                    <div className={`total-display ${isTruco ? 'min-height: 100px' : ''}`}>
-                                        <span className={`total-main-val ${p.isOut ? 'muted' : ''}`}>
-                                            {p.score}
-                                        </span>
-                                        {p.isOut && match.status === 'active' && (
-                                            <Button size="md" variant="ghost" className="btn-reengage" onClick={() => onReengage(p.name)}>
-                                                RE-ENGANCHAR
-                                            </Button>
-                                        )}
-                                    </div>
-                                </td>
-                            ))
-                        )}
-                    </tr>
-
-                    {/* FILA DINÁMICA DE DISTANCIA AL LÍMITE (USO DE isLoseOnLimit) */}
-                    {match.config.limitScore > 0 && match.gameType !== 'Mosca' && match.status === 'active' && (
-                        <tr className={`limit-row ${isLoseOnLimit ? 'lose-limit' : 'win-limit'}`}>
-                            <td className="limit-label-cell">{limitLabel}</td>
-                            {isTeamLayout ? (
-                                ['A', 'B'].map(t => {
-                                    const teamTotal = match.players.filter(p => p.team === t).reduce((acc, p) => acc + p.score, 0);
-                                    return (
-                                        <td key={t} className="limit-value-cell">
-                                            {match.config.limitScore - teamTotal}
-                                        </td>
-                                    );
-                                })
-                            ) : (
-                                match.players.map(p => (
-                                    <td key={p.name} className={`limit-value-cell ${p.isOut ? 'opacity-10' : ''}`}>
-                                        {match.config.limitScore - p.score}
-                                    </td>
-                                ))
-                            )}
-                        </tr>
-                    )}
-                </tbody>
-            </table>
+            {/* 3. EL DRAWER (Se renderiza fuera del flujo normal pero se controla aquí) */}
+            <HistoryDrawer
+                isOpen={isHistoryOpen}
+                onClose={() => setIsHistoryOpen(false)}
+                match={match}
+                onEdit={(num) => {
+                    setIsHistoryOpen(false);
+                    onEditRound(num);
+                }}
+                onDelete={onDeleteRound}
+            />
         </main>
     );
 };

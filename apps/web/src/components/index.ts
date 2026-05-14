@@ -8,9 +8,12 @@ export * from './match/MatchScoreboard';
 export * from './match/WinnerDisplay';
 export * from './match/MatchHeader';
 export * from './match/PlayerHeader';
-export * from './match/TeamHeader';
+export * from './match/TeamPlayerList';
 export * from './match/TrucoTotalCell';
-export * from './match/MesaPointsSelector'
+export * from './match/MesaPointsSelector';
+export * from './match/PlayerScoreCard';
+export * from './match/HistoryDrawer';
+export * from './match/TeamScoreCard';
 
 // Componentes atómicos
 export * from './UI/IconButton';

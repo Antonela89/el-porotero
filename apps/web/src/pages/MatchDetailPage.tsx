@@ -54,10 +54,10 @@ export const MatchDetailPage = () => {
                         </div>
                     } />
 
-                <main className="match-scroller">
+                <main className="flex-1 pb-24">
                     {gameInfo.isDescending && (
                         <div className="game-mode-banner">
-                            Modo Descendente: El primero en llegar a 0 gana
+                            Modo Descendente
                         </div>
                     )}
 
@@ -68,8 +68,6 @@ export const MatchDetailPage = () => {
                         onReengage={(name) => actions.reengage.mutate(name)}
                         onCantar={setCantoPlayer}
                     />
-
-                    <div className="h-3" />
                 </main>
 
                 <ConfirmDialog
