@@ -2,13 +2,60 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
+import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
-  plugins: [react(), tailwindcss(),],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-      '@el-porotero/shared': path.resolve(__dirname, '../../packages/shared/index.ts'),
-    },
-  },
+	plugins: [
+		react(),
+		tailwindcss(),
+		VitePWA({
+			registerType: 'autoUpdate',
+			// Estrategia de cache para que funcione en el campo sin señal
+			workbox: {
+				globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+				runtimeCaching: [
+					{
+						urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+						handler: 'CacheFirst',
+						options: {
+							cacheName: 'google-fonts-cache',
+							expiration: {
+								maxEntries: 10,
+								maxAgeSeconds: 60 * 60 * 24 * 365, // 1 año
+							},
+						},
+					},
+				],
+			},
+			manifest: {
+				name: 'El Porotero',
+				short_name: 'Porotero',
+				description: 'Anotador profesional de cartas',
+				theme_color: '#121826',
+        background_color: '#121826',
+				icons: [
+					{
+						src: 'pwa-192x192.png',
+						sizes: '192x192',
+						type: 'image/png',
+					},
+					{
+						src: 'pwa-512x512.png',
+						sizes: '512x512',
+						type: 'image/png',
+						purpose: 'any maskable', 
+					},
+				],
+			},
+		}),
+	],
+	resolve: {
+		alias: {
+			'@': path.resolve(__dirname, './src'),
+			'@el-porotero/shared': path.resolve(
+				__dirname,
+				'../../packages/shared/index.ts',
+			),
+		},
+	},
 });

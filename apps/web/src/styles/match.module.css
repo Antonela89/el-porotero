@@ -19,6 +19,7 @@
 /* --- HEADER DE PARTIDA --- */
 .match-header {
     @apply bg-background flex fixed top-0 w-full items-center justify-between px-4 py-2 border-b border-white/5;
+    padding-top: calc(env(safe-area-inset-top) + 0.5rem);
 }
 
 .header-info-center {
