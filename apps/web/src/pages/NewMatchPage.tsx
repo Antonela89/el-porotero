@@ -52,7 +52,7 @@ export const NewMatchPage = () => {
                     <div className="flex items-center justify-between">
                         <IconButton icon={<ArrowLeft />} onClick={() => navigate('/')} title="Volver" />
                         <h1 className="text-lg font-black uppercase tracking-tight">Nueva Mesa</h1>
-                        <div className="w-10" /> 
+                        <div className="w-10" />
                     </div>
                 </header>
 
@@ -81,6 +81,7 @@ export const NewMatchPage = () => {
                     </section>
                 )}
 
+                {/* Aviso juego de equipos*/}
                 {isTeamGame && (
                     <div className="info-banner-mini mb-4">
                         <Users size={12} className="inline mr-2" />
@@ -133,6 +134,8 @@ export const NewMatchPage = () => {
                     {canAddMore ? (
                         <div className="add-player-row">
                             <Input
+                                containerClassName='w-full'
+                                className='flex-1'
                                 placeholder="Nombre del jugador..."
                                 value={playerName.toUpperCase()}
                                 onChange={e => setPlayerName(e.target.value)}
