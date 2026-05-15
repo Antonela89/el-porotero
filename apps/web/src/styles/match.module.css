@@ -1,6 +1,6 @@
 /* --- LAYOUT PRINCIPAL --- */
 .match-page {
-    @apply flex flex-col h-dvh bg-background w-full max-w-2xl mx-auto relative overflow-hidden;
+    @apply flex flex-col h-dvh bg-background w-full relative overflow-hidden;
 }
 
 .match-scroller {
