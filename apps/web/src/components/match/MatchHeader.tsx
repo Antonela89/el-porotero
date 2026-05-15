@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useMatchActions } from '@/hooks';
 
 type MatchHeaderProps = {
-    gameInfo: GameDefinition
+    gameInfo: Partial<GameDefinition>;
     match: IMatch;
     onRefresh: () => void;
     icon: React.ReactNode;

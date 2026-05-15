@@ -52,7 +52,7 @@ export const MatchDetailPage = () => {
                         </div>
                     } />
 
-                <main className="flex-1 overflow-y-auto px-4 pt-16 pb-24">
+                <main className="match-main">
                     {gameInfo.isDescending && (
                         <div className="game-mode-banner">
                             Modo Descendente

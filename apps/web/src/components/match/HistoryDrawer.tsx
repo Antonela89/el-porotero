@@ -3,6 +3,8 @@ import { Edit2, Trash2, X } from 'lucide-react';
 import { IMatch, IRound } from '@el-porotero/shared';
 import { IconButton } from '@/components';
 
+const MotionDiv = motion.create('div');
+
 interface HistoryDrawerProps {
     match: IMatch;
     isOpen: boolean;
@@ -17,13 +19,13 @@ export const HistoryDrawer = ({ isOpen, onClose, match, onEdit, onDelete }: Hist
             {isOpen && (
                 <>
                     {/* Backdrop */}
-                    <motion.div 
+                    <MotionDiv
                         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                         onClick={onClose}
                         className="fixed inset-0 bg-black/60 z-40 backdrop-blur-sm"
                     />
                     {/* Content */}
-                    <motion.div 
+                    <MotionDiv 
                         initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
                         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
                         className="fixed bottom-0 left-0 right-0 bg-slate-900 border-t border-slate-700 z-50 rounded-t-3xl max-h-[80vh] overflow-hidden flex flex-col"
@@ -61,7 +63,7 @@ export const HistoryDrawer = ({ isOpen, onClose, match, onEdit, onDelete }: Hist
                                 </tbody>
                             </table>
                         </div>
-                    </motion.div>
+                    </MotionDiv>
                 </>
             )}
         </AnimatePresence>

@@ -38,7 +38,7 @@ export const PlayerScoreCard = ({
                 <div className={`player-card-name ${isDealer ? 'text-primary' : ''}`}>
                     {name}
                     {reengage > 0 && (
-                        <div className="flex -space-x-1">
+                        <div className="flex -space-x-1.5">
                             {Array.from({ length: reengage }).map((_, i) => (
                                 <MotionDiv
                                     key={i}
@@ -52,7 +52,7 @@ export const PlayerScoreCard = ({
                         </div>
                     )}
                 </div>
-                <div className='flex gap-1'>
+                <div className='flex gap-1 shrink-0'>
                     {isDealer && <Crown size={24} className="text-primary" fill="currentColor" />}
                     {isSombrero && <HatGlasses size={24} className="text-secondary" />}
                     {showCantar && (
@@ -72,11 +72,10 @@ export const PlayerScoreCard = ({
                 </span>
                 {isOut && <span className="text-xs text-warning font-bold">AFUERA</span>}
 
-                {/* Lógica de "Faltan" o barra de progreso */}
                 {
                     remaining !== null && !isOut && (
                         <div className={`player-card-status ${isCritical ? 'text-warning animate-pulse' : 'text-text-muted'}`}>
-                            {isLoseOnLimit ? `Faltan ${remaining} para salir` : `A ${remaining} de ganar`}
+                            {isLoseOnLimit &&  `Faltan ${remaining} para salir`}
 
                             <div style={{ width: '120px' }}> {/* Ancho fijo para que no ocupe todo si no quieres */}
                                 <ScoreProgressBar

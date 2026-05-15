@@ -1,19 +1,6 @@
-/* --- LAYOUT PRINCIPAL --- */
+/* --- LAYOUT PRINCIPAL /contenedor --- */
 .match-page {
     @apply flex flex-col h-dvh bg-background w-full relative overflow-hidden;
-}
-
-.match-scroller {
-    @apply flex-1 overflow-y-auto px-2;
-    scrollbar-width: none;
-
-    &::-webkit-scrollbar {
-        display: none;
-    }
-}
-
-.game-mode-banner {
-    @apply bg-purple-500/10 text-purple-400 text-[10px] py-2 text-center font-bold uppercase tracking-widest mb-4 border-y border-purple-500/20;
 }
 
 /* --- HEADER DE PARTIDA --- */
@@ -30,7 +17,7 @@
     @apply flex flex-col justify-center items-center gap-0.5;
 
     & .limit-label {
-        @apply text-[10px] text-text-muted font-bold uppercase tracking-tighter;
+        @apply text-[10px] font-bold uppercase tracking-tighter;
     }
 }
 
@@ -38,330 +25,60 @@
     @apply flex gap-2;
 }
 
-/* --- SCOREBOARD (TABLA) --- */
-.scoreboard-container {
-    @apply w-full overflow-x-auto bg-surface rounded-3xl border border-white/5 shadow-2xl;
-    max-width: calc(100vw - 2rem);
-    margin-inline: auto;
+/* --- CUERPO DE LA PARTIDA /CONTENEDOR --- */
+.match-main {
+    @apply flex-1 overflow-y-auto px-4 pt-16 pb-24;
 }
 
-.scoreboard-table {
-    @apply w-full text-center border-collapse;
-    table-layout: fixed;
+/* Aviso de juego descendente (mosca)*/    
+.game-mode-banner {
+    @apply bg-purple-500/10 text-purple-400 text-[10px] py-2 text-center font-bold uppercase tracking-widest mb-4 border-y border-purple-500/20;
 }
 
-.score-header-row {
-    @apply border-b border-white/10;
-}
-
-.score-row {
-    @apply border-b border-white/5 transition-colors;
-
-    &:hover {
-        @apply bg-white/[0.02];
-    }
-}
-
-.score-header-cell {
-    @apply p-2 text-center align-middle relative;
-    height: 110px;
-}
-
-.score-cell {
-    @apply p-4 font-mono text-sm text-center min-w-20;
-
-    & .cell-content {
-        @apply flex items-center justify-center gap-1;
-    }
-}
-
-.score-header-stack {
-    @apply flex flex-col items-center justify-end h-full gap-2;
-}
-
-.score-name-sub {
-    @apply hidden;
-    @apply text-[9px] opacity-50 uppercase tracking-tighter;
-
-    @media (min-width: 1024px) {
-        @apply block;
-    }
-}
-
-
-.score-header-stack {
-    @apply flex flex-col items-center justify-center h-full gap-0.5;
-}
-
-.score-icon-slot {
-    @apply absolute top-2 flex items-center justify-center h-4 w-full;
-}
-
-.team-players-row {
-    @apply flex gap-1.5 relative mt-1;
-}
-
-.player-slot {
-    @apply flex flex-col items-center;
-    min-width: 40px;
-}
-
-.btn-cantar-small {
-    @apply flex items-center justify-center bg-pink-500/10 text-pink-400 border border-pink-500/20 rounded-lg transition-all mt-1;
-    width: 24px;
-    height: 24px;
-    padding: 0;
-
-    &:active {
-        @apply scale-90 bg-pink-500 text-white border-pink-500;
-    }
-
-    @media (hover: hover) {
-        &:hover {
-            @apply bg-pink-500/20 border-pink-500/40 text-pink-300;
-        }
-    }
-}
-
-.player-initials {
-    @apply text-[12px] font-black uppercase transition-colors h-4 flex gap-1;
-    line-height: 1;
-}
-
-.dealer-crown-abs {
-    @apply absolute -bottom-0.25 left-1/2 -translate-x-1/2 text-primary;
-    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
-}
-
-.is-dealer .player-initials {
-    @apply text-primary;
-}
-
-.not-dealer .player-initials {
-    @apply opacity-40;
-}
-
-.crown-reserved-space {
-    @apply h-4 flex items-center justify-center;
+/* MatchScoreboard.tsx - Contenedor de Tarjetas */
+/* Contenedor dinámico de puntajes */
+.scoreboard-grid {
+    display: grid;
+    gap: 12px;
+    padding-block: 16px;
     width: 100%;
 }
 
-.limit-row {
-    @apply font-bold border-t border-white/10 transition-all;
-
-    &.lose-limit {
-        @apply bg-orange-400/5 text-orange-400;
-    }
-
-    &.win-limit {
-        @apply bg-emerald-400/5 text-emerald-400;
-    }
+/* --- LÓGICA RESPONSIVA PARA INDIVIDUAL --- */
+.mode-individual {
+    grid-template-columns: 1fr; /* Por defecto: uno abajo del otro (Mobile) */
 }
 
-.limit-label-cell {
-    @apply sticky-round-col p-5 uppercase tracking-widest text-[10px];
-}
-
-.limit-value-cell {
-    @apply p-4 text-xl font-display text-center align-middle h-16;
-}
-
-.score-cell-mono {
-    @apply p-3 font-mono text-sm text-center;
-
-    &.team-a {
-        @apply text-indigo-300;
-    }
-
-    &.team-b {
-        @apply text-rose-300;
+/* Tablet / Desktop pequeño */
+@media (min-width: 600px) {
+    .mode-individual {
+        grid-template-columns: repeat(2, 1fr); /* Dos columnas */
     }
 }
 
-/* --- TOTALES --- */
-.totals-row {
-    @apply bg-primary/5 font-bold border-t border-white/10;
-}
-
-.total-display {
-    @apply flex flex-col items-center justify-center py-2 relative;
-    line-height: 1;
-}
-
-.total-main-val {
-    @apply text-3xl font-display transition-all text-text-main block;
-
-    &.highlight {
-        @apply text-primary;
-    }
-
-    &.muted {
-        @apply opacity-20;
+/* Desktop Grande */
+@media (min-width: 1024px) {
+    .mode-individual {
+        grid-template-columns: repeat(3, 1fr); /* Tres columnas */
     }
 }
 
-.total-sub-val {
-    @apply text-[8px] opacity-30 mt-1 font-mono uppercase tracking-tighter block;
-    white-space: nowrap;
+/* --- LÓGICA PARA EQUIPOS --- */
+.mode-teams {
+    grid-template-columns: 1fr; /* Siempre uno abajo del otro para mantener la jerarquía de bando */
+    max-width: 500px; /* Evitamos que la card de equipo sea gigante en desktop */
+    margin-inline: auto;
 }
 
-/* --- TRUCO SPECIFIC --- */
-
-.truco-status-stack {
-    @apply flex flex-col items-center justify-center gap-1;
-}
-
-.truco-stage-label {
-    @apply text-[10px] uppercase font-black tracking-[0.2] pt-2 mb-1 transition-all duration-500 text-text-muted opacity-60;
-
-    &.active {
-        @apply text-primary opacity-100;
+/* En tablets podemos poner los dos equipos uno al lado del otro */
+@media (min-width: 800px) {
+    .mode-teams {
+        grid-template-columns: 1fr 1fr;
+        max-width: none;
     }
 }
 
-.score-meta-text {
-    @apply text-[10px] text-text-muted p-2 text-wrap;
-}
-
-/* --- ANOTADOR (MODAL DE RONDA) --- */
-.anotador-content {
-    @apply flex-1 overflow-y-auto pt-2 flex flex-col gap-6;
-}
-
-.score-group-card {
-    @apply p-3 rounded-3xl border bg-background/20 mb-2 transition-all;
-
-    &.team-a {
-        @apply border-l-4 border-indigo-500/50;
-    }
-
-    &.team-b {
-        @apply border-l-4 border-rose-500/50;
-    }
-
-    &.team-none {
-        @apply border-white/5;
-    }
-}
-
-.score-group-header {
-    @apply flex justify-between items-center mb-2;
-}
-
-.team-scoring-area {
-    @apply w-full flex flex-col gap-4;
-}
-
-.compact-input {
-    @apply bg-background border border-white/10 py-2 text-center w-14 rounded-xl outline-none font-display text-lg focus:border-primary transition-all;
-}
-
-.form-error-banner {
-    @apply flex items-center justify-center gap-2 text-warning text-[10px] font-black uppercase py-2;
-}
-
-.round-number-col {
-    @apply sticky-round-col;
-    @apply flex justify-between items-center p-2;
-
-    & span {
-        @apply text-[10px] text-text-muted;
-    }
-}
-
-.row-actions {
-    @apply flex gap-1;
-}
-
-/* --- COMPONENTES ESPECIALES --- */
-/* Winner Display */
-.winner-card {
-    @apply fixed bottom-10 left-6 right-6 z-50;
-    @apply bg-primary text-background p-8 rounded-[2.5rem] flex flex-col items-center gap-4 shadow-2xl;
-    animation: var(--animation-slide-up);
-    border: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.winner-label-primary {
-    @apply text-3xl font-display font-black uppercase tracking-tighter text-background;
-}
-
-.btn-rematch {
-    @apply bg-background text-primary px-10 py-3 rounded-full font-bold text-sm uppercase transition-all;
-    @apply shadow-lg shadow-black/20;
-
-    &:active {
-        @apply scale-95;
-    }
-
-    @media (hover: hover) {
-        &:hover {
-            @apply bg-background/90;
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
-        }
-    }
-}
-
-/* Utilitarios de Imagen/Icono */
-.card-icon-filter {
-    filter: invert(1) brightness(1.5);
-}
-
-.label-mini {
-    @apply text-[10px] text-text-muted mb-1 block uppercase font-black tracking-widest;
-}
-
-/* --- SCOREBOARD V2 LAYOUT --- */
-.scoreboard-wrapper {
-    @apply flex flex-col gap-4 p-4 pb-20;
-}
-
-/* Grilla para modo individual */
-.player-grid {
-    @apply grid grid-cols-2 gap-3;
-}
-
-/* Stack para modo equipos */
-.team-stack {
-    @apply flex flex-col gap-4;
-}
-
-/* --- PlayerScoreCard.tsx --- */
-.player-card {
-    @apply bg-surface border border-white/5 rounded-[2rem] p-5 flex flex-col relative;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
-}
-
-.player-card-header {
-    @apply flex justify-between items-start mb-1;
-}
-
-.player-card-name {
-    @apply flex gap-2 items-center font-black uppercase tracking-widest text-text-muted;
-}
-
-.player-card-score {
-    @apply text-5xl font-display font-black leading-none my-1 text-text-main;
-}
-
-.player-card-status {
-    @apply flex flex-col items-center text-[10px] font-bold uppercase tracking-tighter mt-2 py-1 px-2 rounded-lg bg-white/5;
-}
-/*-----------------------------------------*/
-
-/* --- ScoreProgressBar.tsx --- */
-.progress-container {
-    @apply w-full h-1.5 bg-white/5 rounded-full overflow-hidden mt-3 relative;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.progress-fill {
-    @apply h-full rounded-full;
-
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
-/*-----------------------------------------*/
-
+/* TeamScoreCard.tsx - Tarjeta para equipos */
 /* --- CARDS DE EQUIPO --- */
 .team-card {
     @apply bg-surface border-l-4 rounded-[2rem] overflow-hidden flex flex-col;
@@ -389,11 +106,50 @@
     @apply p-4 flex justify-around items-center bg-white/[0.01];
 }
 
+/* TeamPLayerList.tsx */
+/*no hay clases*/
+
+/* PlayerScoreCard.tsx - Tarjeta indivual */
+.player-card {
+    @apply bg-surface border border-white/5 rounded-[2rem] p-5 flex flex-col relative;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+}
+
+.player-card-header {
+    @apply flex justify-between items-start mb-1;
+}
+
+.player-card-name {
+    @apply flex gap-2 items-center font-black uppercase tracking-widest text-text-muted;
+}
+
+.player-card-score {
+    @apply text-5xl font-display font-black leading-none my-1 text-text-main;
+}
+
+.player-card-status {
+    @apply flex flex-col items-center text-[10px] font-bold uppercase tracking-tighter mt-2 py-1 px-2 rounded-lg bg-white/5;
+}
+
+/* --- ScoreProgressBar.tsx --- */
+.progress-container {
+    @apply w-full h-1.5 bg-white/5 rounded-full overflow-hidden mt-3 relative;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.progress-fill {
+    @apply h-full rounded-full;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
 /* --- HISTORIAL (DRAWER) --- */
+/* Botón que abre historial */
 .history-trigger {
     @apply btn-base bg-surface border border-white/5 p-4 text-text-muted mt-2;
 }
 
+/* HistoryDrawer.tsx */
+/*no hay clases*/
 .history-drawer {
     @apply fixed bottom-0 left-0 right-0 bg-surface z-50 rounded-t-[2.5rem] border-t border-white/10 flex flex-col;
     height: 75dvh;
@@ -407,3 +163,43 @@
 .drawer-handle {
     @apply w-12 h-1.5 bg-white/10 rounded-full mx-auto my-4 shrink-0;
 }
+
+
+/* MatchRoundModal.tsx - Modal de Ronda*/
+
+/*modal-footer-content*/
+
+.form-error-banner {
+    @apply flex items-center justify-center gap-2 text-warning text-[10px] font-black uppercase py-2;
+}
+
+.anotador-content {
+    @apply flex-1 overflow-y-auto pt-2 flex flex-col gap-6;
+}
+
+.score-group-card {
+    @apply p-3 rounded-3xl border bg-background/20 mb-2 transition-all;
+
+    &.team-a {
+        @apply border-l-4 border-indigo-500/50;
+    }
+
+    &.team-b {
+        @apply border-l-4 border-rose-500/50;
+    }
+
+    &.team-none {
+        @apply border-white/5;
+    }
+}
+
+.score-group-header {
+    @apply flex justify-between items-center mb-2;
+}
+
+/*score-group-title*/
+
+/* .team-scoring-area {
+    @apply w-full flex flex-col gap-4;
+} */
+

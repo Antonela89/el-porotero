@@ -27,7 +27,7 @@ export const TeamPlayerList = ({ players, allNames, showCantar, onCantar }: Team
                 <div className={`
                     relative w-10 h-10 rounded-full flex items-center justify-center font-bold text-md
                     ${p.isDealer ? 'bg-amber-400 text-slate-900' : 'bg-slate-700 text-slate-300'}
-                    border-2 ${p.isDealer ? 'border-amber-800' : 'border-transparent'}
+                    border-2 ${p.isDealer ? 'border-amber-100' : 'border-transparent'}
                 `}>
                     {getShortName(p.name, allNames)}
 

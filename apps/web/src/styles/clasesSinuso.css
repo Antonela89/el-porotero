@@ -1,0 +1,274 @@
+.compact-input {
+    @apply bg-background border border-white/10 py-2 text-center w-14 rounded-xl outline-none font-display text-lg focus:border-primary transition-all;
+}
+
+
+
+.round-number-col {
+    @apply sticky-round-col;
+    @apply flex justify-between items-center p-2;
+
+    & span {
+        @apply text-[10px] text-text-muted;
+    }
+}
+
+.row-actions {
+    @apply flex gap-1;
+}
+
+/* --- COMPONENTES ESPECIALES --- */
+/* Winner Display */
+.winner-card {
+    @apply fixed bottom-10 left-6 right-6 z-50;
+    @apply bg-primary text-background p-8 rounded-[2.5rem] flex flex-col items-center gap-4 shadow-2xl;
+    animation: var(--animation-slide-up);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.winner-label-primary {
+    @apply text-3xl font-display font-black uppercase tracking-tighter text-background;
+}
+
+.btn-rematch {
+    @apply bg-background text-primary px-10 py-3 rounded-full font-bold text-sm uppercase transition-all;
+    @apply shadow-lg shadow-black/20;
+
+    &:active {
+        @apply scale-95;
+    }
+
+    @media (hover: hover) {
+        &:hover {
+            @apply bg-background/90;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+    }
+}
+
+/* Utilitarios de Imagen/Icono */
+.card-icon-filter {
+    filter: invert(1) brightness(1.5);
+}
+
+.label-mini {
+    @apply text-[10px] text-text-muted mb-1 block uppercase font-black tracking-widest;
+}
+
+
+
+
+.match-scroller {
+    @apply flex-1 overflow-y-auto px-2;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+
+
+
+/* --- SCOREBOARD (TABLA) --- */
+.scoreboard-container {
+    @apply w-full overflow-x-auto bg-surface rounded-3xl border border-white/5 shadow-2xl;
+    max-width: calc(100vw - 2rem);
+    margin-inline: auto;
+}
+
+.scoreboard-table {
+    @apply w-full text-center border-collapse;
+    table-layout: fixed;
+}
+
+.score-header-row {
+    @apply border-b border-white/10;
+}
+
+.score-row {
+    @apply border-b border-white/5 transition-colors;
+
+    &:hover {
+        @apply bg-white/2;
+    }
+}
+
+.score-header-cell {
+    @apply p-2 text-center align-middle relative;
+    height: 110px;
+}
+
+.score-cell {
+    @apply p-4 font-mono text-sm text-center min-w-20;
+
+    & .cell-content {
+        @apply flex items-center justify-center gap-1;
+    }
+}
+
+.score-header-stack {
+    @apply flex flex-col items-center justify-end h-full gap-2;
+}
+
+.score-name-sub {
+    @apply hidden;
+    @apply text-[9px] opacity-50 uppercase tracking-tighter;
+
+    @media (min-width: 1024px) {
+        @apply block;
+    }
+}
+
+
+.score-header-stack {
+    @apply flex flex-col items-center justify-center h-full gap-0.5;
+}
+
+.score-icon-slot {
+    @apply absolute top-2 flex items-center justify-center h-4 w-full;
+}
+
+.team-players-row {
+    @apply flex gap-1.5 relative mt-1;
+}
+
+.player-slot {
+    @apply flex flex-col items-center;
+    min-width: 40px;
+}
+
+.btn-cantar-small {
+    @apply flex items-center justify-center bg-pink-500/10 text-pink-400 border border-pink-500/20 rounded-lg transition-all mt-1;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+
+    &:active {
+        @apply scale-90 bg-pink-500 text-white border-pink-500;
+    }
+
+    @media (hover: hover) {
+        &:hover {
+            @apply bg-pink-500/20 border-pink-500/40 text-pink-300;
+        }
+    }
+}
+
+.player-initials {
+    @apply text-[12px] font-black uppercase transition-colors h-4 flex gap-1;
+    line-height: 1;
+}
+
+.dealer-crown-abs {
+    @apply absolute -bottom-px left-1/2 -translate-x-1/2 text-primary;
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
+}
+
+.is-dealer .player-initials {
+    @apply text-primary;
+}
+
+.not-dealer .player-initials {
+    @apply opacity-40;
+}
+
+.crown-reserved-space {
+    @apply h-4 flex items-center justify-center;
+    width: 100%;
+}
+
+.limit-row {
+    @apply font-bold border-t border-white/10 transition-all;
+
+    &.lose-limit {
+        @apply bg-orange-400/5 text-orange-400;
+    }
+
+    &.win-limit {
+        @apply bg-emerald-400/5 text-emerald-400;
+    }
+}
+
+.limit-label-cell {
+    @apply sticky-round-col p-5 uppercase tracking-widest text-[10px];
+}
+
+.limit-value-cell {
+    @apply p-4 text-xl font-display text-center align-middle h-16;
+}
+
+.score-cell-mono {
+    @apply p-3 font-mono text-sm text-center;
+
+    &.team-a {
+        @apply text-indigo-300;
+    }
+
+    &.team-b {
+        @apply text-rose-300;
+    }
+}
+
+/* --- TOTALES --- */
+.totals-row {
+    @apply bg-primary/5 font-bold border-t border-white/10;
+}
+
+.total-display {
+    @apply flex flex-col items-center justify-center py-2 relative;
+    line-height: 1;
+}
+
+.total-main-val {
+    @apply text-3xl font-display transition-all text-text-main block;
+
+    &.highlight {
+        @apply text-primary;
+    }
+
+    &.muted {
+        @apply opacity-20;
+    }
+}
+
+.total-sub-val {
+    @apply text-[8px] opacity-30 mt-1 font-mono uppercase tracking-tighter block;
+    white-space: nowrap;
+}
+
+/* --- TRUCO SPECIFIC --- */
+
+.truco-status-stack {
+    @apply flex flex-col items-center justify-center gap-1;
+}
+
+.truco-stage-label {
+    @apply text-[10px] uppercase font-black tracking-[0.2] pt-2 mb-1 transition-all duration-500 text-text-muted opacity-60;
+
+    &.active {
+        @apply text-primary opacity-100;
+    }
+}
+
+.score-meta-text {
+    @apply text-[10px] text-text-muted p-2 text-wrap;
+}
+
+
+/* --- SCOREBOARD V2 LAYOUT --- */
+.scoreboard-wrapper {
+    @apply flex flex-col gap-4 p-4 pb-20;
+}
+
+/* Grilla para modo individual */
+.player-grid {
+    @apply grid grid-cols-2 gap-3;
+}
+
+/* Stack para modo equipos */
+.team-stack {
+    @apply flex flex-col gap-4;
+}
+
+
+

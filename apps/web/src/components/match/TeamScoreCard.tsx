@@ -1,15 +1,16 @@
-import { motion }from 'framer-motion';
-import { TeamPlayerList } from '@/components';
+import { motion } from 'framer-motion';
+import { TeamPlayerList, ScoreProgressBar } from '@/components';
 import { ITeamScore, GameType, IMatchConfig } from '@el-porotero/shared';
 
 interface Player {
     name: string; isDealer: boolean
-}; 
+};
 
 interface TeamScoreCardPromps {
     teamId: 'A' | 'B';
     score: ITeamScore["score"];
     limitScore: IMatchConfig["limitScore"];
+    isWinnerOnLimit: boolean;
     gameType: GameType;
     allNames: string[];
     players: Player[];
@@ -19,11 +20,12 @@ interface TeamScoreCardPromps {
 
 const MotionDiv = motion.create('div')
 
-export const TeamScoreCard = ({ teamId, score, players, allNames, limitScore, gameType, onCantar }: TeamScoreCardPromps) => {
+export const TeamScoreCard = ({ teamId, score, players, allNames, limitScore, isWinnerOnLimit, gameType, onCantar }: TeamScoreCardPromps) => {
     const isTeamA = teamId === 'A';
     const colorClass = isTeamA ? 'text-indigo-400' : 'text-rose-400';
     const borderColor = isTeamA ? 'border-indigo-400' : 'border-rose-400';
     const remaining = limitScore > 0 ? limitScore - score : null;
+    const isCritical = limitScore ? (remaining !== null && remaining <= 20) : (remaining !== null && remaining <= 10);
 
     return (
         <MotionDiv
@@ -41,13 +43,16 @@ export const TeamScoreCard = ({ teamId, score, players, allNames, limitScore, ga
                     </span>
                 </div>
 
-                {/* Distancia al límite */}
                 {remaining !== null && (
-                    <div className="flex flex-col items-end">
-                        <span className="text-[10px] uppercase font-bold text-text-muted">Restan</span>
-                        <span className={`text-2xl font-mono font-bold ${remaining <= 10 ? 'text-rose-500' : 'text-slate-300'}`}>
-                            {remaining}
-                        </span>
+                    <div className={`flex flex-col items-end ${isCritical ? 'text-esmerald-400 animate-pulse' : 'text-text-muted'}`}>
+                        <div style={{ width: '120px' }}>
+                            {isWinnerOnLimit && `A ${remaining} de ganar`}
+                            <ScoreProgressBar
+                                current={score}
+                                limit={limitScore}
+                                isLoseOnLimit={isWinnerOnLimit}
+                            />
+                        </div>
                     </div>
                 )}
             </div>
@@ -62,6 +67,6 @@ export const TeamScoreCard = ({ teamId, score, players, allNames, limitScore, ga
                     onCantar={onCantar}
                 />
             </div>
-        </MotionDiv>
+        </MotionDiv >
     );
 };

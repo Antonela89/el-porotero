@@ -19,6 +19,7 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
     const allPlayerNames = match.players.map(p => p.name);
 
     const isLoseOnLimit = ['Loba', 'Chinchon', 'Uno'].includes(match.gameType);
+    const isWinnerOnLimit = ['Barsiga', 'Escoba', 'Burako', 'Truco'].includes(match.gameType);
     // const limitLabel = isLoseOnLimit ? 'Para Salir' : 'Para Ganar';
     const isTeamLayout = match.isTeamGame || match.gameType === 'Truco';
     const isMosca = match.gameType === 'Mosca';
@@ -32,10 +33,14 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
     //     round.scores.filter(s => match.players.find(p => p.name === s.playerName)?.team === team)
     //         .reduce((acc, s) => acc + (s.pointsAdded || 0), 0);
 
+    const gridClassName = isTeamLayout
+        ? "scoreboard-grid mode-teams"
+        : "scoreboard-grid mode-individual";
+
     return (
         <>
             {/* SECCIÓN DE PUNTAJES (Cards) */}
-            <div className={isTeamLayout ? "flex py-4 flex-col gap-4" : "py-4 grid grid-cols-1 gap-2"}>
+            <div className={gridClassName}>
                 {isTeamLayout ? (
                     // --- MODO EQUIPOS ---
                     ['A', 'B'].map(t => {
@@ -59,6 +64,7 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
                                 players={teamPlayers}
                                 allNames={allPlayerNames}
                                 limitScore={match.config.limitScore}
+                                isWinnerOnLimit={isWinnerOnLimit}
                                 gameType={match.gameType}
                                 onCantar={onCantar}
                             />
