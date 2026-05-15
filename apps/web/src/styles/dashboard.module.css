@@ -1,137 +1,115 @@
-.dashboard-container {
-    @apply flex flex-col min-h-screen bg-background w-full px-4;
-    min-height: 100dvh;
-}
-
+/* --- DASHBOARD --- */
+/* Encabezado */
 .dashboard-header {
-    @apply flex flex-col justify-center items-center w-full;
+    @apply flex flex-col justify-start items-center w-full mb-4;
 }
 
 .dashboard-welcome {
-    @apply text-text-muted italic text-center leading-relaxed;
+    @apply text-text-muted text-sm leading-tight;
 
     & span {
-        @apply font-display font-bold text-text-main text-lg not-italic;
+        @apply font-display text-center font-black text-text-main text-2xl block;
     }
 }
 
+/* Llamada a la acción */
 .dashboard-action-area {
-    @apply max-w-4xl mx-auto w-full mb-4;
+    @apply w-full mb-6;
 }
 
-/* --- LISTADO Y GRUPO POR FECHAS --- */
+.dashboard-action-btn {
+    @apply w-full flex-1 py-5 font-black uppercase tracking-widest shadow-primary-glow/20
+}
+
+/* Filtrado por estado */
+.filter-scroll-area {
+    @apply flex gap-2 overflow-x-auto pb-3;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+.filter-scroll-area::-webkit-scrollbar {
+    display: none;
+}
+
+.filter-pill {
+    @apply flex-1 text-[10px]! py-1.5 px-3;
+    white-space: nowrap;
+}
+
+/* Listado */
 .dashboard-recent-list {
-    @apply max-w-4xl mx-auto w-full flex flex-col gap-6 mt-2 pb-20;
+    @apply flex flex-col gap-4;
 }
 
-.dashboard-history-title {
-    @apply text-xl font-display font-bold flex items-center gap-2 tracking-tight;
+.date-group-header {
+    @apply text-[9px] font-black uppercase text-text-muted/30 mb-2 flex items-center gap-2;
 }
 
-.date-group-container {
-    @apply flex flex-col gap-4 animate-slide-up;
+.date-group-header::after {
+    content: "";
+    @apply flex-1 h-[1px] bg-white/5;
 }
 
-.date-group-title {
-    @apply text-[10px] font-black uppercase tracking-[0.2em] text-text-muted border-l-4 border-primary/40 pl-4 py-1 ml-1;
+.empty-state-compact {
+    @apply text-center py-10 text-xs text-text-muted opacity-40 italic border border-dashed border-white/5 rounded-2xl;
 }
 
-/* --- GRID Y TARJETAS (MATCH CARDS) --- */
-.match-grid {
-    @apply grid grid-cols-1 md:grid-cols-2 gap-4;
+.date-group-wrapper {
+    @apply flex flex-col gap-2;
 }
 
-.match-card {
-    @apply bg-surface border border-white/5 p-6 rounded-[2rem] shadow-xl transition-all cursor-pointer flex flex-col gap-5;
-
-    &:active {
-        @apply scale-[0.97] bg-white/[0.02];
-    }
-
-    @media (hover: hover) {
-        &:hover {
-            @apply border-primary/30 shadow-primary-glow/10;
-            transform: translateY(-4px);
-        }
-    }
+/* --- MATCH CARD --- */
+.match-item {
+    @apply relative flex items-center gap-3 p-3 rounded-2xl bg-surface border border-white/5 transition-all;
 }
 
-.match-card-header {
-    @apply w-full gap-4 flex flex-col justify-between items-start;
+/* Indicador de estado lateral */
+.status-indicator {
+    @apply absolute left-0 top-2 bottom-2 w-1 rounded-r-full;
 }
 
-.match-card-info {
-    @apply w-full flex justify-between items-center;
+.match-icon-box {
+    @apply flex-shrink-0 w-12 h-12 rounded-xl bg-background border border-white/5 flex items-center justify-center text-primary;
+}
+
+.match-main-info {
+    @apply flex-1 min-w-0 flex flex-col;
+}
+
+.match-name-row {
+    @apply flex items-center gap-2;
 
     & h3 {
-        @apply text-2xl font-display font-black text-primary uppercase tracking-tighter;
-    }
-
-    /* --- BADGES DE ESTADO --- */
-    .status-badge {
-        @apply px-3 py-2 rounded-full text-[9px] font-black uppercase tracking-widest border transition-colors;
-
-        &.active {
-            @apply bg-primary/10 text-primary border-primary/20;
-        }
-
-        &.finished {
-            @apply bg-secondary/10 text-secondary border-secondary/20;
-        }
-
-        &.closed {
-            @apply bg-white/5 text-text-muted border-white/10;
-        }
+        @apply text-sm font-display font-black text-text-main uppercase truncate;
     }
 }
 
-.match-card-meta {
-    @apply flex w-full items-center gap-4 text-text-muted text-xs font-medium;
+/* Ganador Badge */
+.match-winner-pill {
+    @apply text-[8px] font-black bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-md border border-emerald-500/20;
+}
 
-    & span {
-        @apply flex items-center gap-1.5;
+.match-players-badge {
+    @apply text-[12px]! font-bold text-text-muted flex items-center gap-1;
+}
+
+.match-actions {
+    @apply flex items-center gap-1;
+}
+
+/* Botón de tres puntos para mobile */
+.btn-more-options {
+    @apply p-2 text-text-muted active:text-text-main transition-colors;
+}
+
+/* Ajustes para pantallas muy pequeñas */
+@media (max-width: 340px) {
+    .match-item {
+        @apply gap-2 p-2;
     }
-}
 
-.match-card-winner {
-    @apply flex flex-1 text-emerald-400 font-bold flex items-center gap-1.5 bg-emerald-400/10 p-2 p-0.5 rounded-lg;
-}
-
-.match-card-footer {
-    @apply flex items-center justify-between border-t border-white/5 pt-4 mt-auto gap-2;
-
-    @media (max-width: 340px) {
-        @apply flex-col items-stretch;
-
-        & .match-card-actions {
-            @apply justify-center mb-2;
-        }
+    .match-icon-box {
+        @apply w-10 h-10;
     }
-}
-
-.btn-continuar-card {
-    @apply bg-secondary text-white rounded-xl py-3 px-4 text-sm font-bold flex items-center justify-center gap-2;
-
-    @media (max-width: 340px) {
-        @apply w-full;
-    }
-}
-
-.match-card-actions {
-    @apply flex gap-3;
-}
-
-
-
-/* --- ESTADOS DE CARGA --- */
-.dashboard-empty-state {
-    @apply text-center py-20 opacity-40 border-2 border-dashed border-white/10 rounded-[2.5rem] flex flex-col items-center gap-4;
-
-    & p {
-        @apply text-sm italic;
-    }
-}
-
-.skeleton-card {
-    @apply h-32 w-full bg-surface/50 animate-pulse rounded-[2rem] border border-white/5;
 }

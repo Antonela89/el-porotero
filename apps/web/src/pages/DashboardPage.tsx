@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Clock } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { IMatch } from '@el-porotero/shared';
 import { CardMatch, EditMatchModal, Button, LoadingSpinner, ConfirmDialog } from '@/components';
 import { useMatches } from '@/hooks';
@@ -12,10 +12,18 @@ export const DashboardPage = () => {
     const [matchToEdit, setMatchToEdit] = useState<IMatch | null>(null);
     const [idToDelete, setMatchToDelete] = useState<string | null>(null);
 
+    const [filter, setFilter] = useState<'active' | 'finished' | 'cancelled' | 'all'>('active');
+
     if (loading) return <LoadingSpinner message="Buscando tus partidas..." />;
 
+    // Filtrar por estado
+    const filteredMatches = matches.filter(match => {
+        if (filter === 'all') return true;
+        return match.status === filter;
+    });
+
     // Agrupacion de partidas por fecha
-    const groupedMatches = matches.reduce((groups, match) => {
+    const groupedMatches = filteredMatches.reduce((groups, match) => {
         const dateStr = match.createdAt ? String(match.createdAt) : new Date().toISOString();
         const dateKey = new Date(dateStr).toLocaleDateString('es-AR', {
             day: '2-digit', month: 'long', year: 'numeric'
@@ -25,6 +33,12 @@ export const DashboardPage = () => {
         groups[dateKey].push(match);
         return groups;
     }, {} as Record<string, IMatch[]>);
+
+    const filterOptions = [
+        { id: 'active', label: 'En Juego' },
+        { id: 'finished', label: 'Finalizadas' },
+        { id: 'cancelled', label: 'Canceladas' },
+    ] as const;
 
     return (
         <>
@@ -36,13 +50,13 @@ export const DashboardPage = () => {
                 <meta property="og:image" content="/og-image.jpg" /> {/* Imagen 1200x630px en public/ */}
             </Helmet>
 
-            <div className="dashboard-container">
+            <>
                 {/* Header */}
                 <header className="dashboard-header">
-                    <p className="dashboard-welcome">
-                        <span className='text-[16px]'>¡Hola!</span><br />
+                    <div className="dashboard-welcome">
+                        <span>¡Hola!</span>
                         ¿Qué vamos a jugar hoy?
-                    </p>
+                    </div>
                 </header>
 
                 {/* Acción Principal */}
@@ -50,50 +64,44 @@ export const DashboardPage = () => {
                     <Button
                         onClick={() => navigate('/new-match')}
                         size="lg"
-                        className="w-full py-6!"
+                        className="dashboard-action-btn"
                     >
-                        <Plus size={28} /> Nueva Partida
+                        <Plus size={24} strokeWidth={3} /> Nueva Partida
                     </Button>
                 </section>
 
-                {/* Listado de Partidas Recientes */}
-                <main className="dashboard-recent-list">
-                    <h2 className="dashboard-history-title">
-                        <Clock size={20} /> Partidas Recientes
-                    </h2>
+                {/* --- CONTENEDOR DE FILTROS --- */}
+                <nav className='filter-scroll-area'>
+                    {filterOptions.map((opt) => (
+                        <Button
+                            key={opt.id}
+                            variant={filter === opt.id ? 'primary' : 'ghost'}
+                            size="md"
+                            onClick={() => setFilter(opt.id)}
+                            className='filter-pill'
+                        >
+                            {opt.label}
+                        </Button>
+                    ))}
+                </nav>
 
-                    {/* 1. Estado de Carga */}
-                    {loading ? (
-                        <div className="loading-skeleton-list">
-                            <div className="skeleton-card" />
-                            <div className="skeleton-card" />
-                        </div>
-                    ) : matches.length === 0 ? (
-                        /* 2. Estado Vacío */
-                        <div className="dashboard-empty-state">
-                            No hay partidas anotadas todavía.
-                        </div>
+                <main className="dashboard-recent-list">
+                    {filteredMatches.length === 0 ? (
+                        <div className='empty-state-compact'>No hay partidas en este estado.</div>
                     ) : (
-                        /* 3. Listado de Partidas */
-                        <div className="date-group-list">
-                            {Object.entries(groupedMatches).map(([date, matchesInDate]) => (
-                                <section key={date} className="date-group-container">
-                                    <h3 className="date-group-title">
-                                        {date}
-                                    </h3>
-                                    <div className="match-grid">
-                                        {matchesInDate.map(match => (
-                                            <CardMatch
-                                                key={match._id}
-                                                match={match}
-                                                onDelete={(id) => setMatchToDelete(id)}
-                                                onEdit={setMatchToEdit}
-                                            />
-                                        ))}
-                                    </div>
-                                </section>
-                            ))}
-                        </div>
+                        Object.entries(groupedMatches).map(([date, matchesInDate]) => (
+                            <div key={date} className='date-group-wrapper'>
+                                <h3 className='date-group-header'>{date}</h3>
+                                {matchesInDate.map(match => (
+                                    <CardMatch
+                                        key={match._id}
+                                        match={match}
+                                        onDelete={deleteMatch}
+                                        onEdit={setMatchToEdit}
+                                    />
+                                ))}
+                            </div>
+                        ))
                     )}
                 </main>
 
@@ -117,7 +125,7 @@ export const DashboardPage = () => {
                     title="¿Borrar Partida?"
                     description="Esta acción es irreversible. Se perderán todos los porotos de esta mesa."
                 />
-            </div>
+            </>
         </>
     );
 };

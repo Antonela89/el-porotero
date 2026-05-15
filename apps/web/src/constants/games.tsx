@@ -28,7 +28,7 @@ export const GAMES: GameDefinition[] = [
         maxPlayers: 6,
         description: 'Gana el último en pie. Límite de 100 o 101 puntos.',
         icon: <Layers size={24} />,
-        color: 'text-blue-400',
+        color: 'blue-400',
         defaultLimit: 100,
         isDescending: false
     },
@@ -38,7 +38,7 @@ export const GAMES: GameDefinition[] = [
         maxPlayers: 6,
         description: 'El clásico rioplatense. Se juega a 30 puntos (15 y 15).',
         icon: <Swords size={24} />,
-        color: 'text-red-400',
+        color: 'red-400',
         defaultLimit: 30,
         isDescending: false
     },
@@ -48,7 +48,7 @@ export const GAMES: GameDefinition[] = [
         maxPlayers: 4,
         description: 'Armá escaleras y grupos. No te pases de 100.',
         icon: <LayoutGrid size={24} />,
-        color: 'text-green-400',
+        color: 'green-400',
         defaultLimit: 100,
         isDescending: false
     },
@@ -58,7 +58,7 @@ export const GAMES: GameDefinition[] = [
         maxPlayers: 5,
         description: 'Juego de bazas descendente. Arrancás con 15, llegás a 0.',
         icon: <Bug size={24} />,
-        color: 'text-purple-400',
+        color: 'purple-400',
         defaultLimit: 0,
         isDescending: true
     },
@@ -68,7 +68,7 @@ export const GAMES: GameDefinition[] = [
         maxPlayers: 4,
         description: 'Sumá 15 con las cartas de la mesa. A 15 puntos.',
         icon: <Coins size={24} />,
-        color: 'text-yellow-400',
+        color: 'yellow-400',
         defaultLimit: 15,
         isDescending: false
     },
@@ -78,7 +78,7 @@ export const GAMES: GameDefinition[] = [
         maxPlayers: 6,
         description: 'Escoba de 61 puntos con cantos (Flor, Escalera, etc.).',
         icon: <Flower2 size={24} />,
-        color: 'text-pink-400',
+        color: 'pink-400',
         defaultLimit: 61,
         isDescending: false
     },
@@ -88,7 +88,7 @@ export const GAMES: GameDefinition[] = [
         maxPlayers: 4,
         description: 'Canastas y muertos. A 3000 o 5000 puntos.',
         icon: <Dice5 size={24} />,
-        color: 'text-orange-400',
+        color: 'orange-400',
         defaultLimit: 3000,
         isDescending: false
     },
@@ -98,7 +98,7 @@ export const GAMES: GameDefinition[] = [
         maxPlayers: 10,
         description: 'Sumá los puntos de tus cartas. El límite estándar es 500.',
         icon: <Copy size={24} />,
-        color: 'text-violet-400',
+        color: 'violet-400',
         defaultLimit: 500,
         isDescending: false
     },

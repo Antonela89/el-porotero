@@ -4,7 +4,7 @@
   "description": "",
   "main": "apps/api/dist/server.js",
   "scripts": {
-    "dev": "pnpm -r --parallel dev",
+    "dev": "pnpm --filter @el-porotero/shared build && pnpm -r --parallel dev",
     "build": "pnpm -r build",
     "build:web": "pnpm --filter @el-porotero/shared build && pnpm --filter web build",
     "build:api": "pnpm --filter @el-porotero/shared build && pnpm --filter api build",
