@@ -43,15 +43,16 @@ export const MatchDetailPage = () => {
 
             <div className="match-page">
                 <MatchHeader
+                    gameInfo={gameInfo}
                     match={match}
                     onRefresh={refetch}
                     icon={
-                        <div className={gameInfo.color}>
+                        <div className={`text-${gameInfo.color}`}>
                             {gameInfo.icon}
                         </div>
                     } />
 
-                <main className="flex-1 overflow-y-auto px-4 pt-16 pb-28">
+                <main className="flex-1 overflow-y-auto px-4 pt-16 pb-24">
                     {gameInfo.isDescending && (
                         <div className="game-mode-banner">
                             Modo Descendente

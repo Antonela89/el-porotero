@@ -248,16 +248,8 @@
     @apply flex justify-between items-center mb-2;
 }
 
-.player-card {
-    @apply flex flex-col w-full p-2 rounded-2xl bg-background/40 border border-white/5 mb-2;
-}
-
 .team-scoring-area {
     @apply w-full flex flex-col gap-4;
-}
-
-.player-card-header {
-    @apply flex justify-between items-center mb-2;
 }
 
 .compact-input {
@@ -334,7 +326,7 @@
     @apply flex flex-col gap-4;
 }
 
-/* --- CARDS DE JUGADOR --- */
+/* --- PlayerScoreCard.tsx --- */
 .player-card {
     @apply bg-surface border border-white/5 rounded-[2rem] p-5 flex flex-col relative;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
@@ -345,7 +337,7 @@
 }
 
 .player-card-name {
-    @apply text-[10px] font-black uppercase tracking-widest text-text-muted;
+    @apply flex gap-2 items-center font-black uppercase tracking-widest text-text-muted;
 }
 
 .player-card-score {
@@ -353,8 +345,22 @@
 }
 
 .player-card-status {
-    @apply text-[9px] font-bold uppercase tracking-tighter mt-2 py-1 px-2 rounded-lg bg-white/5 self-start;
+    @apply flex flex-col items-center text-[10px] font-bold uppercase tracking-tighter mt-2 py-1 px-2 rounded-lg bg-white/5;
 }
+/*-----------------------------------------*/
+
+/* --- ScoreProgressBar.tsx --- */
+.progress-container {
+    @apply w-full h-1.5 bg-white/5 rounded-full overflow-hidden mt-3 relative;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.progress-fill {
+    @apply h-full rounded-full;
+
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+/*-----------------------------------------*/
 
 /* --- CARDS DE EQUIPO --- */
 .team-card {

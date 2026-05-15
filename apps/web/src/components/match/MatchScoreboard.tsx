@@ -33,9 +33,9 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
     //         .reduce((acc, s) => acc + (s.pointsAdded || 0), 0);
 
     return (
-        <main className="p-4 flex flex-col gap-4">
-            {/* 1. SECCIÓN DE PUNTAJES (Cards) */}
-            <div className={isTeamLayout ? "flex flex-col gap-4" : "grid grid-cols-2 gap-3"}>
+        <>
+            {/* SECCIÓN DE PUNTAJES (Cards) */}
+            <div className={isTeamLayout ? "flex py-4 flex-col gap-4" : "py-4 grid grid-cols-1 gap-2"}>
                 {isTeamLayout ? (
                     // --- MODO EQUIPOS ---
                     ['A', 'B'].map(t => {
@@ -75,7 +75,7 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
                             isDealer={i === match.currentDealerIndex}
                             isSombrero={i === sombreroIndex}
                             isOut={p.isOut}
-                            isReengage={p.reengageCount > 0 ? true : false}
+                            reengage={p.reengageCount}
                             isLoseOnLimit={isLoseOnLimit}
                             onReengage={() => onReengage(p.name)}
                             showCantar={match.gameType === 'Barsiga'}
@@ -85,7 +85,7 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
                 )}
             </div>
 
-            {/* 2. ACCESO AL HISTORIAL (Activador del Drawer) */}
+            {/* ACCESO AL HISTORIAL (Activador del Drawer) */}
             {match.rounds.length > 0 && (
                 <button
                     onClick={() => setIsHistoryOpen(true)}
@@ -104,7 +104,7 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
                 </button>
             )}
 
-            {/* 3. EL DRAWER (Se renderiza fuera del flujo normal pero se controla aquí) */}
+            {/* EL DRAWER (Se renderiza fuera del flujo normal pero se controla aquí) */}
             <HistoryDrawer
                 isOpen={isHistoryOpen}
                 onClose={() => setIsHistoryOpen(false)}
@@ -115,6 +115,6 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
                 }}
                 onDelete={onDeleteRound}
             />
-        </main>
+        </>
     );
 };

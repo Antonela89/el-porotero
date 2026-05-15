@@ -1,17 +1,19 @@
 import { useState } from 'react';
 import { IMatch } from '@el-porotero/shared';
+import { GameDefinition } from '@/constants';
 import { MoreVertical, ArrowLeft, RotateCcw, Trash2 } from 'lucide-react';
 import { IconButton, ConfirmDialog } from '@/components';
 import { useNavigate } from 'react-router-dom';
 import { useMatchActions } from '@/hooks';
 
 type MatchHeaderProps = {
+    gameInfo: GameDefinition
     match: IMatch;
     onRefresh: () => void;
     icon: React.ReactNode;
 }
 
-export const MatchHeader = ({ match, onRefresh, icon }: MatchHeaderProps) => {
+export const MatchHeader = ({ gameInfo, match, onRefresh, icon }: MatchHeaderProps) => {
     const { cancelMatch } = useMatchActions(match._id!);
     const [showCancelModal, setShowCancelModal] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
@@ -30,11 +32,11 @@ export const MatchHeader = ({ match, onRefresh, icon }: MatchHeaderProps) => {
                 onClick={() => navigate('/dashboard')}
                 title="Volver"
             />
-            <div className="header-info-center">
+            <div className={`header-info-center text-${gameInfo.color}`}>
                 {icon}
                 <div className='header-title-col'>
                     <span className="text-lg">{match.gameType}</span>
-                    <span className='limit-label'>
+                    <span className={`limit-label text-${gameInfo.color}`}>
                         {match.gameType === 'Mosca'
                             ? 'OBJETIVO: 0 PTS'
                             : `LÍMITE: ${match.config.limitScore} PTS`
