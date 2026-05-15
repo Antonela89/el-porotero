@@ -23,14 +23,10 @@
 
 /* Filtrado por estado */
 .filter-scroll-area {
-    @apply flex gap-2 overflow-x-auto pb-3;
-    scrollbar-width: none;
+    @apply flex gap-2 overflow-y-auto pb-3 custom-scrollbar;
     -webkit-overflow-scrolling: touch;
 }
 
-.filter-scroll-area::-webkit-scrollbar {
-    display: none;
-}
 
 .filter-pill {
     @apply flex-1 text-[10px]! py-1.5 px-3;
