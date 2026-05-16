@@ -104,7 +104,6 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit }: MatchRo
         </div>
     );
 
-
     return (
         <BaseModal
             isOpen={isOpen}

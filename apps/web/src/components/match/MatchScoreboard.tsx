@@ -11,9 +11,10 @@ interface MatchScoreboardProps {
     onDeleteRound: (num: number) => void;
     onReengage: (name: string) => void;
     onCantar: (name: string) => void;
+    onRematch: (match: IMatch) => void;
 }
 
-export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage, onCantar }: MatchScoreboardProps) => {
+export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage, onCantar, onRematch }: MatchScoreboardProps) => {
     const [isHistoryOpen, setIsHistoryOpen] = useState(false);
     // const { getStatus } = useTrucoLogic(match);
     const allPlayerNames = match.players.map(p => p.name);
@@ -60,13 +61,16 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
                             <TeamScoreCard
                                 key={t}
                                 teamId={t as 'A' | 'B'}
+                                match={match}
                                 score={teamTotalScore}
+                                winner={match.winner}
                                 players={teamPlayers}
                                 allNames={allPlayerNames}
                                 limitScore={match.config.limitScore}
                                 isWinnerOnLimit={isWinnerOnLimit}
                                 gameType={match.gameType}
                                 onCantar={onCantar}
+                                onRematch={onRematch}
                             />
                         );
                     })
@@ -77,6 +81,7 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
                             key={p.name}
                             name={p.name}
                             score={p.score}
+                            winner={match.winner}
                             limitScore={match.config.limitScore}
                             isDealer={i === match.currentDealerIndex}
                             isSombrero={i === sombreroIndex}
@@ -86,6 +91,7 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
                             onReengage={() => onReengage(p.name)}
                             showCantar={match.gameType === 'Barsiga'}
                             onCantar={() => onCantar(p.name)}
+                            onRematch={() => onRematch(match)} 
                         />
                     ))
                 )}

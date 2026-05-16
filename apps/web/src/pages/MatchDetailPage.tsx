@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams, useNavigate } from 'react-router-dom';
-import { MatchRoundModal, MatchHeader, MatchScoreboard, WinnerDisplay, ConfirmDialog, AddCantoModal, AddPointsFAB, LoadingSpinner } from '@/components';
+import { MatchRoundModal, MatchHeader, MatchScoreboard, ConfirmDialog, AddCantoModal, AddPointsFAB, LoadingSpinner } from '@/components';
 import { GAMES_MAP } from '@/constants';
 import { useMatch, useMatchActions } from '@/hooks';
 import { IMatch } from '@el-porotero/shared';
@@ -65,6 +65,7 @@ export const MatchDetailPage = () => {
                         onDeleteRound={setRoundToDelete}
                         onReengage={(name) => actions.reengage.mutate(name)}
                         onCantar={setCantoPlayer}
+                        onRematch={() => handleRevancha(match)}
                     />
                 </main>
 
@@ -78,10 +79,6 @@ export const MatchDetailPage = () => {
                     title="¿Borrar ronda?"
                     description={`Se eliminará la ronda ${roundToDelete} y se recalcularán los puntos.`}
                 />
-
-                {match.status === 'finished' && (
-                    <WinnerDisplay winner={match.winner} handleRevancha={handleRevancha} match={match} />
-                )}
 
                 <MatchRoundModal
                     key={roundToEdit ? `edit-${roundToEdit}` : 'new-round'}

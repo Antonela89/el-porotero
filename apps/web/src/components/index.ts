@@ -5,7 +5,6 @@ export * from './match/MatchRoundModal';
 export * from './match/EditMatchModal';
 export * from './match/AddCantoModal';
 export * from './match/MatchScoreboard';
-export * from './match/WinnerDisplay';
 export * from './match/MatchHeader';
 export * from './match/PlayerHeader';
 export * from './match/TeamPlayerList';

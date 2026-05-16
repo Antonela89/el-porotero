@@ -203,3 +203,51 @@
     @apply w-full flex flex-col gap-4;
 } */
 
+/* Winner */
+.winner-card-inner {
+    @apply flex flex-col items-center justify-center h-full w-full rounded-[2rem] border-2 border-primary bg-surface shadow-2xl;
+    background: radial-gradient(circle at center, var(--color-surface) 0%, #121826 100%);
+}
+
+.winner-name {
+    @apply text-lg font-display font-black text-primary uppercase tracking-tight;
+}
+
+.winner-label {
+    @apply text-[10px] font-black text-white/40 tracking-[0.3em] mb-4;
+}
+
+.btn-rematch-compact {
+    @apply flex items-center gap-2 px-6 py-2 bg-primary text-background rounded-full font-black text-[10px] uppercase transition-transform active:scale-95;
+    box-shadow: 0 4px 15px rgba(253, 224, 71, 0.3);
+}
+
+.team-card.is-winner {
+    @apply border-primary ring-4 ring-primary/20;
+}
+
+.reengage-asterisks {
+    @apply flex -space-x-2 ml-2;
+}
+
+.winner-card-inner {
+    @apply flex flex-row items-center justify-between h-full w-full rounded-[2.5rem] bg-surface border-2 border-primary shadow-2xl p-4;
+    background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+}
+
+.winner-card-info {
+    @apply flex flex-col flex-1 items-center justify-center;
+}
+
+.winner-pill-text {
+    @apply text-[10px] font-black uppercase tracking-[0.4em] mb-4 text-primary/60;
+}
+
+.btn-rematch-compact {
+    @apply btn-base bg-primary text-background px-6 py-2 text-[10px] uppercase font-black shadow-lg shadow-primary/20;
+}
+
+.card-front, .card-back {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
