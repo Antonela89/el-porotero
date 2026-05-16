@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { IMatch } from '@el-porotero/shared';
 import { GameDefinition } from '@/constants';
-import { MoreVertical, ArrowLeft, RotateCcw, Trash2 } from 'lucide-react';
-import { IconButton, ConfirmDialog } from '@/components';
+import { MoreVertical, ArrowLeft, RotateCcw, Trash2, X, Settings } from 'lucide-react';
+import { IconButton, ConfirmDialog, EditMatchModal } from '@/components';
 import { useNavigate } from 'react-router-dom';
 import { useMatchActions } from '@/hooks';
 
@@ -17,6 +17,7 @@ export const MatchHeader = ({ gameInfo, match, onRefresh, icon }: MatchHeaderPro
     const { cancelMatch } = useMatchActions(match._id!);
     const [showCancelModal, setShowCancelModal] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const navigate = useNavigate();
 
     const handleConfirmCancel = () => {
@@ -26,6 +27,10 @@ export const MatchHeader = ({ gameInfo, match, onRefresh, icon }: MatchHeaderPro
 
     return (
         <header className="match-header">
+            {showMenu && (
+                <div className="fixed inset-0 z-200" onClick={() => setShowMenu(false)} />
+            )}
+
             <IconButton
                 icon={<ArrowLeft size={22} />}
                 variant="ghost"
@@ -55,29 +60,58 @@ export const MatchHeader = ({ gameInfo, match, onRefresh, icon }: MatchHeaderPro
 
                 />
                 <IconButton
-                    icon={<MoreVertical size={20} />}
+                    icon={showMenu ? <X size={20} /> : <MoreVertical size={20} />}
                     variant="ghost"
                     onClick={() => setShowMenu(!showMenu)}
                     title="Opciones"
+                    className="relative z-50"
                 />
 
                 {showMenu && (
-                    <div className="absolute right-0 mt-2 w-48 bg-surface border border-white/10 rounded-xl shadow-xl z-50 p-2">
-                        <button
-                            className="flex items-center gap-2 w-full p-3 text-sm text-rose-400 font-bold"
-                            onClick={() => { setShowCancelModal(true); setShowMenu(false); }}
+                    <div className="absolute right-0 mt-2 mr-2 flex flex-col items-center gap-3 w-24 bg-surface border border-white/10 rounded-xl shadow-xl z-201 p-2">
+                        {/* OPCIÓN: EDITAR */}
+                        <IconButton
+                            className="flex items-center rounded-full w-18 h-18 active:bg-white/5 transition-colors border-b border-white/5"
+                            icon={<Settings size={26} className="text-secondary" />}
+                            title='Editar'
+                            onClick={() => {
+                                setIsEditModalOpen(true);
+                                setShowMenu(false);
+                            }}
                         >
-                            <Trash2 size={16} /> Cancelar Partida
-                        </button>
+                        </IconButton>
+
+                        {/* OPCIÓN: CANCELAR */}
+                        <IconButton
+                            className="flex items-center rounded-full w-18 h-18 active:bg-rose-500/10 transition-colors"
+                            icon={<Trash2 size={26} className='text-rose-400'/>}
+                            title='Cancelar'
+                            onClick={() => {
+                                setShowCancelModal(true);
+                                setShowMenu(false);
+                            }}
+                        >
+                        </IconButton>
                     </div>
                 )}
             </div>
+
+            {/* MODAL DE EDICIÓN */}
+            <EditMatchModal
+                match={match}
+                isOpen={isEditModalOpen}
+                onClose={() => setIsEditModalOpen(false)}
+                onSuccess={() => {
+                    onRefresh();
+                    setIsEditModalOpen(false);
+                }}
+            />
 
             <ConfirmDialog
                 isOpen={showCancelModal}
                 onClose={() => setShowCancelModal(false)}
                 onConfirm={handleConfirmCancel}
-                title="Cancelar Partida?"
+                title="¿Cancelar Partida?"
                 description="Se perderá el progreso actual. Esta acción no se puede deshacer."
             />
         </header>

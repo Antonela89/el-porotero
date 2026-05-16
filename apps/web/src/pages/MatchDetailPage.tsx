@@ -108,12 +108,14 @@ export const MatchDetailPage = () => {
                         }
                     }}
                 />
-            </div>
 
-            <AddPointsFAB
-                isVisible={match.status === 'active'}
-                onClick={() => { setRoundToEdit(null); setIsModalOpen(true); }}
-            />
+                <footer>
+                    <AddPointsFAB
+                        isVisible={match.status === 'active'}
+                        onClick={() => { setRoundToEdit(null); setIsModalOpen(true); }}
+                    />
+                </footer>
+            </div>
         </>
     );
 };

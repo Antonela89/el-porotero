@@ -8,16 +8,16 @@ interface BaseModalProps {
     title: string;
     children: React.ReactNode;
     footer?: React.ReactNode;
-    maxWidth?: string; // Para modales mas anchos
+    maxWidth?: string; 
 }
 
-export const BaseModal = ({ isOpen, onClose, title, children, footer, maxWidth = 'max-w-md' }: BaseModalProps) => (
+export const BaseModal = ({ isOpen, onClose, title, children, footer, maxWidth = '' }: BaseModalProps) => (
     <Dialog.Root open={isOpen} onOpenChange={onClose}>
         <Dialog.Portal>
             <Dialog.Overlay className="modal-overlay" />
-            <Dialog.Content className={`modal-panel ${maxWidth || ''}`}>
-                <header className="p-6 pb-2 flex justify-between items-center shrink-0">
-                    <Dialog.Title className="text-xl font-display font-bold">
+            <Dialog.Content className={`modal-panel ${maxWidth}`}>
+                <header className="modal-header">
+                    <Dialog.Title className="text-lg font-display font-bold uppercase tracking-tight">
                         {title}
                     </Dialog.Title>
                     <IconButton icon={<X size={20} />} title="Cerrar" onClick={onClose} />

@@ -5,7 +5,7 @@
 
 /* --- HEADER DE PARTIDA --- */
 .match-header {
-    @apply bg-background flex fixed top-0 w-full items-center justify-between px-4 py-2 border-b border-white/5;
+    @apply bg-background flex fixed top-0 z-99 w-full items-center justify-between px-4 py-2 border-b border-white/5;
     padding-top: calc(env(safe-area-inset-top) + 0.5rem);
 }
 
@@ -30,7 +30,7 @@
     @apply flex-1 overflow-y-auto px-4 pt-16 pb-24;
 }
 
-/* Aviso de juego descendente (mosca)*/    
+/* Aviso de juego descendente (mosca)*/
 .game-mode-banner {
     @apply bg-purple-500/10 text-purple-400 text-[10px] py-2 text-center font-bold uppercase tracking-widest mb-4 border-y border-purple-500/20;
 }
@@ -46,31 +46,36 @@
 
 /* --- LÓGICA RESPONSIVA PARA INDIVIDUAL --- */
 .mode-individual {
-    grid-template-columns: 1fr; /* Por defecto: uno abajo del otro (Mobile) */
+    grid-template-columns: 1fr;
+    /* Por defecto: uno abajo del otro (Mobile) */
 }
 
 /* Tablet / Desktop pequeño */
 @media (min-width: 600px) {
     .mode-individual {
-        grid-template-columns: repeat(2, 1fr); /* Dos columnas */
+        grid-template-columns: repeat(2, 1fr);
+        /* Dos columnas */
     }
 }
 
 /* Desktop Grande */
 @media (min-width: 1024px) {
     .mode-individual {
-        grid-template-columns: repeat(3, 1fr); /* Tres columnas */
+        grid-template-columns: repeat(3, 1fr);
+        /* Tres columnas */
     }
 }
 
 /* --- LÓGICA PARA EQUIPOS --- */
 .mode-teams {
-    grid-template-columns: 1fr; /* Siempre uno abajo del otro para mantener la jerarquía de bando */
-    max-width: 500px; /* Evitamos que la card de equipo sea gigante en desktop */
+    grid-template-columns: 1fr;
+    /* Siempre uno abajo del otro para mantener la jerarquía de bando */
+    max-width: 500px;
+    /* Evitamos que la card de equipo sea gigante en desktop */
     margin-inline: auto;
 }
 
-/* En tablets podemos poner los dos equipos uno al lado del otro */
+/* En tablets dos equipos uno al lado del otro */
 @media (min-width: 800px) {
     .mode-teams {
         grid-template-columns: 1fr 1fr;
@@ -164,8 +169,7 @@
 
 .history-table {
     @apply w-full border-collapse;
-    /* Evita que las columnas se estiren por el contenido */
-    table-layout: fixed; 
+    table-layout: fixed;
 }
 
 .history-table th {
@@ -274,7 +278,40 @@
     @apply btn-base bg-primary text-background px-6 py-2 text-[10px] uppercase font-black shadow-lg shadow-primary/20;
 }
 
-.card-front, .card-back {
+.card-front,
+.card-back {
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
+}
+
+/* Modal de Edición */
+.edit-form-container {
+    @apply flex flex-col gap-2;
+}
+
+.edit-section {
+    @apply flex flex-col gap-2;
+}
+
+.edit-players-grid {
+    @apply flex flex-col gap-2 max-h-[35vh] overflow-y-auto custom-scrollbar;
+}
+
+.edit-player-row {
+    @apply flex items-center gap-3 bg-white/5 p-1 rounded-xl border border-white/5;
+}
+
+.player-index-mini {
+    @apply w-6 h-6 flex items-center justify-center text-[10px] font-black text-text-muted bg-background rounded-full ml-2;
+}
+
+/* Input extra-compacto */
+.input-compact{
+    @apply !py-2 !px-3 !text-sm !h-10 border-transparent bg-transparent;
+}
+
+/* Select con estilo nocturno */
+.select-custom{
+    @apply w-full h-12 bg-background border border-white/10 text-text-main text-sm px-4 rounded-xl;
+    appearance: none;
 }

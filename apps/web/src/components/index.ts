@@ -6,7 +6,6 @@ export * from './match/EditMatchModal';
 export * from './match/AddCantoModal';
 export * from './match/MatchScoreboard';
 export * from './match/MatchHeader';
-export * from './match/PlayerHeader';
 export * from './match/TeamPlayerList';
 export * from './match/TrucoTotalCell';
 export * from './match/MesaPointsSelector';

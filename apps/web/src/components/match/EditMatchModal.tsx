@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { IMatch, IPlayer } from '@el-porotero/shared';
-import { Save, X } from 'lucide-react';
+import { Save } from 'lucide-react';
 import { BaseModal, Button, Input } from '@/components';
 import { useMatchActions } from '@/hooks';
 
@@ -29,25 +29,21 @@ export const EditMatchModal = ({ match, isOpen, onClose, onSuccess }: EditMatchM
         );
     };
 
-    const modalFooter = (
-        <div className="edit-match-footer">
-            <Button
-                variant="ghost"
-                className="btn-footer-confirm"
-                onClick={onClose}
-            >
-                <X size={20} /> Cancelar
+    const EditFooter = (
+        <>
+            <Button className="flex-1" variant="ghost" size="sx" onClick={onClose}>
+                Cancelar
             </Button>
             <Button
                 variant="primary"
-                className="btn-footer-confirm"
+                size="sx"
+                className="flex-1"
                 onClick={handleSave}
                 loading={updateMatch.isPending}
-                disabled={updateMatch.isPending}
             >
-                <Save size={20} /> Guardar
+                <Save size={18} /> Guardar
             </Button>
-        </div>
+        </>
     );
 
     return (
@@ -55,36 +51,45 @@ export const EditMatchModal = ({ match, isOpen, onClose, onSuccess }: EditMatchM
             isOpen={isOpen}
             onClose={onClose}
             title="Ajustes de la Mesa"
-            footer={modalFooter}
             maxWidth="max-w-sm"
+            footer={EditFooter}
         >
-            <div className="edit-match-form">
-                <label className="label-caps">Nombres de Jugadores</label>
-                <div className="flex flex-col gap-3">
-                    {players.map((p, i) => (
-                        <Input
-                            key={i}
-                            value={p.name}
-                            onChange={(e) => {
-                                const newP = [...players];
-                                newP[i] = { ...newP[i], name: e.target.value.toUpperCase() };
-                                setPlayers(newP);
-                            }}
-                            placeholder={`Jugador ${i + 1}`}
-                        />
-                    ))}
-                </div>
+            <div className="edit-form-container">
+                {/* LISTA DE JUGADORES COMPACTA */}
+                <section className="edit-section">
+                    <label className="label-mini">Jugadores</label>
+                    <div className="edit-players-grid">
+                        {players.map((p, i) => (
+                            <div key={i} className="edit-player-row">
+                                <span className="player-index-mini">{i + 1}</span>
+                                <Input
+                                    value={p.name}
+                                    onChange={(e) => {
+                                        const newP = [...players];
+                                        newP[i] = { ...newP[i], name: e.target.value.toUpperCase() };
+                                        setPlayers(newP);
+                                    }}
+                                    className="input-compact"
+                                    placeholder={`Jugador ${i + 1}`}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </section>
 
-                <label className="label-caps mt-4">Estado de la Partida</label>
-                <select
-                    className="w-full"
-                    value={status}
-                    onChange={(e) => setStatus(e.target.value as IMatch['status'])}
-                >
-                    <option value="active">En curso (Abierta)</option>
-                    <option value="finished">Finalizada (Hay ganador)</option>
-                    <option value="cancelled">Cancelada (Anulada)</option>
-                </select>
+                {/* ESTADO DE PARTIDA */}
+                <section className="edit-section mt-2">
+                    <label className="label-mini">Estado actual</label>
+                    <select
+                        className="select-custom"
+                        value={status}
+                        onChange={(e) => setStatus(e.target.value as IMatch['status'])}
+                    >
+                        <option value="active">En curso (Abierta)</option>
+                        <option value="finished">Finalizada (Hay ganador)</option>
+                        <option value="cancelled">Cancelada (Anulada)</option>
+                    </select>
+                </section>
             </div>
         </BaseModal>
     );
