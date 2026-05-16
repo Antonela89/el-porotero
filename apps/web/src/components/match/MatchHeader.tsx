@@ -5,6 +5,7 @@ import { MoreVertical, ArrowLeft, RotateCcw, Trash2, X, Settings } from 'lucide-
 import { IconButton, ConfirmDialog, EditMatchModal } from '@/components';
 import { useNavigate } from 'react-router-dom';
 import { useMatchActions } from '@/hooks';
+import { getGameColorVar } from '@/utils';
 
 type MatchHeaderProps = {
     gameInfo: Partial<GameDefinition>;
@@ -18,6 +19,7 @@ export const MatchHeader = ({ gameInfo, match, onRefresh, icon }: MatchHeaderPro
     const [showCancelModal, setShowCancelModal] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const gameColor = getGameColorVar(match.gameType);
     const navigate = useNavigate();
 
     const handleConfirmCancel = () => {
@@ -37,7 +39,7 @@ export const MatchHeader = ({ gameInfo, match, onRefresh, icon }: MatchHeaderPro
                 onClick={() => navigate('/dashboard')}
                 title="Volver"
             />
-            <div className={`header-info-center text-${gameInfo.color}`}>
+            <div className='header-info-center' style={{ color: gameColor }}>
                 {icon}
                 <div className='header-title-col'>
                     <span className="text-lg">{match.gameType}</span>
@@ -84,7 +86,7 @@ export const MatchHeader = ({ gameInfo, match, onRefresh, icon }: MatchHeaderPro
                         {/* OPCIÓN: CANCELAR */}
                         <IconButton
                             className="flex items-center rounded-full w-18 h-18 active:bg-rose-500/10 transition-colors"
-                            icon={<Trash2 size={26} className='text-rose-400'/>}
+                            icon={<Trash2 size={26} className='text-rose-400' />}
                             title='Cancelar'
                             onClick={() => {
                                 setShowCancelModal(true);

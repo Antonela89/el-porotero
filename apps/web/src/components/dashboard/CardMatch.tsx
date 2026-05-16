@@ -5,8 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { IconButton } from '@/components';
 import { GAMES_MAP } from '@/constants';
 import { useState } from 'react';
+import { getGameColorVar } from '@/utils';
 
 const MotionArticle = motion.create('article');
+const MotionDiv = motion.create('div');
 
 interface MatchCardProps {
     match: IMatch;
@@ -20,6 +22,8 @@ export const CardMatch = ({ match, onDelete, onEdit }: MatchCardProps) => {
     const gameInfo = GAMES_MAP[match.gameType];
     const [showMenu, setShowMenu] = useState(false);
 
+    const gameColor = getGameColorVar(match.gameType);
+
     const handleNavigate = () => navigate(`/match/${match._id}`);
 
     return (
@@ -32,13 +36,13 @@ export const CardMatch = ({ match, onDelete, onEdit }: MatchCardProps) => {
             {/* Indicador de color lateral */}
             <div className="status-indicator"
                 style={{
-                    backgroundColor: isActive ? `var(--color-${gameInfo.color})` : 'var(--color-secondary)'
+                    backgroundColor: isActive ? gameColor : 'var(--color-text-muted)'
                 }} />
 
             {/* Información Principal */}
             {!showMenu && (
                 <>
-                    <div className="match-icon-box" style={{ color: `var(--color-${gameInfo.color})` }}>
+                    <div className="match-icon-box" style={{ color: gameColor }}>
                         {gameInfo?.icon || <Trophy size={20} />}
                     </div>
 
@@ -56,11 +60,11 @@ export const CardMatch = ({ match, onDelete, onEdit }: MatchCardProps) => {
                 </>
             )}
 
-            {/* 3. Área de Acciones / Menú Extendido */}
+            {/* Área de Acciones / Menú Extendido */}
             <div className='match-actions' onClick={(e) => e.stopPropagation()}>
                 <AnimatePresence mode="wait">
                     {!showMenu ? (
-                        <motion.div
+                        <MotionDiv
                             key="more"
                             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                             className="flex items-center gap-1"
@@ -72,9 +76,9 @@ export const CardMatch = ({ match, onDelete, onEdit }: MatchCardProps) => {
                                 title="Opciones"
                             />
                             <ChevronRight size={16} className="opacity-20" />
-                        </motion.div>
+                        </MotionDiv>
                     ) : (
-                        <motion.div
+                        <MotionDiv
                             key="actions"
                             initial={{ x: 20, opacity: 0 }}
                             animate={{ x: 0, opacity: 1 }}
@@ -98,7 +102,7 @@ export const CardMatch = ({ match, onDelete, onEdit }: MatchCardProps) => {
                                 icon={<X size={16} />}
                                 title="Cerrar"
                             />
-                        </motion.div>
+                        </MotionDiv>
                     )}
                 </AnimatePresence>
             </div>

@@ -1,3 +1,15 @@
+:root {
+    /* --- COLORES DE JUEGOS --- */
+    --color-loba: #60a5fa;     /* blue-400 */
+    --color-truco: #f87171;    /* red-400 */
+    --color-chinchon: #4ade80; /* green-400 */
+    --color-mosca: #c084fc;    /* purple-400 */
+    --color-escoba: #facc15;   /* yellow-400 */
+    --color-barsiga: #f472b6;  /* pink-400 */
+    --color-burako: #fb923c;   /* orange-400 */
+    --color-uno: #a78bfa;      /* violet-400 */
+}
+
 @theme {
     /* --- PALETA DE COLORES "BODEGÓN NOCTURNO" --- */
     /* Fondo principal (Accesible/No cansa la vista) */
