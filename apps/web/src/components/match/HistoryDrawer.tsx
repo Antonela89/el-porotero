@@ -2,18 +2,20 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Edit2, Trash2, X } from 'lucide-react';
 import { IMatch, IRound } from '@el-porotero/shared';
 import { IconButton } from '@/components';
+import { getShortName } from '@/utils';
 
 const MotionDiv = motion.create('div');
 
 interface HistoryDrawerProps {
     match: IMatch;
+    allNames: string[];
     isOpen: boolean;
     onClose: () => void;
     onEdit: (n: number) => void;
     onDelete: (n: number) => void;
 }
 
-export const HistoryDrawer = ({ isOpen, onClose, match, onEdit, onDelete }: HistoryDrawerProps) => {
+export const HistoryDrawer = ({ allNames, isOpen, onClose, match, onEdit, onDelete }: HistoryDrawerProps) => {
     return (
         <AnimatePresence>
             {isOpen && (
@@ -22,44 +24,60 @@ export const HistoryDrawer = ({ isOpen, onClose, match, onEdit, onDelete }: Hist
                     <MotionDiv
                         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="fixed inset-0 bg-black/60 z-40 backdrop-blur-sm"
+                        className="drawer-overlay"
                     />
                     {/* Content */}
-                    <MotionDiv 
+                    <MotionDiv
                         initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
                         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                        className="fixed bottom-0 left-0 right-0 bg-slate-900 border-t border-slate-700 z-50 rounded-t-3xl max-h-[80vh] overflow-hidden flex flex-col"
+                        className="history-drawer"
                     >
-                        <div className="flex items-center justify-between p-5 border-b border-slate-800">
+                        <div className="drawer-header-row">
                             <h3 className="text-xl font-bold">Historial de Rondas</h3>
-                            <IconButton icon={<X />} title="Historial" onClick={onClose} variant="ghost" />
+                            <IconButton icon={<X />} title="Cerrar" onClick={onClose} variant="ghost" />
                         </div>
-                        
-                        <div className="overflow-auto p-4">
-                            <table className="w-full text-center border-collapse">
+
+                        <div className="history-table-container custom-scrollbar">
+                            <table className="history-table">
                                 <thead className="text-slate-500 text-xs uppercase tracking-wider">
                                     <tr>
-                                        <th className="p-2">#</th>
-                                        {match.players.map(p => <th key={p.name} className="p-2">{p.name}</th>)}
-                                        <th className="p-2 text-right">Acción</th>
+                                        <th className="w-10">#</th>
+                                        {match.players.map(p => (
+                                            <th key={p.name}>
+                                                <div className="history-player-header">
+                                                    <span className="initials-pill">
+                                                        {getShortName(p.name, allNames)}
+                                                    </span>
+                                                </div>
+                                            </th>
+                                        ))}
+                                        <th className="w-16"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {match.rounds.map((round: IRound) => (
-                                        <tr key={round.roundNumber} className="border-b border-slate-800/50">
-                                            <td className="p-3 text-slate-500 font-mono">{round.roundNumber}</td>
+                                    {[...match.rounds].reverse().map((round: IRound) => (
+                                        <tr key={round.roundNumber}>
+                                            <td className="round-index">{round.roundNumber}</td>
                                             {match.players.map(p => {
                                                 const s = round.scores.find(score => score.playerName === p.name);
-                                                return <td key={p.name} className="p-3 font-mono text-lg">{s?.pointsAdded || 0}</td>
+                                                return (
+                                                    <td key={p.name} className="round-points">
+                                                        {s?.pointsAdded || 0}
+                                                    </td>
+                                                );
                                             })}
-                                            <td className="p-3">
-                                                <div className="flex justify-end gap-2">
-                                                    <IconButton icon={<Edit2 size={14} />} title="Editar Puntaje" variant="info" onClick={() => onEdit(round.roundNumber)} />
-                                                    <IconButton icon={<Trash2 size={14} />} title="Eliminar Puntaje" variant="danger" onClick={() => onDelete(round.roundNumber)} />
+                                            <td className="round-actions-cell">
+                                                <div className="flex gap-1 justify-end">
+                                                    <button className="btn-edit-inline" onClick={() => onEdit(round.roundNumber)}>
+                                                        <Edit2 size={12} />
+                                                    </button>
+                                                    <button className="btn-delete-inline" onClick={() => onDelete(round.roundNumber)}>
+                                                        <Trash2 size={12} />
+                                                    </button>
                                                 </div>
                                             </td>
                                         </tr>
-                                    )).reverse()}
+                                    ))}
                                 </tbody>
                             </table>
                         </div>

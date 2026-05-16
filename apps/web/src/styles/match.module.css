@@ -149,19 +149,56 @@
 }
 
 /* HistoryDrawer.tsx */
-/*no hay clases*/
 .history-drawer {
     @apply fixed bottom-0 left-0 right-0 bg-surface z-50 rounded-t-[2.5rem] border-t border-white/10 flex flex-col;
     height: 75dvh;
-    box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.5);
 }
 
-.drawer-overlay {
-    @apply fixed inset-0 bg-background/80 backdrop-blur-sm z-40;
+.drawer-header-row {
+    @apply flex items-center justify-between px-6 py-2 border-b border-white/5;
 }
 
-.drawer-handle {
-    @apply w-12 h-1.5 bg-white/10 rounded-full mx-auto my-4 shrink-0;
+.history-table-container {
+    @apply flex-1 overflow-auto p-2 pb-10;
+}
+
+.history-table {
+    @apply w-full border-collapse;
+    /* Evita que las columnas se estiren por el contenido */
+    table-layout: fixed; 
+}
+
+.history-table th {
+    @apply py-3 px-1;
+}
+
+.history-player-header {
+    @apply flex flex-col items-center;
+}
+
+.initials-pill {
+    @apply w-8 h-8 rounded-full bg-background border border-white/10 flex items-center justify-center text-[10px] font-black text-text-muted;
+}
+
+.round-index {
+    @apply text-[10px] font-mono text-text-muted text-center;
+}
+
+.round-points {
+    @apply text-sm font-display font-bold text-white text-center py-4 border-b border-white/[0.02];
+}
+
+/* Botones minúsculos para no ocupar ancho */
+.round-actions-cell {
+    @apply border-b border-white/[0.02];
+}
+
+.btn-edit-inline {
+    @apply p-2 text-indigo-400 active:scale-90 transition-transform;
+}
+
+.btn-delete-inline {
+    @apply p-2 text-rose-500/50 active:text-rose-500 active:scale-90 transition-transform;
 }
 
 
@@ -217,22 +254,12 @@
     @apply text-[10px] font-black text-white/40 tracking-[0.3em] mb-4;
 }
 
-.btn-rematch-compact {
-    @apply flex items-center gap-2 px-6 py-2 bg-primary text-background rounded-full font-black text-[10px] uppercase transition-transform active:scale-95;
-    box-shadow: 0 4px 15px rgba(253, 224, 71, 0.3);
-}
-
 .team-card.is-winner {
     @apply border-primary ring-4 ring-primary/20;
 }
 
 .reengage-asterisks {
     @apply flex -space-x-2 ml-2;
-}
-
-.winner-card-inner {
-    @apply flex flex-row items-center justify-between h-full w-full rounded-[2.5rem] bg-surface border-2 border-primary shadow-2xl p-4;
-    background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
 }
 
 .winner-card-info {

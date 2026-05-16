@@ -119,6 +119,7 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
             {/* EL DRAWER (Se renderiza fuera del flujo normal pero se controla aquí) */}
             <HistoryDrawer
                 isOpen={isHistoryOpen}
+                allNames={allPlayerNames}
                 onClose={() => setIsHistoryOpen(false)}
                 match={match}
                 onEdit={(num) => {

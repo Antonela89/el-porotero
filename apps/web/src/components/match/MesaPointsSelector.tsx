@@ -31,7 +31,6 @@ export const MesaPointsSelector = ({ details, onToggle }: MesaPointsSelectorProp
 
         <div className="score-input-row">
             {(['As', '7', '12'] as const).map(v => {
-                // CORRECCIÓN: Type casting para que TS no chille
                 const key = `hasVelo${v}` as keyof IRoundDetails;
                 const isActive = !!details?.[key];
 
