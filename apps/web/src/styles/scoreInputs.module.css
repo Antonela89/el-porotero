@@ -88,7 +88,6 @@
 .table-item-btn {
     @apply flex flex-1 flex-col items-center gap-1 p-2 rounded-xl border transition-all duration-300;
     @apply bg-surface border-white/5 text-text-muted opacity-40;
-    /* Inactivo por defecto */
 
     &:hover {
         @apply opacity-80;
@@ -96,7 +95,7 @@
 }
 
 /* Variantes activas */
-.active-oro {
+.active-oros {
     @apply opacity-100 bg-yellow-500/20 border-yellow-500 text-yellow-500 shadow-lg shadow-yellow-500/10;
 }
 
@@ -107,7 +106,6 @@
 .active-setenta {
     @apply opacity-100 bg-emerald-500/20 border-emerald-500 text-emerald-50 shadow-lg shadow-emerald-500/10;
 }
-
 
 .team-score-grid {
     @apply grid grid-cols-3 gap-2 mb-4;
@@ -234,3 +232,4 @@
 .btn-action-burako {
     @apply flex-1 py-3 px-2 text-[10px] font-black uppercase tracking-tighter;
 }
+

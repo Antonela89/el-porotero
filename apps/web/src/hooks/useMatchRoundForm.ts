@@ -139,12 +139,10 @@ export const useMatchRoundForm = (
 				return anyoneClosed;
 			case 'Escoba':
 			case 'Barsiga':
-				return ['hasVeloAs', 'hasVelo7', 'hasVelo12'].every(
-					(k) =>
-						scores.filter(
-							(s: IRoundScore) =>
-								s.details[k as keyof IRoundDetails],
-						).length === 1,
+				return ['hasVeloAs', 'hasVelo7', 'hasVelo12'].every((k) =>
+					scores.some(
+						(s: IRoundScore) => s.details[k as keyof IRoundDetails],
+					),
 				);
 			default:
 				return true;
