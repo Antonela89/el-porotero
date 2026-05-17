@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
 import { Crown, HatGlasses, Asterisk, Megaphone, Trophy, RefreshCw } from 'lucide-react';
 import { Button, IconButton, ScoreProgressBar } from '@/components';
+import { getPointsToLimit, getTempCantosSum, getScoreStatus, getShortName } from '@/utils';
+import { IMatch } from '@el-porotero/shared';
 
 const MotionArticle = motion.create('article');
 const MotionDiv = motion.create('div');
@@ -8,8 +10,9 @@ const MotionDiv = motion.create('div');
 interface PlayerScoreCardProps {
     name: string;
     score: number;
+    allPlayers: string[]
     winner?: string;
-    limitScore: number;
+    match: IMatch;
     isDealer: boolean;
     isSombrero: boolean;
     isOut: boolean;
@@ -19,20 +22,22 @@ interface PlayerScoreCardProps {
     onReengage?: () => void;
     onCantar?: () => void;
     showCantar?: boolean;
-    onRematch?: ()  => void;
+    onRematch?: () => void;
 }
 
 export const PlayerScoreCard = ({
-    name, score, winner, limitScore, isDealer, isSombrero, isOut,
+    name, score, allPlayers, winner, match, isDealer, isSombrero, isOut,
     isLoseOnLimit, reengage, onReengage, onCantar, showCantar, onRematch
 }: PlayerScoreCardProps) => {
 
     const isWinner = winner === name;
-    const remaining = limitScore > 0 ? limitScore - score : null;
-    const isCritical = isLoseOnLimit ? (remaining !== null && remaining <= 20) : (remaining !== null && remaining <= 10);
+    const remaining = getPointsToLimit(score, match.config.limitScore, match.config.isDescending);
+    const status = getScoreStatus(remaining, isLoseOnLimit);
+    const tempCantos = getTempCantosSum(match.tempCantos, name);
+    const iniciales = getShortName(name, allPlayers)
 
     return (
-        <div className="card-container" style={{ perspective: '1000px' }}>
+        <div className="card-container" style={{ perspective: '1200px', minHeight: '145px' }}>
 
             <MotionArticle
                 className="card-inner"
@@ -43,11 +48,11 @@ export const PlayerScoreCard = ({
             >
 
                 {/* LADO A: EL MARCADOR (Frente) */}
-                <article className={`player-card ${isOut ? 'bg-slate-900/50 border-slate-800' : 'bg-slate-800 border-slate-700'}`}>
+                <article className={`player-card ${isOut ? 'is-out' : ''}`} style={{ backfaceVisibility: 'hidden' }}>
                     {/* Cabecera: Nombre e Iconos */}
                     <div className="player-card-header">
                         <div className={`player-card-name ${isDealer ? 'text-primary' : ''}`}>
-                            {name}
+                            {iniciales}
                             {reengage > 0 && (
                                 <div className="flex -space-x-1.5">
                                     {Array.from({ length: reengage }).map((_, i) => (
@@ -81,39 +86,49 @@ export const PlayerScoreCard = ({
                         <span className={`player-card-score ${isOut ? 'text-slate-600' : 'text-white'}`}>
                             {score}
                         </span>
-                        {isOut && <span className="text-xs text-warning font-bold">AFUERA</span>}
-
-                        {
-                            remaining !== null && !isOut && (
-                                <div className={`player-card-status ${isCritical ? 'text-warning animate-pulse' : 'text-text-muted'}`}>
-                                    {isLoseOnLimit && `Faltan ${remaining} para salir`}
-
-                                    <div style={{ width: '120px' }}> {/* Ancho fijo para que no ocupe todo si no quieres */}
-                                        <ScoreProgressBar
-                                            current={score}
-                                            limit={limitScore}
-                                            isLoseOnLimit={isLoseOnLimit}
-                                        />
-                                    </div>
-                                </div>
-                            )
-                        }
+                        {tempCantos > 0 && (
+                            <motion.span
+                                initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
+                                className="text-sm font-black text-purple-400"
+                            >
+                                +{tempCantos}
+                            </motion.span>
+                        )}
                     </div>
 
-                    {
-                        isOut && onReengage && (
-                            <Button size="md" variant="primary" className="mt-3 w-full" onClick={onReengage}>
-                                RE-ENGANCHAR
-                            </Button>
-                        )
-                    }
+                    {match.config.limitScore > 0 && !isOut && (
+                        <div className={`flex flex-col items-end ${status.colorClass} ${status.isCritical ? 'animate-pulse' : ''}`}>
+                            <span className="text-[9px] font-black uppercase tracking-tighter">
+                                {isLoseOnLimit ? 'Para salir' : 'Para ganar'}
+                            </span>
+                            <span className="text-xl font-display font-black leading-none mb-1">
+                                {remaining}
+                            </span>
+                            <div style={{ width: '90px' }}>
+                                <ScoreProgressBar
+                                    current={score}
+                                    limit={match.config.limitScore}
+                                    isLoseOnLimit={isLoseOnLimit}
+                                />
+                            </div>
+                        </div>
+                    )}
+
+                    {isOut && <span className="badge-out">AFUERA</span>}
+
+                    {isOut && onReengage && (
+                        <Button size="md" variant="primary" className="mt-3 w-full py-2" onClick={onReengage}>
+                            RE-ENGANCHAR
+                        </Button>
+                    )}
                 </article >
 
-                    {/* LADO B: EL GANADOR (Detrás) */}
-                <div 
-                    className="card-back" 
-                    style={{ 
-                        backfaceVisibility: 'hidden', 
+
+                {/* LADO B: EL GANADOR (Detrás) */}
+                <div
+                    className="card-back"
+                    style={{
+                        backfaceVisibility: 'hidden',
                         transform: 'rotateY(180deg)',
                         position: 'absolute',
                         top: 0, left: 0, right: 0, bottom: 0
@@ -125,13 +140,13 @@ export const PlayerScoreCard = ({
                             <h3 className="winner-name">{name}</h3>
                             <p className="winner-label">¡GANADOR!</p>
                         </div>
-                        
+
                         <button className="btn-rematch-compact" onClick={onRematch}>
                             <RefreshCw size={14} /> REVANCHA
                         </button>
                     </article>
                 </div>
             </MotionArticle>
-        </div>
+        </div >
     );
 };

@@ -112,7 +112,53 @@
 }
 
 /* TeamPLayerList.tsx */
-/*no hay clases*/
+.team-players-row {
+    @apply flex justify-center gap-4 py-2;
+}
+
+.player-slot {
+    @apply flex flex-col items-center gap-1;
+}
+
+.player-initials-circle {
+    @apply relative w-10 h-10 rounded-full flex items-center justify-center font-black text-sm bg-slate-700 text-slate-300 border-2 border-transparent transition-all;
+}
+
+.player-initials-circle.is-dealer {
+    @apply bg-amber-400 text-slate-900 border-amber-200 shadow-[0_0_10px_rgba(251,191,36,0.3)];
+}
+
+.dealer-crown-abs {
+    @apply absolute -top-2 -right-2 bg-slate-900 rounded-full p-1;
+}
+
+.btn-cantar-pill {
+    @apply p-1.5 rounded-full bg-white/5 text-slate-400 active:bg-indigo-500 active:text-white transition-colors;
+}
+
+/* History Table Fixes */
+.history-table {
+    @apply w-full border-collapse table-fixed;
+}
+
+.row-expanded {
+    @apply bg-white/[0.03];
+}
+
+.round-points-team {
+    @apply text-sm font-display font-black text-center py-4 border-b border-white/[0.02];
+}
+
+.team-a-text { @apply text-indigo-300; }
+.team-b-text { @apply text-rose-300; }
+
+.canto-detail-grid {
+    @apply grid grid-cols-2 gap-2 p-3 bg-black/20 rounded-xl mx-2 mb-2;
+}
+
+.canto-detail-item {
+    @apply flex justify-between px-2 border-l border-white/10;
+}
 
 /* PlayerScoreCard.tsx - Tarjeta indivual */
 .player-card {
@@ -124,16 +170,33 @@
     @apply flex justify-between items-start mb-1;
 }
 
-.player-card-name {
-    @apply flex gap-2 items-center font-black uppercase tracking-widest text-text-muted;
+.player-card-status {
+    @apply flex flex-col items-center text-[10px] font-bold uppercase tracking-tighter mt-2 py-1 px-2 rounded-lg bg-white/5;
+}
+
+.player-card.is-out {
+    @apply bg-slate-900/50 border-slate-800 opacity-60 grayscale-[0.5];
+}
+
+.badge-out {
+    @apply text-[10px] font-black text-warning border border-warning/20 bg-warning/10 px-2 py-0.5 rounded-md uppercase tracking-widest;
+}
+
+.btn-cantar-active {
+    @apply bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-full !p-2;
+}
+
+.btn-cantar-active:active {
+    @apply bg-purple-500 text-white scale-90;
 }
 
 .player-card-score {
-    @apply text-5xl font-display font-black leading-none my-1 text-text-main;
+    @apply text-5xl font-display font-black leading-none text-text-main;
 }
 
-.player-card-status {
-    @apply flex flex-col items-center text-[10px] font-bold uppercase tracking-tighter mt-2 py-1 px-2 rounded-lg bg-white/5;
+/* Para asegurar que el nombre no empuje a los iconos */
+.player-card-name {
+    @apply text-sm font-black uppercase tracking-tight;
 }
 
 /* --- ScoreProgressBar.tsx --- */
@@ -197,12 +260,13 @@
     @apply border-b border-white/[0.02];
 }
 
-.btn-edit-inline {
-    @apply p-2 text-indigo-400 active:scale-90 transition-transform;
+.round-actions {
+    @apply flex gap-1;
 }
 
+.btn-edit-inline,
 .btn-delete-inline {
-    @apply p-2 text-rose-500/50 active:text-rose-500 active:scale-90 transition-transform;
+    @apply p-2 active:scale-90 transition-transform;
 }
 
 .form-error-banner {

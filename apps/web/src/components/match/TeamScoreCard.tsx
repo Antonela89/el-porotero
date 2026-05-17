@@ -1,22 +1,14 @@
 import { motion } from 'framer-motion';
 import { TeamPlayerList, ScoreProgressBar } from '@/components';
 import { Trophy, RefreshCw } from 'lucide-react';
-import { ITeamScore, GameType, IMatchConfig, IMatch } from '@el-porotero/shared';
-
-interface Player {
-    name: string; isDealer: boolean
-};
+import { IMatch } from '@el-porotero/shared';
+import { getPointsToLimit, getTeamTempCantosSum, getTeamStyle, getScoreStatus, getTeamPlayersData, getTeamTotalScore } from '@/utils';
 
 interface TeamScoreCardPromps {
     teamId: 'A' | 'B';
     match: IMatch;
-    score: ITeamScore["score"];
     winner?: string;
-    limitScore: IMatchConfig["limitScore"];
     isWinnerOnLimit: boolean;
-    gameType: GameType;
-    allNames: string[];
-    players: Player[];
     showCantar?: boolean;
     onCantar?: (name: string) => void;
     onRematch: (match: IMatch) => void;
@@ -24,16 +16,18 @@ interface TeamScoreCardPromps {
 
 const MotionArticle = motion.create('article')
 
-export const TeamScoreCard = ({ teamId, match, score, winner, players, allNames, limitScore, isWinnerOnLimit, gameType, onCantar, onRematch }: TeamScoreCardPromps) => {
-    const isTeamA = teamId === 'A';
-    const colorClass = isTeamA ? 'text-indigo-400' : 'text-rose-400';
-    const borderColor = isTeamA ? 'border-indigo-400' : 'border-rose-400';
-    const remaining = limitScore > 0 ? limitScore - score : null;
-    const isCritical = limitScore ? (remaining !== null && remaining <= 20) : (remaining !== null && remaining <= 10);
+export const TeamScoreCard = ({ teamId, match, winner, isWinnerOnLimit, onCantar, onRematch }: TeamScoreCardPromps) => {
     const isWinner = winner === teamId;
+    const teamStyles = getTeamStyle(teamId);
+
+    const players = getTeamPlayersData(match, teamId);
+    const score = getTeamTotalScore(match.players, teamId);
+    const remaining = getPointsToLimit(score, match.config.limitScore, match.config.isDescending);
+    const status = getScoreStatus(remaining, !isWinnerOnLimit);
+    const tempCantos = getTeamTempCantosSum(match.tempCantos, match.players, teamId);
 
     return (
-        <div className="card-container" style={{ perspective: '1000px' }}>
+        <div className="card-container" style={{ perspective: '1200px', minHeight: '160px' }}>
 
             <MotionArticle
                 className="card-inner"
@@ -45,60 +39,60 @@ export const TeamScoreCard = ({ teamId, match, score, winner, players, allNames,
 
                 {/* LADO A: EL MARCADOR (Frente) */}
                 <article
-                    className={`team-card ${borderColor} overflow-hidden shadow-xl`}
+                    className={`team-card ${teamStyles.border} ${teamStyles.bg} overflow-hidden shadow-xl`}
                 >
                     {/* Parte superior: Info del Equipo y Puntaje */}
                     <div className="team-card-header">
                         <div className="team-info">
-                            <span className={`team-label ${colorClass}`}>
+                            <span className={`team-label ${teamStyles.text}`}>
                                 Equipo {teamId}
                             </span>
                             <span className="team-score-big">
                                 {score}
                             </span>
+                            {tempCantos > 0 && (
+                                <div className="temp-canto-badge">+{tempCantos}</div>
+                            )}
                         </div>
 
-                        {remaining !== null && (
-                            <div className={`flex flex-col items-end ${isCritical ? 'text-esmerald-400 animate-pulse' : 'text-text-muted'}`}>
-                                <div style={{ width: '120px' }}>
-                                    {isWinnerOnLimit && `A ${remaining} de ganar`}
+                        {match.config.limitScore > 0 && (
+                            <div className={`flex flex-col items-end ${status.colorClass} ${status.isCritical ? 'animate-pulse' : ''}`}>
+                                <span className="text-[9px] font-black uppercase tracking-tighter">
+                                    {isWinnerOnLimit ? 'Para ganar' : 'Para salir'}
+                                </span>
+                                <span className="text-xl font-display font-black leading-none mb-1">
+                                    {remaining}
+                                </span>
+                                <div style={{ width: '80px' }}>
                                     <ScoreProgressBar
                                         current={score}
-                                        limit={limitScore}
-                                        isLoseOnLimit={isWinnerOnLimit}
+                                        limit={match.config.limitScore}
+                                        isLoseOnLimit={!isWinnerOnLimit}
                                     />
                                 </div>
                             </div>
                         )}
                     </div>
 
-                    {/* Parte inferior*/}
                     <div className="team-players-footer">
                         <TeamPlayerList
                             players={players}
-                            allNames={allNames}
-                            // color={colorClass}
-                            showCantar={gameType === 'Barsiga'}
+                            allNames={match.players.map(p => p.name)}
+                            showCantar={match.gameType === 'Barsiga'}
                             onCantar={onCantar}
                         />
                     </div>
-                </article >
+                </article>
 
                 {/* LADO B: EL GANADOR (Detrás) */}
                 <div
                     className="card-back"
-                    style={{
-                        backfaceVisibility: 'hidden',
-                        transform: 'rotateY(180deg)',
-                        position: 'absolute',
-                        top: 0, left: 0, right: 0, bottom: 0
-                    }}
+                    style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)', position: 'absolute', inset: 0 }}
                 >
                     <article className="winner-card-inner">
-                        <Trophy size={32} className="text-primary mb-1" />
-                        <h3 className="winner-name">{teamId}</h3>
-                        <p className="winner-label">¡GANADORES!</p>
-
+                        <Trophy size={40} className="text-primary mb-1" />
+                        <h3 className="winner-name">EQUIPO {teamId}</h3>
+                        <p className="winner-pill-text">¡VICTORIA TOTAL!</p>
                         <button className="btn-rematch-compact" onClick={() => onRematch(match)}>
                             <RefreshCw size={14} /> REVANCHA
                         </button>

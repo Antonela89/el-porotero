@@ -17,22 +17,19 @@ interface MatchScoreboardProps {
 export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage, onCantar, onRematch }: MatchScoreboardProps) => {
     const [isHistoryOpen, setIsHistoryOpen] = useState(false);
     // const { getStatus } = useTrucoLogic(match);
-    const allPlayerNames = match.players.map(p => p.name);
 
     const isLoseOnLimit = ['Loba', 'Chinchon', 'Uno'].includes(match.gameType);
     const isWinnerOnLimit = ['Barsiga', 'Escoba', 'Burako', 'Truco'].includes(match.gameType);
-    // const limitLabel = isLoseOnLimit ? 'Para Salir' : 'Para Ganar';
     const isTeamLayout = match.isTeamGame || match.gameType === 'Truco';
     const isMosca = match.gameType === 'Mosca';
     // const isTruco = match.gameType === 'Truco';
 
+    const allPlayerNames = match.players.map(p => p.name)
+    console.log(allPlayerNames);
+    
+
     const sombreroIndex = (isMosca && match.players.length === 5)
         ? (match.currentDealerIndex + 1) % match.players.length : -1;
-
-    // Helpers
-    // const sumTeamRound = (round: IRound, team: 'A' | 'B') =>
-    //     round.scores.filter(s => match.players.find(p => p.name === s.playerName)?.team === team)
-    //         .reduce((acc, s) => acc + (s.pointsAdded || 0), 0);
 
     const gridClassName = isTeamLayout
         ? "scoreboard-grid mode-teams"
@@ -45,30 +42,13 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
                 {isTeamLayout ? (
                     // --- MODO EQUIPOS ---
                     ['A', 'B'].map(t => {
-                        const teamPlayers = match.players
-                            .map((p, i) => ({ ...p, globalIndex: i }))
-                            .filter(p => p.team === t)
-                            .map(p => ({
-                                name: p.name,
-                                isDealer: p.globalIndex === match.currentDealerIndex
-                            }));
-
-                        const teamTotalScore = match.players
-                            .filter(p => p.team === t)
-                            .reduce((acc, p) => acc + p.score, 0);
-
                         return (
                             <TeamScoreCard
                                 key={t}
                                 teamId={t as 'A' | 'B'}
                                 match={match}
-                                score={teamTotalScore}
                                 winner={match.winner}
-                                players={teamPlayers}
-                                allNames={allPlayerNames}
-                                limitScore={match.config.limitScore}
                                 isWinnerOnLimit={isWinnerOnLimit}
-                                gameType={match.gameType}
                                 onCantar={onCantar}
                                 onRematch={onRematch}
                             />
@@ -81,8 +61,9 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
                             key={p.name}
                             name={p.name}
                             score={p.score}
+                            allPlayers={allPlayerNames}
+                            match={match}
                             winner={match.winner}
-                            limitScore={match.config.limitScore}
                             isDealer={i === match.currentDealerIndex}
                             isSombrero={i === sombreroIndex}
                             isOut={p.isOut}
