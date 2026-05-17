@@ -101,7 +101,6 @@ export const MatchDetailPage = () => {
                     playerName={cantoPlayer}
                     onConfirm={(points) => {
                         if (cantoPlayer) {
-                            console.log("🚀 Enviando Canto:", { playerName: cantoPlayer, points });
                             actions.addCanto.mutate({
                                 playerName: cantoPlayer,
                                 points

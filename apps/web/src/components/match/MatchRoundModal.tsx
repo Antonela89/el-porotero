@@ -114,7 +114,6 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit }: MatchRo
                 disabled={!isFormValid || saveRound.isPending}
                 loading={saveRound.isPending}
                 onClick={() => {
-                    console.log("📦 Enviando Ronda Final con estos Scores:", scores);
                     saveRound.mutate(
                         { scores, isEdit: isEditMode, roundNumber: roundToEdit ?? undefined },
                         { onSuccess: onClose }
