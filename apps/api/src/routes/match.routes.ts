@@ -13,7 +13,7 @@ import {
 } from '@/controllers/index.js';
 import { protect } from '@/middlewares/index.js';
 
-const matchRouter = Router();
+const matchRouter: Router = Router();
 
 matchRouter.use(protect); // Todas las rutas de acá abajo requieren Token
 
