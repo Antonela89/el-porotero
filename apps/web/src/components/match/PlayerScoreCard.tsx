@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Crown, HatGlasses, Asterisk, Megaphone, Trophy, RefreshCw } from 'lucide-react';
 import { Button, IconButton, ScoreProgressBar } from '@/components';
-import { getPointsToLimit, getTempCantosSum, getScoreStatus, getShortName } from '@/utils';
+import { getPointsToLimit, getTempCantosSum, getScoreStatus } from '@/utils';
 import { IMatch } from '@el-porotero/shared';
 
 const MotionArticle = motion.create('article');
@@ -10,7 +10,6 @@ const MotionDiv = motion.create('div');
 interface PlayerScoreCardProps {
     name: string;
     score: number;
-    allPlayers: string[]
     winner?: string;
     match: IMatch;
     isDealer: boolean;
@@ -26,7 +25,7 @@ interface PlayerScoreCardProps {
 }
 
 export const PlayerScoreCard = ({
-    name, score, allPlayers, winner, match, isDealer, isSombrero, isOut,
+    name, score, winner, match, isDealer, isSombrero, isOut,
     isLoseOnLimit, reengage, onReengage, onCantar, showCantar, onRematch
 }: PlayerScoreCardProps) => {
 
@@ -34,7 +33,6 @@ export const PlayerScoreCard = ({
     const remaining = getPointsToLimit(score, match.config.limitScore, match.config.isDescending);
     const status = getScoreStatus(remaining, isLoseOnLimit);
     const tempCantos = getTempCantosSum(match.tempCantos, name);
-    const iniciales = getShortName(name, allPlayers)
 
     return (
         <div className="card-container" style={{ perspective: '1200px', minHeight: '145px' }}>
@@ -52,7 +50,7 @@ export const PlayerScoreCard = ({
                     {/* Cabecera: Nombre e Iconos */}
                     <div className="player-card-header">
                         <div className={`player-card-name ${isDealer ? 'text-primary' : ''}`}>
-                            {iniciales}
+                            {name}
                             {reengage > 0 && (
                                 <div className="flex -space-x-1.5">
                                     {Array.from({ length: reengage }).map((_, i) => (
@@ -117,7 +115,7 @@ export const PlayerScoreCard = ({
                     {isOut && <span className="badge-out">AFUERA</span>}
 
                     {isOut && onReengage && (
-                        <Button size="md" variant="primary" className="mt-3 w-full py-2" onClick={onReengage}>
+                        <Button disabled={match.status === 'finished'} size="md" variant="primary" className="mt-3 w-full py-2" onClick={onReengage}>
                             RE-ENGANCHAR
                         </Button>
                     )}

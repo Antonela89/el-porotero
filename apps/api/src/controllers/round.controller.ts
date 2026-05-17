@@ -1,7 +1,40 @@
 import { Request, Response } from 'express';
 import { MatchModel } from '@/models/index.js';
 import * as GameRules from '@/services/gameRules.services.js';
-// Función  Auxiliar
+
+// Funciones  Auxiliares
+// Función Universal de Detección de Ganador
+const determineWinner = (match: any): { status: 'active' | 'finished' | 'cancelled'; winner: string | null } => {
+	const { gameType, players, config, isTeamGame } = match;
+	const limit = config.limitScore;
+
+	if (isTeamGame || gameType === 'Truco') {
+		const totalA = players
+			.filter((p: any) => p.team === 'A')
+			.reduce((acc: number, p: any) => acc + p.score, 0);
+		const totalB = players
+			.filter((p: any) => p.team === 'B')
+			.reduce((acc: number, p: any) => acc + p.score, 0);
+
+		if (totalA >= limit) return { status: 'finished', winner: 'A' };
+		if (totalB >= limit) return { status: 'finished', winner: 'B' };
+	} else {
+		if (config.isDescending) {
+			const winner = players.find((p: any) => p.score === 0);
+			if (winner) return { status: 'finished', winner: winner.name };
+		} else if (gameType === 'Loba' || gameType === 'Chinchon') {
+			const playersAlive = players.filter((p: any) => !p.isOut);
+			if (playersAlive.length === 1)
+				return { status: 'finished', winner: playersAlive[0].name };
+		} else {
+			const winner = players.find((p: any) => p.score >= limit);
+			if (winner) return { status: 'finished', winner: winner.name };
+		}
+	}
+	return { status: 'active', winner: null };
+};
+
+// Función para recalcular puntajes
 const recalculateMatchScores = (match: any) => {
 	// Resetear a todos los jugadores al estado inicial
 	match.players.forEach((p: any) => {
@@ -43,14 +76,9 @@ const recalculateMatchScores = (match: any) => {
 	});
 
 	// Verificar si hay un ganador final
-	const playersAlive = match.players.filter((p: any) => !p.isOut);
-	if (playersAlive.length === 1 && match.rounds.length > 0) {
-		match.status = 'finished';
-		match.winner = playersAlive[0].name;
-	} else {
-		match.status = 'active';
-		match.winner = null;
-	}
+	const result = determineWinner(match);
+	match.status = result.status;
+	match.winner = result.winner;
 };
 
 // Agregar una ronda a una partida existente
@@ -88,34 +116,16 @@ export const addRound = async (req: Request, res: Response) => {
 				break;
 		}
 
-		const isTeamGame = ['Truco', 'Burako'].includes(match.gameType);
-
-		if (isTeamGame) {
-			// Calculamos el total de cada equipo
-			const totalA = match.players
-				.filter((p: any) => p.team === 'A')
-				.reduce((acc: number, p: any) => acc + p.score, 0);
-			const totalB = match.players
-				.filter((p: any) => p.team === 'B')
-				.reduce((acc: number, p: any) => acc + p.score, 0);
-
-			const limit = match.config.limitScore;
-
-			if (totalA >= limit) {
-				match.status = 'finished';
-				match.winner = 'Equipo A';
-			} else if (totalB >= limit) {
-				match.status = 'finished';
-				match.winner = 'Equipo B';
-			}
-		}
-
 		match.rounds.push({
 			roundNumber: match.rounds.length + 1,
 			dealerIndex: match.currentDealerIndex,
 			scores,
 			timestamp: new Date(),
 		});
+
+		const result = determineWinner(match);
+		match.status = result.status;
+		match.winner = result.winner as 'active' | 'finished' | 'cancelled';
 
 		// Iteramos con seguridad
 		for (const s of scores) {
@@ -127,54 +137,12 @@ export const addRound = async (req: Request, res: Response) => {
 				});
 			}
 		}
-
-		// Lógica genérica de fin de juego por puntaje
-		if (!instantWinner) {
-			if (match.config.isDescending) {
-				// Si es descendente (Mosca), gana el primero que llega a 0
-				const winnerPlayer = match.players.find((p) => p.score === 0);
-				if (winnerPlayer) instantWinner = winnerPlayer.name;
-			} else if (match.gameType === 'Loba') {
-				// Si es Loba, gana el último que queda vivo (isOut: false)
-				const playersAlive = match.players.filter((p) => !p.isOut);
-				if (playersAlive.length === 1)
-					instantWinner = playersAlive[0].name;
-			} else if (match.config.limitScore) {
-				const winnerPlayer = match.players.find(
-					(p) => p.score >= match.config.limitScore!,
-				);
-				if (winnerPlayer) {
-					instantWinner = winnerPlayer.name;
-				}
-			}
-		}
-
-		if (instantWinner) {
-			match.status = 'finished';
-			match.winner = instantWinner;
-		} else {
-			// Verificación de victoria normal
-			if (match.config.isDescending) {
-				const winnerPlayer = match.players.find((p) => p.score === 0);
-				if (winnerPlayer) {
-					match.status = 'finished';
-					match.winner = winnerPlayer.name;
-				}
-			} else {
-				// En juegos como Loba, gana el que tiene menos puntos cuando los demás perdieron
-				const playersAlive = match.players.filter((p) => !p.isOut);
-				if (playersAlive.length === 1) {
-					match.status = 'finished';
-					match.winner = playersAlive[0].name;
-				}
-			}
-		}
-
-		match.tempCantos = [];
-
+		
 		// Rotar el repartidor (Dealer)
 		match.currentDealerIndex =
 			(match.currentDealerIndex + 1) % match.players.length;
+		match.tempCantos = [];
+
 
 		await match.save();
 		res.json(match);

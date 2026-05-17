@@ -1,9 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { History, ChevronUp } from 'lucide-react';
-// import { AnimatePresence, motion } from 'framer-motion';
 import { IMatch } from '@el-porotero/shared';
-// import { useTrucoLogic } from '@/hooks';
 import { PlayerScoreCard, HistoryDrawer, TeamScoreCard } from '@/components';
+import confetti from 'canvas-confetti';
 
 interface MatchScoreboardProps {
     match: IMatch;
@@ -16,15 +15,54 @@ interface MatchScoreboardProps {
 
 export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage, onCantar, onRematch }: MatchScoreboardProps) => {
     const [isHistoryOpen, setIsHistoryOpen] = useState(false);
-    // const { getStatus } = useTrucoLogic(match);
+
+    // Usamos un Ref para no disparar el confeti múltiples veces si hay re-renders
+    const hasCelebrated = useRef(false);
+
+    useEffect(() => {
+        // Disparamos solo si hay un ganador y no hemos celebrado todavía en esta sesión
+        if (match.status === 'finished' && match.winner && !hasCelebrated.current) {
+
+            const commonConfig = {
+                origin: { y: 0.7 },
+                zIndex: 9999,
+                disableForReducedMotion: true
+            };
+
+            // Función de disparo prolija
+            const fire = (particleRatio: number, opts: object) => {
+                confetti({
+                    ...commonConfig,
+                    ...opts,
+                    origin: { y: 0.7 },
+                    particleCount: Math.floor(200 * particleRatio),
+                    zIndex: 9999,
+                    disableForReducedMotion: true 
+                });
+            };
+
+            // Ráfaga de confeti (estilo fuegos artificiales)
+            fire(0.25, { spread: 26, startVelocity: 55 });
+            fire(0.2, { spread: 60 });
+            fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+            fire(0.1, { spread: 120, startVelocity: 45 });
+
+            hasCelebrated.current = true;
+        }
+
+        // Si borramos una ronda y el estado vuelve a 'active', reseteamos el ref
+        if (match.status === 'active') {
+            hasCelebrated.current = false;
+        }
+    }, [match.status, match.winner]); // Reacciona al cambio de estado
 
     const isLoseOnLimit = ['Loba', 'Chinchon', 'Uno'].includes(match.gameType);
     const isWinnerOnLimit = ['Barsiga', 'Escoba', 'Burako', 'Truco'].includes(match.gameType);
     const isTeamLayout = match.isTeamGame || match.gameType === 'Truco';
     const isMosca = match.gameType === 'Mosca';
-    // const isTruco = match.gameType === 'Truco';
 
-    const allPlayerNames = match.players.map(p => p.name)    
+    const allPlayerNames = match.players.map(p => p.name)
 
     const sombreroIndex = (isMosca && match.players.length === 5)
         ? (match.currentDealerIndex + 1) % match.players.length : -1;
@@ -32,6 +70,21 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
     const gridClassName = isTeamLayout
         ? "scoreboard-grid mode-teams"
         : "scoreboard-grid mode-individual";
+
+    const getEffectiveWinner = () => {
+        if (match.winner) return match.winner;
+
+        // Fallback para equipos
+        if (isTeamLayout) {
+            const totalA = match.players.filter(p => p.team === 'A').reduce((acc, p) => acc + p.score, 0);
+            const totalB = match.players.filter(p => p.team === 'B').reduce((acc, p) => acc + p.score, 0);
+            if (totalA >= match.config.limitScore) return 'A';
+            if (totalB >= match.config.limitScore) return 'B';
+        }
+        return null;
+    };
+
+    const currentWinner = getEffectiveWinner() ?? undefined;
 
     return (
         <>
@@ -45,7 +98,7 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
                                 key={t}
                                 teamId={t as 'A' | 'B'}
                                 match={match}
-                                winner={match.winner}
+                                winner={currentWinner}
                                 isWinnerOnLimit={isWinnerOnLimit}
                                 onCantar={onCantar}
                                 onRematch={onRematch}
@@ -59,9 +112,8 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
                             key={p.name}
                             name={p.name}
                             score={p.score}
-                            allPlayers={allPlayerNames}
                             match={match}
-                            winner={match.winner}
+                            winner={currentWinner}
                             isDealer={i === match.currentDealerIndex}
                             isSombrero={i === sombreroIndex}
                             isOut={p.isOut}
@@ -70,7 +122,7 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
                             onReengage={() => onReengage(p.name)}
                             showCantar={match.gameType === 'Barsiga'}
                             onCantar={() => onCantar(p.name)}
-                            onRematch={() => onRematch(match)} 
+                            onRematch={() => onRematch(match)}
                         />
                     ))
                 )}

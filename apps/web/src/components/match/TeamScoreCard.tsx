@@ -19,7 +19,7 @@ const MotionArticle = motion.create('article')
 export const TeamScoreCard = ({ teamId, match, winner, isWinnerOnLimit, onCantar, onRematch }: TeamScoreCardPromps) => {
     const isWinner = winner === teamId;
     const teamStyles = getTeamStyle(teamId);
-
+    
     const players = getTeamPlayersData(match, teamId);
     const score = getTeamTotalScore(match.players, teamId);
     const remaining = getPointsToLimit(score, match.config.limitScore, match.config.isDescending);

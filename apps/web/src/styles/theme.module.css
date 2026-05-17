@@ -1,13 +1,26 @@
 :root {
     /* --- COLORES DE JUEGOS --- */
-    --color-loba: #60a5fa;     /* blue-400 */
-    --color-truco: #f87171;    /* red-400 */
-    --color-chinchon: #4ade80; /* green-400 */
-    --color-mosca: #c084fc;    /* purple-400 */
-    --color-escoba: #facc15;   /* yellow-400 */
-    --color-barsiga: #f472b6;  /* pink-400 */
-    --color-burako: #fb923c;   /* orange-400 */
-    --color-uno: #a78bfa;      /* violet-400 */
+    /* blue-400 */
+    --color-loba: #60a5fa;
+    /* red-400 */
+    --color-truco: #f87171;
+    /* green-400 */
+    --color-chinchon: #4ade80;
+    /* purple-400 */
+    --color-mosca: #c084fc;
+    /* yellow-400 */
+    --color-escoba: #facc15;
+    /* pink-400 */
+    --color-barsiga: #f472b6;
+    /* orange-400 */
+    --color-burako: #fb923c;
+    /* violet-400 */
+    --color-uno: #a78bfa;
+
+    /* Un verde esmeralda vibrante */
+    --color-success: #10b981;
+    /* Un naranja/ámbar */
+    --color-warning: #f59e0b;
 }
 
 @theme {

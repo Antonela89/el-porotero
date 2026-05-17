@@ -1,10 +1,12 @@
+import { useEffect } from 'react';
 import { AuthProvider } from '@/context/AuthProvider';
 import { AppRouter } from '@/routes/AppRouter';
-import { Toaster } from 'sonner';
+import { Toaster, toast } from 'sonner';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { persistQueryClient } from '@tanstack/react-query-persist-client';
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
-import { handleApiError } from '@/utils'
+import { handleApiError } from '@/utils';
+import { useRegisterSW } from 'virtual:pwa-register/react';
 import './index.css';
 
 const queryClient = new QueryClient({
@@ -31,17 +33,34 @@ const localStoragePersister = createAsyncStoragePersister({
 persistQueryClient({
   queryClient,
   persister: localStoragePersister,
-  maxAge: 1000 * 60 * 60 * 24, 
+  maxAge: 1000 * 60 * 60 * 24,
   buster: 'v2'
 });
 
 
 function App() {
+  const {
+    needRefresh: [needRefresh],
+    updateServiceWorker
+  } = useRegisterSW();
+
+  useEffect(() => {
+    if (needRefresh) {
+      toast.info("¡Hay mejoras en El Porotero!", {
+        action: {
+          label: "Actualizar",
+          onClick: () => updateServiceWorker(true)
+        },
+        duration: Infinity // Que se quede ahí hasta que actualicen
+      });
+    }
+  }, [needRefresh, updateServiceWorker]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <AppRouter />
-        <Toaster position="top-center" expand={true} richColors theme="dark" closeButton/>
+        <Toaster position="top-center" expand={true} richColors theme="dark" closeButton />
       </AuthProvider>
     </QueryClientProvider>
   );

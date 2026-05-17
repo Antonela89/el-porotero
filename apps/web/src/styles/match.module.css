@@ -196,7 +196,7 @@
 
 /* Para asegurar que el nombre no empuje a los iconos */
 .player-card-name {
-    @apply text-sm font-black uppercase tracking-tight;
+    @apply flex gap-2 items-center text-sm font-black uppercase tracking-tight;
 }
 
 /* --- ScoreProgressBar.tsx --- */
@@ -320,7 +320,7 @@
 
 /* Winner */
 .winner-card-inner {
-    @apply flex flex-col items-center justify-center h-full w-full rounded-[2rem] border-2 border-primary bg-surface shadow-2xl;
+    @apply flex flex-col items-center p-4 justify-center h-full w-full rounded-[2rem] border-2 border-primary bg-surface shadow-2xl;
     background: radial-gradient(circle at center, var(--color-surface) 0%, #121826 100%);
 }
 
