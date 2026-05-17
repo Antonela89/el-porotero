@@ -24,9 +24,7 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
     const isMosca = match.gameType === 'Mosca';
     // const isTruco = match.gameType === 'Truco';
 
-    const allPlayerNames = match.players.map(p => p.name)
-    console.log(allPlayerNames);
-    
+    const allPlayerNames = match.players.map(p => p.name)    
 
     const sombreroIndex = (isMosca && match.players.length === 5)
         ? (match.currentDealerIndex + 1) % match.players.length : -1;
@@ -82,7 +80,7 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
             {match.rounds.length > 0 && (
                 <button
                     onClick={() => setIsHistoryOpen(true)}
-                    className="history-trigge"
+                    className="history-trigger"
                 >
                     <div className="flex items-center gap-3">
                         <div className="p-2 bg-slate-700 rounded-lg">

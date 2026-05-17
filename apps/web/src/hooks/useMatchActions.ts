@@ -78,8 +78,10 @@ export const useMatchActions = (matchId: string) => {
 	const addCanto = useMutation({
 		mutationFn: (payload: { playerName: string; points: number }) =>
 			api.post(`/matches/${matchId}/round/canto`, payload),
-		onSuccess: () =>
-			queryClient.invalidateQueries({ queryKey: ['match', matchId] }),
+		onSuccess: (data) => {
+			console.log("✅ Canto guardado en tempCantos del Match:", data);
+			queryClient.invalidateQueries({ queryKey: ['match', matchId] })
+		}
 	});
 
 	// Cancelar Juego

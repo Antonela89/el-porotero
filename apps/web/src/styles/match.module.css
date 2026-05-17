@@ -213,7 +213,7 @@
 /* --- HISTORIAL (DRAWER) --- */
 /* Botón que abre historial */
 .history-trigger {
-    @apply btn-base bg-surface border border-white/5 p-4 text-text-muted mt-2;
+    @apply btn-base w-full bg-surface border border-white/5 p-4 text-text-muted mt-2;
 }
 
 /* HistoryDrawer.tsx */

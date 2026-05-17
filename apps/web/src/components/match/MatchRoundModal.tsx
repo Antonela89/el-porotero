@@ -14,7 +14,7 @@ interface MatchRoundModalProps {
 
 export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit }: MatchRoundModalProps) => {
     const isEditMode = !!roundToEdit;
-    const { scores, updateScore, isFormValid, handleTeamUpdate } = useMatchRoundForm(match, roundToEdit);
+    const { scores, updateScore, isFormValid, handleTeamUpdate, updateScoreWithExclusivity } = useMatchRoundForm(match, roundToEdit);
     const { saveRound } = useMatchActions(match._id!);
 
     const [flowState, setFlowState] = useState<TrucoFlowState>({
@@ -71,8 +71,11 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit }: MatchRo
                 return (
                     <EscobaInputRow
                         score={s}
-                        onUpdate={onUpdateAction}
-                        onToggleExclusive={(key) => updateScore(idx, { [key]: !s.details?.[key as keyof IRoundDetails] })}
+                        onUpdate={(update) => updateScore(idx, update)}
+                        onToggleExclusive={(key) => {
+                            const currentValue = !!s.details[key];
+                            updateScoreWithExclusivity(idx, { [key]: !currentValue });
+                        }}
                     />
                 );
             case 'Mosca':
@@ -110,10 +113,13 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit }: MatchRo
                 className="w-full flex-1"
                 disabled={!isFormValid || saveRound.isPending}
                 loading={saveRound.isPending}
-                onClick={() => saveRound.mutate(
-                    { scores, isEdit: isEditMode, roundNumber: roundToEdit ?? undefined },
-                    { onSuccess: onClose }
-                )}
+                onClick={() => {
+                    console.log("📦 Enviando Ronda Final con estos Scores:", scores);
+                    saveRound.mutate(
+                        { scores, isEdit: isEditMode, roundNumber: roundToEdit ?? undefined },
+                        { onSuccess: onClose }
+                    )
+                }}
             >
                 <Save size={20} /> Confirmar Ronda
             </Button>

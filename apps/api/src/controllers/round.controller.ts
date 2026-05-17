@@ -170,11 +170,12 @@ export const addRound = async (req: Request, res: Response) => {
 			}
 		}
 
+		match.tempCantos = [];
+
 		// Rotar el repartidor (Dealer)
 		match.currentDealerIndex =
 			(match.currentDealerIndex + 1) % match.players.length;
 
-		match.tempCantos = [];
 		await match.save();
 		res.json(match);
 	} catch (error: unknown) {
@@ -306,12 +307,7 @@ export const addCanto = async (req: Request, res: Response) => {
 		if (!match)
 			return res.status(404).json({ message: 'Partida no encontrada' });
 
-		const player = match.players.find((p) => p.name === playerName);
-		if (player) {
-			player.score += points;
-			// Guardamos el canto para que el historial sepa por qué sumó
-			match.tempCantos.push({ playerName, points });
-		}
+		match.tempCantos.push({ playerName, points });
 
 		await match.save();
 		res.json(match);

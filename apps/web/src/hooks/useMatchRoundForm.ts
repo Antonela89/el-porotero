@@ -14,8 +14,9 @@ export const useMatchRoundForm = (
 	const isEditMode = !!roundToEdit;
 	const { validateRound, sombreroIndex } = useMoscaLogic(match);
 
-	const [scores, setScores] = useState<IRoundScore[]>(() => {
-		if (isEditMode) {
+	// FUNCIÓN DE LIMPIEZA INICIAL
+	const getInitialScores = useCallback((): IRoundScore[] => {
+		if (isEditMode && roundToEdit) {
 			const roundData = match.rounds.find(
 				(r) => r.roundNumber === roundToEdit,
 			);
@@ -23,18 +24,36 @@ export const useMatchRoundForm = (
 				? JSON.parse(JSON.stringify(roundData.scores))
 				: [];
 		}
-		return match.players.map((p) => ({
-			playerName: p.name,
-			pointsAdded: 0,
-			details: {
-				bazas: 0,
-				paso: false,
-				isCerrar: false,
-				isCorteMinus10: false,
-				tomoMuerto: true,
-			},
-		}));
-	});
+
+		// MODO NUEVA RONDA: Recuperamos los cantos de la mesa
+		return match.players.map((p) => {
+			const playerTempCanto = match.tempCantos?.find(
+				(c) => c.playerName === p.name,
+			);
+
+			return {
+				playerName: p.name,
+				pointsAdded: 0,
+				details: {
+					bazas: 0,
+					paso: false,
+					isCerrar: false,
+					isCorteMinus10: false,
+					tomoMuerto: true,
+					escobas: 0,
+					hasOros: false,
+					hasCartas: false,
+					hasSetenta: false,
+					hasVeloAs: false,
+					hasVelo7: false,
+					hasVelo12: false,
+					cantos: playerTempCanto ? playerTempCanto.points : 0,
+				},
+			};
+		});
+	}, [match, isEditMode, roundToEdit]);
+
+	const [scores, setScores] = useState<IRoundScore[]>(getInitialScores);
 
 	const updateScore = useCallback(
 		(index: number, payload: Partial<IRoundScore & IRoundDetails>) => {
@@ -59,6 +78,60 @@ export const useMatchRoundForm = (
 			});
 		},
 		[match.gameType],
+	);
+
+	const updateScoreWithExclusivity = useCallback(
+		(index: number, payload: Partial<IRoundScore & IRoundDetails>) => {
+			const keys = Object.keys(payload) as (keyof IRoundDetails)[];
+			const key = keys[0];
+			const value = payload[key];
+
+			const EXCLUSIVE_KEYS: (keyof IRoundDetails)[] = [
+				'hasOros',
+				'hasCartas',
+				'hasSetenta',
+				'hasVeloAs',
+				'hasVelo7',
+				'hasVelo12',
+			];
+
+			setScores((prev) => {
+				const next = prev.map((s) => ({
+					...s,
+					details: { ...s.details },
+				}));
+
+				// Si es un punto exclusivo y lo estamos activando (true)
+				if (EXCLUSIVE_KEYS.includes(key) && value === true) {
+					// Limpiamos ese punto de TODOS los jugadores
+					next.forEach((s) => {
+						const d = s.details as Record<string, unknown>;
+
+						EXCLUSIVE_KEYS.forEach((k) => {
+							d[k as string] = false;
+						});
+					});
+				}
+
+				// Aplicamos el cambio al jugador/equipo actual
+				// Si es juego por equipos, se lo aplicamos a todo el bando
+				const currentPlayer = match.players[index];
+				next.forEach((s, i) => {
+					if (
+						match.isTeamGame &&
+						match.players[i].team === currentPlayer.team &&
+						currentPlayer.team !== 'None'
+					) {
+						s.details = { ...s.details, ...payload };
+					} else if (i === index) {
+						s.details = { ...s.details, ...payload };
+					}
+				});
+
+				return next;
+			});
+		},
+		[match.players, match.isTeamGame],
 	);
 
 	const handleTeamUpdate = useCallback(
@@ -141,7 +214,8 @@ export const useMatchRoundForm = (
 			case 'Barsiga':
 				return ['hasVeloAs', 'hasVelo7', 'hasVelo12'].every((k) =>
 					scores.some(
-						(s: IRoundScore) => s.details[k as keyof IRoundDetails],
+						(s: IRoundScore) =>
+							s.details[k as keyof IRoundDetails] === true,
 					),
 				);
 			default:
@@ -152,6 +226,7 @@ export const useMatchRoundForm = (
 	return {
 		scores,
 		updateScore,
+		updateScoreWithExclusivity,
 		isFormValid,
 		sombreroIndex,
 		handleTeamUpdate,

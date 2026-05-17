@@ -81,7 +81,7 @@ export const MatchDetailPage = () => {
                 />
 
                 <MatchRoundModal
-                    key={roundToEdit ? `edit-${roundToEdit}` : 'new-round'}
+                    key={isModalOpen ? (roundToEdit ? `edit-${roundToEdit}` : 'new-round') : 'closed'}
                     isOpen={isModalOpen}
                     onClose={() => {
                         setIsModalOpen(false);
@@ -101,6 +101,7 @@ export const MatchDetailPage = () => {
                     playerName={cantoPlayer}
                     onConfirm={(points) => {
                         if (cantoPlayer) {
+                            console.log("🚀 Enviando Canto:", { playerName: cantoPlayer, points });
                             actions.addCanto.mutate({
                                 playerName: cantoPlayer,
                                 points
