@@ -14,7 +14,7 @@ app.use(
 		origin: (origin, callback) => {
 			if (
 				!origin ||
-				origin.endsWith('.vercel.app') ||
+				origin.endsWith('.onrender.com') ||
 				origin.includes('localhost')
 			) {
 				callback(null, true);
