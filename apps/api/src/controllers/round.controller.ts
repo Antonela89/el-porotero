@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { MatchModel } from '@/models/index.js';
 import * as GameRules from '@/services/gameRules.services.js';
+import { AnyAaaaRecord } from 'dns';
 
 // Funciones  Auxiliares
 // Función Universal de Detección de Ganador
@@ -185,7 +186,7 @@ export const reengagePlayer = async (req: Request, res: Response) => {
 			if (match.rounds.length > 0) {
 				const lastRound = match.rounds[match.rounds.length - 1];
 				const playerRoundScore = lastRound.scores.find(
-					(s) => s.playerName === playerName,
+					(s: any) => s.playerName === playerName,
 				);
 				if (playerRoundScore) {
 					playerRoundScore.details = {
