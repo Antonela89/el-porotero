@@ -32,6 +32,11 @@ app.use(express.json());
 // Conexión a la DB
 connectDB();
 
+// Endpoint para mantener vivo el server (Heartbeat)
+app.get('/api/ping', (req, res) => {
+	res.status(200).send('pong');
+});
+
 // Ruta de prueba
 app.get('/', (req, res) => {
 	res.send('API de El Porotero Online');
