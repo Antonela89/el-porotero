@@ -22,7 +22,7 @@ export const MatchDetailPage = () => {
 
     const gameInfo = match ? GAMES_MAP[match.gameType] : null;
 
-    if (loading || !gameInfo) return <LoadingSpinner />;
+    if (loading || !gameInfo) return <LoadingSpinner fullScreen message='Preparando la mesa...' />;
     if (!match) return <div className="p-20 text-center">Partida no encontrada.</div>;
 
     const handleRevancha = (m: IMatch) => {

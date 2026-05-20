@@ -14,7 +14,7 @@ export const DashboardPage = () => {
 
     const [filter, setFilter] = useState<'active' | 'finished' | 'cancelled' | 'all'>('active');
 
-    if (loading) return <LoadingSpinner message="Buscando tus partidas..." />;
+    if (loading) return <LoadingSpinner fullScreen message="Buscando tus partidas..." />;
 
     // Filtrar por estado
     const filteredMatches = matches.filter(match => {
