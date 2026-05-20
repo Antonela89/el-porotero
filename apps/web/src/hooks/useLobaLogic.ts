@@ -1,4 +1,3 @@
-// apps/web/src/hooks/useLobaLogic.ts
 import { IMatch, IRoundScore } from '@el-porotero/shared';
 
 export const useLobaLogic = (match: IMatch) => {
