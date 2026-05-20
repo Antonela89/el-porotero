@@ -18,18 +18,26 @@ export const AccumulativeInputRow = ({ gameType, score, onUpdateScore, onUpdateD
             <Input
                 type="text"
                 inputMode="numeric"
-                placeholder="Puntos"
-                className="score-input-field w-full"
+                placeholder="0"
+                className="score-input-field flex-1"
                 disabled={isCerrar || isCorte}
                 value={isCerrar ? "0" : isCorte ? "-10" : (score.pointsAdded || "")}
-                onChange={(e) => onUpdateScore({ pointsAdded: parseInt(e.target.value.replace(/\D/g, "")) || 0 })}
+                onChange={(e) => onUpdateScore({
+                    pointsAdded: parseInt(e.target.value.replace(/\D/g, "")) || 0,
+                    isCerrar: false,
+                    isCorteMinus10: false
+                })}
             />
             <div className='flex w-full gap-2 items-center mt-2'>
                 <Button
                     variant={isCerrar ? 'primary' : 'ghost'}
                     className="text-[12px]! py-2! flex-1"
                     disabled={disableExclusives && !isCerrar}
-                    onClick={() => onUpdateDetails({ isCerrar: !isCerrar, isCorteMinus10: false })}
+                    onClick={() => onUpdateDetails({
+                        isCerrar: !isCerrar,
+                        isCorteMinus10: false,
+                        pointsAdded: !isCerrar ? 0 : score.pointsAdded
+                    })}
                 >
                     CERRÓ
                 </Button>
@@ -38,8 +46,13 @@ export const AccumulativeInputRow = ({ gameType, score, onUpdateScore, onUpdateD
                         variant={isCorte ? 'danger' : 'ghost'}
                         className="text-[12px]! py-2! flex-1"
                         disabled={disableExclusives && !isCorte}
-                        onClick={() => onUpdateDetails({ isCorteMinus10: !isCorte, isCerrar: false })}
+                        onClick={() => onUpdateDetails({
+                            isCorteMinus10: !isCorte,
+                            isCerrar: false,
+                            pointsAdded: !isCorte ? -10 : 0
+                        })}
                     >
+
                         -10
                     </Button>
                 )}

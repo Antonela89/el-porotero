@@ -136,7 +136,7 @@
 
 /* Spinner */
 .spinner-wrapper {
-    @apply flex flex-col items-center justify-center gap-4;
+    @apply inset-0 flex flex-col items-center justify-center gap-4;
 
     &.full-screen {
         @apply fixed inset-0 bg-background/80 backdrop-blur-md z-100;

@@ -23,7 +23,7 @@ const determineWinner = (match: any): { status: 'active' | 'finished' | 'cancell
 		if (config.isDescending) {
 			const winner = players.find((p: any) => p.score === 0);
 			if (winner) return { status: 'finished', winner: winner.name };
-		} else if (gameType === 'Loba' || gameType === 'Chinchon') {
+		} else if (['Uno', 'Loba', 'Chinchon'].includes(gameType)) {
 			const playersAlive = players.filter((p: any) => !p.isOut);
 			if (playersAlive.length === 1)
 				return { status: 'finished', winner: playersAlive[0].name };

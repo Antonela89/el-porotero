@@ -33,6 +33,7 @@ export const PlayerScoreCard = ({
     const remaining = getPointsToLimit(score, match.config.limitScore, match.config.isDescending);
     const status = getScoreStatus(remaining, isLoseOnLimit);
     const tempCantos = getTempCantosSum(match.tempCantos, name);
+      const isUno = match.gameType === 'Uno';
 
     return (
         <div className="card-container" style={{ perspective: '1200px', minHeight: '145px' }}>
@@ -114,7 +115,7 @@ export const PlayerScoreCard = ({
 
                     {isOut && <span className="badge-out">AFUERA</span>}
 
-                    {isOut && onReengage && (
+                    {!isUno && isOut && onReengage && (
                         <Button disabled={match.status === 'finished'} size="md" variant="primary" className="mt-3 w-full py-2" onClick={onReengage}>
                             RE-ENGANCHAR
                         </Button>
