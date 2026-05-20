@@ -39,7 +39,7 @@ export const useMatchRoundForm = (
 					paso: false,
 					isCerrar: false,
 					isCorteMinus10: false,
-					tomoMuerto: true,
+					tomoMuerto: false,
 					escobas: 0,
 					hasOros: false,
 					hasCartas: false,
