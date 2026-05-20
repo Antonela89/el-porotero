@@ -37,7 +37,7 @@
 
 /* --- ELEMENTOS DE FORMULARIO --- */
 .form-group {
-    @apply flex flex-col gap-2 w-full;
+    @apply flex flex-col gap-2 w-full flex-1;
 }
 
 .form-label {

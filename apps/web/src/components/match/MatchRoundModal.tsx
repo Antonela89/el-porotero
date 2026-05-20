@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { IMatch, IRoundDetails, IRoundScore, TrucoFlowState } from '@el-porotero/shared';
-import { Save, AlertCircle, Minus, Plus,  Crown } from 'lucide-react';
+import { Save, AlertCircle, Minus, Plus, Crown } from 'lucide-react';
 import { useMatchActions, useMatchRoundForm } from '@/hooks';
 import { MesaPointsSelector, IconButton, BaseModal, MoscaInputRow, AccumulativeInputRow, BurakoPlayerInput, EscobaInputRow, TrucoInputRow, Button } from '@/components';
 
@@ -211,8 +211,7 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit }: MatchRo
                                         </div>
                                     )}
                                 </div>) : (
-
-                                <div className="player-list">
+                                <div className="player-list mode-responsive">
                                     {teamPlayers.map(player => {
                                         const idx = match.players.indexOf(player);
                                         const s = scores[idx];
@@ -220,8 +219,10 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit }: MatchRo
 
                                         return (
                                             <div key={player.name} className="player-input-card">
-                                                <p className="player-input-name">{player.name}</p>
-                                                {idx === match.currentDealerIndex && <Crown size={14} className="text-primary" />}
+                                                <div className="player-input-name">
+                                                    <p>{player.name}</p>
+                                                    {idx === match.currentDealerIndex && <Crown size={14} className="text-primary" />}
+                                                </div>
                                                 {/* Loba, Mosca, Burako individual, etc. */}
                                                 {renderInput(s, idx)}
                                             </div>

@@ -37,7 +37,8 @@
 
 /* MatchScoreboard.tsx - Contenedor de Tarjetas */
 /* Contenedor dinámico de puntajes */
-.scoreboard-grid {
+.scoreboard-grid,
+.player-list {
     display: grid;
     gap: 12px;
     padding-block: 16px;
@@ -45,14 +46,16 @@
 }
 
 /* --- LÓGICA RESPONSIVA PARA INDIVIDUAL --- */
-.mode-individual {
+.mode-individual, 
+.mode-responsive {
     grid-template-columns: 1fr;
     /* Por defecto: uno abajo del otro (Mobile) */
 }
 
 /* Tablet / Desktop pequeño */
 @media (min-width: 600px) {
-    .mode-individual {
+    .mode-individual,
+    .mode-responsive {
         grid-template-columns: repeat(2, 1fr);
         /* Dos columnas */
     }
@@ -149,8 +152,13 @@
     @apply text-sm font-display font-black text-center py-4 border-b border-white/[0.02];
 }
 
-.team-a-text { @apply text-indigo-300; }
-.team-b-text { @apply text-rose-300; }
+.team-a-text {
+    @apply text-indigo-300;
+}
+
+.team-b-text {
+    @apply text-rose-300;
+}
 
 .canto-detail-grid {
     @apply grid grid-cols-2 gap-2 p-3 bg-black/20 rounded-xl mx-2 mb-2;
@@ -318,6 +326,14 @@
     @apply flex w-full flex-col;
 }
 
+.player-input-card {
+    @apply flex flex-col w-full;
+}
+
+.player-input-name {
+    @apply flex justify-between px-4;
+}
+
 /* Winner */
 .winner-card-inner {
     @apply flex flex-col items-center p-4 justify-center h-full w-full rounded-[2rem] border-2 border-primary bg-surface shadow-2xl;
@@ -380,12 +396,12 @@
 }
 
 /* Input extra-compacto */
-.input-compact{
+.input-compact {
     @apply !py-2 !px-3 !text-sm !h-10 border-transparent bg-transparent;
 }
 
 /* Select con estilo nocturno */
-.select-custom{
+.select-custom {
     @apply w-full h-12 bg-background border border-white/10 text-text-main text-sm px-4 rounded-xl;
     appearance: none;
 }
