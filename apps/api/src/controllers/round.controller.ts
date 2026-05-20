@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { MatchModel } from '@/models/index.js';
 import * as GameRules from '@/services/gameRules.services.js';
 import { AnyAaaaRecord } from 'dns';
+import { MatchZodSchema } from '@shared/dist/index.js';
 
 // Funciones  Auxiliares
 // Función que busca el índice del próximo jugador que no esté "isOut"
@@ -20,7 +21,7 @@ const getNextActiveDealerIndex = (
 		nextIndex = (nextIndex + 1) % players.length;
 	}
 
-	return currentIndex; // Fallback
+	return currentIndex;
 };
 
 // Función Universal de Detección de Ganador
@@ -268,13 +269,25 @@ export const deleteRound = async (req: Request, res: Response) => {
 	try {
 		const { matchId } = req.params;
 		const roundNumberStr = req.params.roundNumber as string;
+		const roundToDelete = parseInt(roundNumberStr, 10);
 		const match = await MatchModel.findById(matchId);
+
 		if (!match)
 			return res.status(404).json({ message: 'Partida no encontrada' });
 
+		// determinar si es ultima ronda
+		const isLastRound = match.rounds.length === roundToDelete;
+
+		// si lo es, volver el dealer a la posición anterior
+		if (isLastRound) {
+			const lastRoundData = match.rounds[match.rounds.length - 1];
+
+			match.currentDealerIndex = lastRoundData.dealerIndex;
+		}
+
 		// Quitar la ronda del array
 		match.rounds = match.rounds.filter(
-			(r) => r.roundNumber !== parseInt(roundNumberStr, 10),
+			(r) => r.roundNumber !== roundToDelete,
 		);
 
 		match.rounds.forEach((r, i) => (r.roundNumber = i + 1));
