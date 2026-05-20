@@ -4,8 +4,29 @@ import * as GameRules from '@/services/gameRules.services.js';
 import { AnyAaaaRecord } from 'dns';
 
 // Funciones  Auxiliares
+// Función que busca el índice del próximo jugador que no esté "isOut"
+const getNextActiveDealerIndex = (
+	players: any[],
+	currentIndex: number,
+): number => {
+	let nextIndex = (currentIndex + 1) % players.length;
+
+	// Recorremos la mesa buscando al próximo vivo
+	for (let i = 0; i < players.length; i++) {
+		if (!players[nextIndex].isOut) {
+			return nextIndex;
+		}
+		// Si el jugador está fuera, probamos con el siguiente
+		nextIndex = (nextIndex + 1) % players.length;
+	}
+
+	return currentIndex; // Fallback
+};
+
 // Función Universal de Detección de Ganador
-const determineWinner = (match: any): { status: 'active' | 'finished' | 'cancelled'; winner: string | null } => {
+const determineWinner = (
+	match: any,
+): { status: 'active' | 'finished' | 'cancelled'; winner: string | null } => {
 	const { gameType, players, config, isTeamGame } = match;
 	const limit = config.limitScore;
 
@@ -138,12 +159,13 @@ export const addRound = async (req: Request, res: Response) => {
 				});
 			}
 		}
-		
-		// Rotar el repartidor (Dealer)
-		match.currentDealerIndex =
-			(match.currentDealerIndex + 1) % match.players.length;
-		match.tempCantos = [];
 
+		// Rotar el repartidor (Dealer)
+		match.currentDealerIndex = getNextActiveDealerIndex(
+			match.players,
+			match.currentDealerIndex,
+		);
+		match.tempCantos = [];
 
 		await match.save();
 		res.json(match);
