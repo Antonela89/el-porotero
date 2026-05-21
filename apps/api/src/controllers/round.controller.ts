@@ -1,8 +1,6 @@
 import { Request, Response } from 'express';
 import { MatchModel } from '@/models/index.js';
 import * as GameRules from '@/services/gameRules.services.js';
-import { AnyAaaaRecord } from 'dns';
-import { MatchZodSchema } from '@shared/dist/index.js';
 
 // Funciones  Auxiliares
 // Función que busca el índice del próximo jugador que no esté "isOut"
@@ -191,21 +189,21 @@ export const reengagePlayer = async (req: Request, res: Response) => {
 		if (!match)
 			return res.status(404).json({ message: 'Partida no encontrada' });
 
-		// 1. Encontrar el puntaje más alto entre los que están activos
+		// Encontrar el puntaje más alto entre los que están activos
 		const activePlayers = match.players.filter((p) => !p.isOut);
 		const maxScore =
 			activePlayers.length > 0
 				? Math.max(...activePlayers.map((p) => p.score))
 				: match.config.startingScore;
 
-		// 2. Actualizar al jugador
+		// Actualizar al jugador
 		const player = match.players.find((p) => p.name === playerName);
 		if (player) {
 			player.score = maxScore;
 			player.isOut = false;
 			player.reengageCount = (player.reengageCount || 0) + 1;
 
-			// 3. Marcar la ÚLTIMA ronda para que el asterisco aparezca ahí
+			// Marcar la ÚLTIMA ronda para que el asterisco aparezca ahí
 			if (match.rounds.length > 0) {
 				const lastRound = match.rounds[match.rounds.length - 1];
 				const playerRoundScore = lastRound.scores.find(

@@ -100,6 +100,7 @@ export const processMoscaRules = (match: any, scores: IRoundScore[]) => {
  * Basada en objetivos de mesa y cantos.
  */
 export const processEscobaRules = (match: any, scores: IRoundScore[]) => {
+	const processedTeams = new Set<string>();
 	scores.forEach((s) => {
 		const player = match.players.find((p: any) => p.name === s.playerName);
 		if (!player) return;
@@ -107,22 +108,39 @@ export const processEscobaRules = (match: any, scores: IRoundScore[]) => {
 		let roundTotal = 0;
 		const d = s.details || {};
 
-		// Puntos de mesa y Velos (1 cada uno)
-		if (d.hasOros) roundTotal += 1;
-		if (d.hasCartas) roundTotal += 1;
-		if (d.hasSetenta) roundTotal += 1;
-		if (d.hasVeloAs) roundTotal += 1;
-		if (d.hasVelo7) roundTotal += 1;
-		if (d.hasVelo12) roundTotal += 1;
-
-		// Escobas (valor nominal)
 		if (d.escobas) roundTotal += Number(d.escobas);
 
-		// Cantos (Solo Bársiga)
-		if (match.gameType === 'Barsiga' && d.cantos) {
-			roundTotal += Number(d.cantos);
-		}
+		if (match.isTeamGame) {
+			if (!processedTeams.has(player.team)) {
+				// Es el primer jugador del equipo se suman puntos y escobas
+				if (d.hasOros) roundTotal += 1;
+				if (d.hasCartas) roundTotal += 1;
+				if (d.hasSetenta) roundTotal += 1;
+				if (d.hasVeloAs) roundTotal += 1;
+				if (d.hasVelo7) roundTotal += 1;
+				if (d.hasVelo12) roundTotal += 1;
+				if (d.escobas) roundTotal += Number(d.escobas);
 
+				processedTeams.add(player.team);
+			}
+
+			if (match.gameType === 'Barsiga' && d.cantos) {
+				roundTotal += Number(d.cantos);
+			}
+		} else {
+			// Logica Individual
+			if (d.hasOros) roundTotal += 1;
+			if (d.hasCartas) roundTotal += 1;
+			if (d.hasSetenta) roundTotal += 1;
+			if (d.hasVeloAs) roundTotal += 1;
+			if (d.hasVelo7) roundTotal += 1;
+			if (d.hasVelo12) roundTotal += 1;
+			if (d.escobas) roundTotal += Number(d.escobas);
+			// Cantos (Solo Bársiga)
+			if (match.gameType === 'Barsiga' && d.cantos) {
+				roundTotal += Number(d.cantos);
+			}
+		}
 		s.pointsAdded = roundTotal;
 		player.score += roundTotal;
 	});
