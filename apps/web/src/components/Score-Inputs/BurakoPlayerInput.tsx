@@ -16,6 +16,7 @@ export const BurakoPlayerInput = ({
     disableExclusives = false
 }: BurakoPlayerInputProps) => {
 
+    const fichas = score.details?.fichas ?? score.pointsAdded ?? 0;
     const puras = score.details?.canastasPuras || 0;
     const impuras = score.details?.canastasImpuras || 0;
     const cerro = score.details?.isCerrar || false;
@@ -28,12 +29,12 @@ export const BurakoPlayerInput = ({
             <Input
                 type="text"
                 inputMode="numeric"
-                placeholder="Suma de fichas..."
+                placeholder="Suma de fichas"
                 className="score-input-field flex-1"
-                value={score.pointsAdded || ""}
+                value={fichas || ""}
                 onChange={(e) => {
-                    const val = e.target.value.replace(/\D/g, "");
-                    onUpdate({ pointsAdded: parseInt(val) || 0 });
+                    const val = parseInt(e.target.value.replace(/\D/g, "")) || 0;
+                    onUpdate({ fichas: val, pointsAdded: val });
                 }}
             />
 

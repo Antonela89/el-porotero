@@ -138,15 +138,22 @@ export const processBurakoRules = (match: any, scores: IRoundScore[]) => {
 		if (!player) return;
 
 		if (player) {
-			let totalRonda = s.pointsAdded; // Puntos de fichas
+			let fichas = s.details?.fichas ?? s.pointsAdded ?? 0; // Puntos de fichas
+			let totalRonda = fichas;
 
 			if (s.details) {
-				if (s.details.canastasPuras)
-					totalRonda += s.details.canastasPuras * 200;
-				if (s.details.canastasImpuras)
-					totalRonda += s.details.canastasImpuras * 100;
+				totalRonda += (s.details.canastasPuras || 0) * 200;
+				totalRonda += (s.details.canastasImpuras || 0) * 100;
 				if (s.details.isCerrar) totalRonda += 100;
-				if (s.details.tomoMuerto === false) totalRonda -= 100;
+
+				const isFirstInTeam =
+					match.players.find((p: any) => p.team === player.team)
+						.name === player.name;
+
+				if (!match.isTeamGame || isFirstInTeam) {
+					if (s.details.tomoMuerto === false) totalRonda -= 100;
+					if (s.details.tomoMuerto === true) totalRonda += 100; 
+				}
 			}
 
 			s.pointsAdded = totalRonda;

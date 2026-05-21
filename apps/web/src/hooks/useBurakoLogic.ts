@@ -1,4 +1,3 @@
-// apps/web/src/hooks/useBurakoLogic.ts
 export const useBurakoLogic = () => {
 	const calculatePoints = (
 		basePoints: number,

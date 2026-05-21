@@ -77,6 +77,7 @@ export interface IRoundDetails {
 	cantos?: number; // Puntos extra de Bársiga
 
 	// Burako
+	fichas?: number;
 	canastasPuras?: number;
 	canastasImpuras?: number;
 	tomoMuerto?: boolean;
@@ -114,9 +115,9 @@ export interface IUserStats {
 
 // Interfaces de cada juego
 export interface TrucoFlowState {
-    envidoLevel: number;
-    trucoLevel: number;
-    voice: 'A' | 'B' | null;
-    envidoClaimedBy: 'A' | 'B' | null;
-    trucoClaimedBy: 'A' | 'B' | null;
+	envidoLevel: number;
+	trucoLevel: number;
+	voice: 'A' | 'B' | null;
+	envidoClaimedBy: 'A' | 'B' | null;
+	trucoClaimedBy: 'A' | 'B' | null;
 }

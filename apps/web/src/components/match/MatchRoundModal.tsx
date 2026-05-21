@@ -161,6 +161,7 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit }: MatchRo
                                     {/* Burako */}
                                     {isBurako && (
                                         <div className="flex flex-col gap-2">
+                                            <span className="label-mini">Acciones de Equipo</span>
                                             <div className="player-card">
                                                 {renderInput(scores[firstPlayerIdx], firstPlayerIdx)}
                                             </div>
