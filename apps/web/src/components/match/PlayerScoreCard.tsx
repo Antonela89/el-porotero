@@ -97,34 +97,36 @@ export const PlayerScoreCard = ({
                     </div>
 
                     {match.config.limitScore > 0 && !isOut && (
-                        <MotionDiv
-                            className={`flex flex-col items-end ${status.colorClass}`}
-                            animate={status.isCritical ? {
-                                scale: [1, 1.08, 1], // Sube y baja
-                                transition: {
-                                    duration: 0.8,
-                                    repeat: Infinity,
-                                    ease: "easeInOut"
-                                }
-                            } : { scale: 1 }}
-                        >
-                            <span className="text-[9px] font-black uppercase tracking-tighter">
-                                {isLoseOnLimit ? 'Para salir' : 'Para ganar'}
-                            </span>
-
-                            <span className="text-xl font-display font-black leading-none mb-1">
-                                {remaining}
-                            </span>
-
-                            <div style={{ width: '90px' }}>
-                                <ScoreProgressBar
-                                    current={score}
-                                    limit={match.config.limitScore}
-                                    isLoseOnLimit={isLoseOnLimit}
-                                // Opcional: pasarle el color dinámico
-                                />
+                        <div className={`flex flex-col items-end px-6 ${status.colorClass}`}>
+                            <div className='flex flex-col items-center gap-1'>
+                                <MotionDiv
+                                    className='flex flex-col items-center gap-1'
+                                    animate={status.isCritical ? {
+                                        scale: [1, 1.08, 1],
+                                        transition: {
+                                            duration: 0.8,
+                                            repeat: Infinity,
+                                            ease: "easeInOut"
+                                        }
+                                    } : { scale: 1 }}
+                                >
+                                    <span className="text-[9px] font-black uppercase tracking-tighter">
+                                        {isLoseOnLimit ? 'Para salir' : 'Para ganar'}
+                                    </span>
+                                    <span className="text-xl font-display font-black leading-none">
+                                        {remaining}
+                                    </span>
+                                </MotionDiv>
+                                <div style={{ width: '90px' }}>
+                                    <ScoreProgressBar
+                                        current={score}
+                                        limit={match.config.limitScore}
+                                        isLoseOnLimit={isLoseOnLimit}
+                                    />
+                                </div>
                             </div>
-                        </MotionDiv>
+                        </div>
+
                     )}
 
                     {isOut && <span className="badge-out">AFUERA</span>}

@@ -15,11 +15,12 @@ interface TeamScoreCardPromps {
 }
 
 const MotionArticle = motion.create('article')
+const MotionDiv = motion.create('div');
 
 export const TeamScoreCard = ({ teamId, match, winner, isWinnerOnLimit, onCantar, onRematch }: TeamScoreCardPromps) => {
     const isWinner = winner === teamId;
     const teamStyles = getTeamStyle(teamId);
-    
+
     const players = getTeamPlayersData(match, teamId);
     const score = getTeamTotalScore(match.players, teamId);
     const remaining = getPointsToLimit(score, match.config.limitScore, match.config.isDescending);
@@ -56,22 +57,37 @@ export const TeamScoreCard = ({ teamId, match, winner, isWinnerOnLimit, onCantar
                         </div>
 
                         {match.config.limitScore > 0 && (
-                            <div className={`flex flex-col items-end ${status.colorClass} ${status.isCritical ? 'animate-pulse' : ''}`}>
-                                <span className="text-[9px] font-black uppercase tracking-tighter">
-                                    {isWinnerOnLimit ? 'Para ganar' : 'Para salir'}
-                                </span>
-                                <span className="text-xl font-display font-black leading-none mb-1">
-                                    {remaining}
-                                </span>
-                                <div style={{ width: '80px' }}>
-                                    <ScoreProgressBar
-                                        current={score}
-                                        limit={match.config.limitScore}
-                                        isLoseOnLimit={!isWinnerOnLimit}
-                                    />
+                            <div className={`flex flex-col items-end px-6 ${status.colorClass}`}>
+                                <div className='flex flex-col items-center gap-1'>
+                                    <MotionDiv
+                                        className='flex flex-col items-center gap-1'
+                                        animate={status.isCritical ? {
+                                            scale: [1, 1.08, 1],
+                                            transition: {
+                                                duration: 0.8,
+                                                repeat: Infinity,
+                                                ease: "easeInOut"
+                                            }
+                                        } : { scale: 1 }}
+                                    >
+                                        <span className="text-[9px] font-black uppercase tracking-tighter">
+                                            {isWinnerOnLimit ? 'Para ganar' : 'Para salir'}
+                                        </span>
+                                        <span className="text-xl font-display font-black leading-none">
+                                            {remaining}
+                                        </span>
+                                    </MotionDiv>
+                                    <div style={{ width: '90px' }}>
+                                        <ScoreProgressBar
+                                            current={score}
+                                            limit={match.config.limitScore}
+                                            isLoseOnLimit={isWinnerOnLimit}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         )}
+
                     </div>
 
                     <div className="team-players-footer">
