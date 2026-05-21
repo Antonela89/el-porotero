@@ -108,8 +108,6 @@ export const processEscobaRules = (match: any, scores: IRoundScore[]) => {
 		let roundTotal = 0;
 		const d = s.details || {};
 
-		if (d.escobas) roundTotal += Number(d.escobas);
-
 		if (match.isTeamGame) {
 			if (!processedTeams.has(player.team)) {
 				// Es el primer jugador del equipo se suman puntos y escobas
