@@ -19,7 +19,7 @@ export const BurakoPlayerInput = ({
     const puras = score.details?.canastasPuras || 0;
     const impuras = score.details?.canastasImpuras || 0;
     const cerro = score.details?.isCerrar || false;
-    const muerto = score.details?.tomoMuerto ?? true;
+    const muerto = score.details?.tomoMuerto || false;
     const canClose = (puras + impuras) > 0;
 
     return (

@@ -160,21 +160,26 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit }: MatchRo
                                 <div className="team-scoring-area">
                                     {/* Burako */}
                                     {isBurako && (
-                                        <div className="flex gap-2">
-                                            <Button
-                                                variant={teamDetails?.isCerrar ? 'success' : 'ghost'}
-                                                className="btn-team-action"
-                                                onClick={() => handleTeamUpdate(teamId, { isCerrar: !teamDetails?.isCerrar })}
-                                            >
-                                                {teamDetails?.isCerrar ? 'CERRÓ' : '¿CERRÓ?'}
-                                            </Button>
-                                            <Button
-                                                variant={teamDetails?.tomoMuerto !== false ? 'primary' : 'danger'}
-                                                className="btn-team-action"
-                                                onClick={() => handleTeamUpdate(teamId, { tomoMuerto: !teamDetails?.tomoMuerto })}
-                                            >
-                                                {teamDetails?.tomoMuerto !== false ? 'CON MUERTO' : 'SIN MUERTO'}
-                                            </Button>
+                                        <div className="flex flex-col gap-2">
+                                            <div className="player-card">
+                                                {renderInput(scores[firstPlayerIdx], firstPlayerIdx)}
+                                            </div>
+                                            <div className='flex gap-3'>
+                                                <Button
+                                                    variant={teamDetails?.isCerrar ? 'success' : 'ghost'}
+                                                    className="btn-team-action"
+                                                    onClick={() => handleTeamUpdate(teamId, { isCerrar: !teamDetails?.isCerrar })}
+                                                >
+                                                    {teamDetails?.isCerrar ? 'CERRÓ' : '¿CERRÓ?'}
+                                                </Button>
+                                                <Button
+                                                    variant={teamDetails?.tomoMuerto !== false ? 'primary' : 'danger'}
+                                                    className="btn-team-action"
+                                                    onClick={() => handleTeamUpdate(teamId, { tomoMuerto: !teamDetails?.tomoMuerto })}
+                                                >
+                                                    {teamDetails?.tomoMuerto !== false ? 'CON MUERTO' : 'SIN MUERTO'}
+                                                </Button>
+                                            </div>
                                         </div>)}
 
                                     {/*  Escoba */}
@@ -205,7 +210,7 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit }: MatchRo
                                         </>
                                     )}
                                     {/* TRUCO POR EQUIPOS (Un solo bando de botones) */}
-                                    {isTruco && isTeamGame && isTeam && (
+                                    {isTruco && (
                                         <div className="player-card">
                                             {renderInput(scores[firstPlayerIdx], firstPlayerIdx)}
                                         </div>
@@ -216,6 +221,8 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit }: MatchRo
                                         const idx = match.players.indexOf(player);
                                         const s = scores[idx];
                                         if (player.isOut && !isEditMode) return null;
+                                        console.log(teamPlayers);
+                                        console.log(match.gameType);
 
                                         return (
                                             <div key={player.name} className="player-input-card">
@@ -223,7 +230,6 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit }: MatchRo
                                                     <p>{player.name}</p>
                                                     {idx === match.currentDealerIndex && <Crown size={14} className="text-primary" />}
                                                 </div>
-                                                {/* Loba, Mosca, Burako individual, etc. */}
                                                 {renderInput(s, idx)}
                                             </div>
                                         );
