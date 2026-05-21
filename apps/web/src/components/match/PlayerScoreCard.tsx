@@ -6,6 +6,7 @@ import { IMatch } from '@el-porotero/shared';
 
 const MotionArticle = motion.create('article');
 const MotionDiv = motion.create('div');
+const MotionSpan = motion.create('span');
 
 interface PlayerScoreCardProps {
     name: string;
@@ -33,7 +34,7 @@ export const PlayerScoreCard = ({
     const remaining = getPointsToLimit(score, match.config.limitScore, match.config.isDescending);
     const status = getScoreStatus(remaining, isLoseOnLimit);
     const tempCantos = getTempCantosSum(match.tempCantos, name);
-      const isUno = match.gameType === 'Uno';
+    const isUno = match.gameType === 'Uno';
 
     return (
         <div className="card-container" style={{ perspective: '1200px', minHeight: '145px' }}>
@@ -86,31 +87,44 @@ export const PlayerScoreCard = ({
                             {score}
                         </span>
                         {tempCantos > 0 && (
-                            <motion.span
+                            <MotionSpan
                                 initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
                                 className="text-sm font-black text-purple-400"
                             >
                                 +{tempCantos}
-                            </motion.span>
+                            </MotionSpan>
                         )}
                     </div>
 
                     {match.config.limitScore > 0 && !isOut && (
-                        <div className={`flex flex-col items-end ${status.colorClass} ${status.isCritical ? 'animate-pulse' : ''}`}>
+                        <MotionDiv
+                            className={`flex flex-col items-end ${status.colorClass}`}
+                            animate={status.isCritical ? {
+                                scale: [1, 1.08, 1], // Sube y baja
+                                transition: {
+                                    duration: 0.8,
+                                    repeat: Infinity,
+                                    ease: "easeInOut"
+                                }
+                            } : { scale: 1 }}
+                        >
                             <span className="text-[9px] font-black uppercase tracking-tighter">
                                 {isLoseOnLimit ? 'Para salir' : 'Para ganar'}
                             </span>
+
                             <span className="text-xl font-display font-black leading-none mb-1">
                                 {remaining}
                             </span>
+
                             <div style={{ width: '90px' }}>
                                 <ScoreProgressBar
                                     current={score}
                                     limit={match.config.limitScore}
                                     isLoseOnLimit={isLoseOnLimit}
+                                // Opcional: pasarle el color dinámico
                                 />
                             </div>
-                        </div>
+                        </MotionDiv>
                     )}
 
                     {isOut && <span className="badge-out">AFUERA</span>}
