@@ -11,9 +11,9 @@
 }
 
 .new-match-header {
-    flex-shrink: 0; 
+    flex-shrink: 0;
     padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     padding-top: calc(env(safe-area-inset-top));
 }
 
@@ -35,7 +35,7 @@
 }
 
 .info-banner-mini {
-    @apply bg-indigo-500/10 text-indigo-400 text-[10px] font-black uppercase py-2 px-4 rounded-xl text-center border border-indigo-500/20;
+    @apply bg-pink-500/10 text-pink-400 text-[10px] font-black uppercase py-2 px-4 rounded-xl text-center border border-pink-500/20;
 }
 
 /* --- LISTA DE JUGADORES --- */
@@ -62,6 +62,43 @@
 
 .player-setup-name {
     @apply text-sm font-bold text-text-main truncate;
+}
+
+/* --- INDICADORES DE EQUIPO --- */
+.team-indicator-bar {
+    @apply absolute left-0 top-2 bottom-2 w-1 rounded-r-full;
+}
+
+.team-a-bar {
+    @apply bg-indigo-400;
+}
+
+.team-b-bar {
+    @apply bg-rose-400;
+}
+
+.player-number-circle {
+    @apply w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-black transition-colors;
+}
+
+.team-a-circle {
+    @apply bg-indigo-500/20 text-indigo-400 border border-indigo-500/30;
+}
+
+.team-b-circle {
+    @apply bg-rose-500/20 text-rose-400 border border-rose-500/30;
+}
+
+.team-label-tag {
+    @apply text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-tighter ml-2;
+}
+
+.team-a-tag {
+    @apply bg-indigo-500/10 text-indigo-400 border border-indigo-500/20;
+}
+
+.team-b-tag {
+    @apply bg-rose-500/10 text-rose-400 border border-rose-500/20;
 }
 
 /* --- FOOTER TÁCTICO --- */

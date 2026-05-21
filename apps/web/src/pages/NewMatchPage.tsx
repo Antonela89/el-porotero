@@ -99,32 +99,49 @@ export const NewMatchPage = () => {
                     ) : (
                         <div className="players-setup-list">
                             {/* Lista de Jugadores (Scrollable) */}
-                            {players.map((p, i) => (
-                                <div key={i} className="player-setup-card">
-                                    <div className="player-setup-info">
-                                        <span className="player-setup-index">{i + 1}</span>
-                                        {editingIndex === i ? (
-                                            <Input
-                                                value={tempEditName}
-                                                onChange={e => setTempEditName(e.target.value)}
-                                                onKeyDown={e => e.key === 'Enter' && handleSaveEdit(i)}
-                                                className="player-setup-input"
-                                            />
-                                        ) : (
-                                            <span className="player-setup-name">{p.name}</span>
+                            {players.map((p, i) => {
+                                const isTeamA = i % 2 === 0;
+                                const teamName = isTeamA ? 'A' : 'B';
+                                return (
+                                    <div key={i} className="player-setup-card relative overflow-hidden">
+                                        {isTeamGame && (
+                                            <div className={`team-indicator-bar ${isTeamA ? 'team-a-bar' : 'team-b-bar'}`} />
                                         )}
-                                    </div>
+                                        <div className="player-setup-info">
+                                            <span className={`player-number-circle ${isTeamGame ? (isTeamA ? 'team-a-circle' : 'team-b-circle') : 'player-setup-index'}`}>
+                                                {i + 1}
+                                            </span>
+                                            {editingIndex === i ? (
+                                                <Input
+                                                    value={tempEditName}
+                                                    onChange={e => setTempEditName(e.target.value)}
+                                                    onKeyDown={e => e.key === 'Enter' && handleSaveEdit(i)}
+                                                    className="player-setup-input"
+                                                />
+                                            ) : (
+                                                <div className="flex items-center justify-between w-full">
+                                                    <span className="player-row-name">{p.name}</span>
+                                                    {/* 3. Label de bando al lado del nombre */}
+                                                    {isTeamGame && (
+                                                        <span className={`team-label-tag ${isTeamA ? 'team-a-tag' : 'team-b-tag'}`}>
+                                                            EQ. {teamName}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
 
-                                    <div className="flex gap-3">
-                                        {editingIndex === i ? (
-                                            <IconButton icon={<Check size={16} />} variant="primary" title="Ok" onClick={() => handleSaveEdit(i)} />
-                                        ) : (
-                                            <IconButton icon={<Edit2 size={16} />} variant="info" title="Edit" onClick={() => { setEditingIndex(i); setTempEditName(p.name); }} />
-                                        )}
-                                        <IconButton icon={<X size={16} />} variant="danger" title="X" onClick={() => removePlayer(i)} />
+                                        <div className="flex gap-3">
+                                            {editingIndex === i ? (
+                                                <IconButton icon={<Check size={16} />} variant="primary" title="Ok" onClick={() => handleSaveEdit(i)} />
+                                            ) : (
+                                                <IconButton icon={<Edit2 size={16} />} variant="info" title="Edit" onClick={() => { setEditingIndex(i); setTempEditName(p.name); }} />
+                                            )}
+                                            <IconButton icon={<X size={16} />} variant="danger" title="X" onClick={() => removePlayer(i)} />
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                )
+                            })}
                         </div>
                     )}
                 </div>
@@ -151,7 +168,7 @@ export const NewMatchPage = () => {
                             />
                         </div>
                     ) : (
-                        <div className="info-banner-mini !ext-warning! border-warning/20!">
+                        <div className="info-banner-mini">
                             Mesa completa para {gameType}
                         </div>
                     )}
