@@ -170,7 +170,7 @@
 
 /* PlayerScoreCard.tsx - Tarjeta indivual */
 .player-card {
-    @apply bg-surface border border-white/5 rounded-[2rem] p-5 flex flex-col relative;
+    @apply bg-surface border border-white/5 rounded-[2rem] p-5 flex flex-col relative h-full;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
 }
 
@@ -366,6 +366,10 @@
 
 .btn-rematch-compact {
     @apply btn-base bg-primary text-background px-6 py-2 text-[10px] uppercase font-black shadow-lg shadow-primary/20;
+}
+
+.card-container {
+    @apply min-h-[145px] flex 
 }
 
 .card-front,
