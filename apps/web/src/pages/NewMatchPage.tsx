@@ -90,7 +90,7 @@ export const NewMatchPage = () => {
                 )}
 
                 <div className="new-match-main">
-                    <label className="label-mini">Integrantes ({players.length}/{currentGame?.maxPlayers || 6})</label>
+                    <label className="label-mini mb-4">Integrantes ({players.length}/{currentGame?.maxPlayers || 6})</label>
                     {players.length === 0 ? (
                         <div className="empty-mesa">
                             <Users size={26} />
