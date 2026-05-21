@@ -230,8 +230,6 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit }: MatchRo
                                         const idx = match.players.indexOf(player);
                                         const s = scores[idx];
                                         if (player.isOut && !isEditMode) return null;
-                                        console.log(teamPlayers);
-                                        console.log(match.gameType);
 
                                         return (
                                             <div key={player.name} className="player-input-card">
