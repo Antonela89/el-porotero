@@ -4,7 +4,6 @@ import { Button, IconButton, ScoreProgressBar } from '@/components';
 import { getPointsToLimit, getTempCantosSum, getScoreStatus } from '@/utils';
 import { IMatch } from '@el-porotero/shared';
 
-const MotionArticle = motion.create('article');
 const MotionDiv = motion.create('div');
 const MotionSpan = motion.create('span');
 
@@ -32,19 +31,19 @@ export const PlayerScoreCard = ({
 
     const isWinner = winner === name;
     const remaining = getPointsToLimit(score, match.config.limitScore, match.config.isDescending);
-    const status = getScoreStatus(remaining, isLoseOnLimit);
+    const status = getScoreStatus(remaining, isLoseOnLimit, match.gameType);
     const tempCantos = getTempCantosSum(match.tempCantos, name);
     const isUno = match.gameType === 'Uno';
 
     return (
-        <div className="card-container" style={{ perspective: '1200px', minHeight: '145px' }}>
+        <div className="card-container" style={{ perspective: '1200px' }}>
 
-            <MotionArticle
+            <MotionDiv
                 className="card-inner"
                 initial={false}
                 animate={{ rotateY: isWinner ? 180 : 0 }}
                 transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-                style={{ transformStyle: 'preserve-3d', position: 'relative', width: '100%', height: '100%' }}
+                style={{ ...status.glowStyle, borderRadius: '2rem', transformStyle: 'preserve-3d', position: 'relative', width: '100%', height: '100%' }}
             >
 
                 {/* LADO A: EL MARCADOR (Frente) */}
@@ -94,40 +93,39 @@ export const PlayerScoreCard = ({
                                 +{tempCantos}
                             </MotionSpan>
                         )}
-                    </div>
 
-                    {match.config.limitScore > 0 && !isOut && (
-                        <div className={`flex flex-col items-end px-6 ${status.colorClass}`}>
-                            <div className='flex flex-col items-center gap-1'>
-                                <MotionDiv
-                                    className='flex flex-col items-center gap-1'
-                                    animate={status.isCritical ? {
-                                        scale: [1, 1.08, 1],
-                                        transition: {
-                                            duration: 0.8,
-                                            repeat: Infinity,
-                                            ease: "easeInOut"
-                                        }
-                                    } : { scale: 1 }}
-                                >
-                                    <span className="text-[9px] font-black uppercase tracking-tighter">
-                                        {isLoseOnLimit ? 'Para salir' : 'Para ganar'}
-                                    </span>
-                                    <span className="text-xl font-display font-black leading-none">
-                                        {remaining}
-                                    </span>
-                                </MotionDiv>
-                                <div style={{ width: '90px' }}>
-                                    <ScoreProgressBar
-                                        current={score}
-                                        limit={match.config.limitScore}
-                                        isLoseOnLimit={isLoseOnLimit}
-                                    />
+                        {match.config.limitScore > 0 && !isOut && (
+                            <div className={`flex flex-col items-end px-6 ${status.colorClass}`}>
+                                <div className='flex flex-col items-center gap-1'>
+                                    <MotionDiv
+                                        className='flex flex-col items-center gap-1'
+                                        animate={status.isCritical ? {
+                                            scale: [1, 1.08, 1],
+                                            transition: {
+                                                duration: 0.8,
+                                                repeat: Infinity,
+                                                ease: "easeInOut"
+                                            }
+                                        } : { scale: 1 }}
+                                    >
+                                        <span className="text-[9px] font-black uppercase tracking-tighter">
+                                            {isLoseOnLimit ? 'Para salir' : 'Para ganar'}
+                                        </span>
+                                        <span className="text-xl font-display font-black leading-none">
+                                            {remaining}
+                                        </span>
+                                    </MotionDiv>
+                                    <div style={{ width: '90px' }}>
+                                        <ScoreProgressBar
+                                            current={score}
+                                            limit={match.config.limitScore}
+                                            isLoseOnLimit={isLoseOnLimit}
+                                        />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                    )}
+                        )}
+                    </div>
 
                     {isOut && <span className="badge-out">AFUERA</span>}
 
@@ -161,7 +159,7 @@ export const PlayerScoreCard = ({
                         </button>
                     </article>
                 </div>
-            </MotionArticle>
+            </MotionDiv>
         </div >
     );
 };

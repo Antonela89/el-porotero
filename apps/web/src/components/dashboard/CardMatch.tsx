@@ -50,7 +50,9 @@ export const CardMatch = ({ match, onDelete, onEdit }: MatchCardProps) => {
                         <div className='match-name-row'>
                             <h3>{match.gameType}</h3>
                             {match.winner && (
-                                <span className='match-winner-pill'>{match.winner}</span>
+                                <span className='match-winner-pill'>
+                                    {match.isTeamGame ? `Equipo ${match.winner}` : match.winner}
+                                </span>
                             )}
                         </div>
                         <span className='match-players-badge'>

@@ -14,7 +14,6 @@ interface TeamScoreCardPromps {
     onRematch: (match: IMatch) => void;
 }
 
-const MotionArticle = motion.create('article')
 const MotionDiv = motion.create('div');
 
 export const TeamScoreCard = ({ teamId, match, winner, isWinnerOnLimit, onCantar, onRematch }: TeamScoreCardPromps) => {
@@ -24,18 +23,18 @@ export const TeamScoreCard = ({ teamId, match, winner, isWinnerOnLimit, onCantar
     const players = getTeamPlayersData(match, teamId);
     const score = getTeamTotalScore(match.players, teamId);
     const remaining = getPointsToLimit(score, match.config.limitScore, match.config.isDescending);
-    const status = getScoreStatus(remaining, !isWinnerOnLimit);
+    const status = getScoreStatus(remaining, !isWinnerOnLimit, match.gameType);
     const tempCantos = getTeamTempCantosSum(match.tempCantos, match.players, teamId);
 
     return (
-        <div className="card-container" style={{ perspective: '1200px', minHeight: '160px' }}>
+        <div className="card-container" style={{ perspective: '1200px' }}>
 
-            <MotionArticle
+            <MotionDiv
                 className="card-inner"
                 initial={false}
                 animate={{ rotateY: isWinner ? 180 : 0 }}
                 transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-                style={{ transformStyle: 'preserve-3d', position: 'relative', width: '100%', height: '100%' }}
+                style={{...status.glowStyle,  borderRadius: '2rem', transformStyle: 'preserve-3d', position: 'relative', width: '100%', height: '100%' }}
             >
 
                 {/* LADO A: EL MARCADOR (Frente) */}
@@ -114,7 +113,7 @@ export const TeamScoreCard = ({ teamId, match, winner, isWinnerOnLimit, onCantar
                         </button>
                     </article>
                 </div>
-            </MotionArticle>
+            </MotionDiv>
         </div>
 
     );

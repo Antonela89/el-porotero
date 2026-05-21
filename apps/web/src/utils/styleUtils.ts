@@ -45,11 +45,28 @@ export const getTeamStyle = (team: 'A' | 'B') => {
 /**
  * Determina si el puntaje es crítico basado en el tipo de juego
  */
-export const getScoreStatus = (remaining: number, isLoseOnLimit: boolean) => {
-	// Si el límite es para perder (Loba/Uno), el peligro es cuando queda poco (0-20)
-	// Si el límite es para ganar (Truco/Escoba), la emoción es cuando falta poco (0-10)
-	const threshold = isLoseOnLimit ? 20 : 10;
+export const getScoreStatus = (
+	remaining: number,
+	isLoseOnLimit: boolean,
+	gameType: string,
+) => {
+	// umbrales por juego
+	const thresholds: Record<string, number> = {
+		Burako: 300,
+		Uno: 50,
+		Loba: 20,
+		Chinchon: 20,
+		Truco: 10,
+		Escoba: 5,
+		Mosca: 5,
+		Barsiga: 10,
+	};
+	const threshold = thresholds[gameType] || 10;
 	const isCritical = remaining <= threshold && remaining > 0;
+
+	const color = isLoseOnLimit
+		? 'var(--color-warning)'
+		: 'var(--color-success)';
 
 	return {
 		isCritical,
@@ -63,5 +80,16 @@ export const getScoreStatus = (remaining: number, isLoseOnLimit: boolean) => {
 				? 'var(--color-warning)'
 				: 'var(--color-success)'
 			: 'var(--color-primary)',
+		glowStyle: isCritical
+			? {
+					borderColor: color,
+					boxShadow: `0 0 20px ${color}44`, 
+					borderWidth: '2px',
+				}
+			: {
+					borderColor: 'rgba(255,255,255,0.05)',
+					boxShadow: 'none',
+					borderWidth: '1px',
+				},
 	};
 };
