@@ -134,15 +134,19 @@ export const processEscobaRules = (match: any, scores: IRoundScore[]) => {
  */
 export const processBurakoRules = (match: any, scores: IRoundScore[]) => {
 	const processedTeams = new Set<string>();
+
 	scores.forEach((s) => {
 		const player = match.players.find((p: any) => p.name === s.playerName);
 		if (!player) return;
 
-		let fichas = s.details?.fichas ?? s.pointsAdded ?? 0; // Puntos de fichas
-		let totalRonda = fichas;
+		// Las fichas son SIEMPRE individuales (cada uno suma lo que bajó)
+		const fichas = s.details?.fichas ?? s.pointsAdded ?? 0;
+		player.score += fichas;
 
 		if (match.isTeamGame) {
+			// LÓGICA DE EQUIPOS
 			if (!processedTeams.has(player.team)) {
+				// Es el primer jugador del equipo que encontramos: cobramos los bonos
 				let teamBonuses = 0;
 				if (s.details.canastasPuras)
 					teamBonuses += s.details.canastasPuras * 200;
@@ -156,16 +160,26 @@ export const processBurakoRules = (match: any, scores: IRoundScore[]) => {
 
 				player.score += teamBonuses;
 				processedTeams.add(player.team);
+
+				//  Guardar Fichas + Bonos en pointsAdded para el historial
+				s.pointsAdded = fichas + teamBonuses;
+			} else {
+				// Es el segundo jugador
+				s.pointsAdded = fichas;
 			}
 		} else {
-			totalRonda += (s.details.canastasPuras || 0) * 200;
-			totalRonda += (s.details.canastasImpuras || 0) * 100;
-			if (s.details.isCerrar) totalRonda += 100;
-			if (s.details.tomoMuerto === false) totalRonda -= 100;
-			if (s.details.tomoMuerto === true) totalRonda += 100;
+			// LÓGICA INDIVIDUAL
+			let individualBonuses = 0;
+			if (s.details.canastasPuras)
+				individualBonuses += s.details.canastasPuras * 200;
+			if (s.details.canastasImpuras)
+				individualBonuses += s.details.canastasImpuras * 100;
+			if (s.details.isCerrar) individualBonuses += 100;
+			if (s.details.tomoMuerto === false) individualBonuses -= 100;
+			if (s.details.tomoMuerto === true) individualBonuses += 100;
 
-			s.pointsAdded = totalRonda;
-			player.score += totalRonda;
+			s.pointsAdded = fichas + individualBonuses;
+			player.score += individualBonuses;
 		}
 	});
 };

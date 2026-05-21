@@ -22,8 +22,7 @@ export const BurakoPlayerInput = ({
     const cerro = score.details?.isCerrar || false;
     const muerto = score.details?.tomoMuerto || false;
     const canClose = (puras + impuras) > 0;
-    console.log(canClose, puras, impuras);
-    
+    console.log('BurakoPlayerInput render', { score, fichas, puras, impuras, cerro, muerto });    
 
     return (
         <div className="score-input-stack">
