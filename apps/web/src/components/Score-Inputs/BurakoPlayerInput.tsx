@@ -13,7 +13,7 @@ export const BurakoPlayerInput = ({
     score,
     onUpdate,
     isTeamGame,
-    disableExclusives = false
+    disableExclusives = true
 }: BurakoPlayerInputProps) => {
 
     const fichas = score.details?.fichas ?? score.pointsAdded ?? 0;
@@ -22,6 +22,8 @@ export const BurakoPlayerInput = ({
     const cerro = score.details?.isCerrar || false;
     const muerto = score.details?.tomoMuerto || false;
     const canClose = (puras + impuras) > 0;
+    console.log(canClose, puras, impuras);
+    
 
     return (
         <div className="score-input-stack">

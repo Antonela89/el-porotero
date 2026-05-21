@@ -10,6 +10,7 @@ export const Button = ({
     size = 'md',
     loading,
     className = '',
+    disabled = false,
     ...props
 }: ButtonProps) => {
 
@@ -20,7 +21,7 @@ export const Button = ({
         <button
             type="button"
             className={`${variantClass} ${sizeClass} ${className}`}
-            disabled={loading || props.disabled}
+            disabled={loading || disabled}
             {...props}
         >
             {loading ? "Cargando..." : children}

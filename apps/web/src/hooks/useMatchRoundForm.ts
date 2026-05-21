@@ -140,7 +140,11 @@ export const useMatchRoundForm = (
 			const value = payload[key];
 
 			setScores((prev) => {
-				let next = [...prev];
+				const next = prev.map((s) => ({
+					...s,
+					details: { ...s.details },
+				}));
+
 				const EXCLUSIVE_KEYS = [
 					'hasOros',
 					'hasCartas',
@@ -152,20 +156,10 @@ export const useMatchRoundForm = (
 				];
 
 				if (EXCLUSIVE_KEYS.includes(key) && value === true) {
-					next = next.map((s) => ({
-						...s,
-						details: { ...s.details, [key]: false },
-					}));
-					return next.map((s) => {
-						const p = match.players.find(
-							(player) => player.name === s.playerName,
-						);
-						if (p?.team === teamId)
-							return {
-								...s,
-								details: { ...s.details, [key]: true },
-							};
-						return s;
+					next.forEach((s) => {
+						// Usamos el casteo unknown para que TS no chille con las props numéricas
+						(s.details as Record<string, unknown>)[key as string] =
+							false;
 					});
 				}
 
@@ -173,8 +167,13 @@ export const useMatchRoundForm = (
 					const p = match.players.find(
 						(player) => player.name === s.playerName,
 					);
-					if (p?.team === teamId)
-						return { ...s, details: { ...s.details, ...payload } };
+
+					if (p?.team === teamId) {
+						return {
+							...s,
+							details: { ...s.details, ...payload },
+						};
+					}
 					return s;
 				});
 			});

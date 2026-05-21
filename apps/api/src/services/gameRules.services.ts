@@ -133,28 +133,36 @@ export const processEscobaRules = (match: any, scores: IRoundScore[]) => {
  * Procesa canastas, batida y muerto.
  */
 export const processBurakoRules = (match: any, scores: IRoundScore[]) => {
+	const processedTeams = new Set<string>();
 	scores.forEach((s) => {
 		const player = match.players.find((p: any) => p.name === s.playerName);
 		if (!player) return;
 
-		if (player) {
-			let fichas = s.details?.fichas ?? s.pointsAdded ?? 0; // Puntos de fichas
-			let totalRonda = fichas;
+		let fichas = s.details?.fichas ?? s.pointsAdded ?? 0; // Puntos de fichas
+		let totalRonda = fichas;
 
-			if (s.details) {
-				totalRonda += (s.details.canastasPuras || 0) * 200;
-				totalRonda += (s.details.canastasImpuras || 0) * 100;
-				if (s.details.isCerrar) totalRonda += 100;
+		if (match.isTeamGame) {
+			if (!processedTeams.has(player.team)) {
+				let teamBonuses = 0;
+				if (s.details.canastasPuras)
+					teamBonuses += s.details.canastasPuras * 200;
+				if (s.details.canastasImpuras)
+					teamBonuses += s.details.canastasImpuras * 100;
+				if (s.details.isCerrar) teamBonuses += 100;
 
-				const isFirstInTeam =
-					match.players.find((p: any) => p.team === player.team)
-						.name === player.name;
+				// Lógica del Muerto
+				if (s.details.tomoMuerto === false) teamBonuses -= 100;
+				if (s.details.tomoMuerto === true) teamBonuses += 100;
 
-				if (!match.isTeamGame || isFirstInTeam) {
-					if (s.details.tomoMuerto === false) totalRonda -= 100;
-					if (s.details.tomoMuerto === true) totalRonda += 100; 
-				}
+				player.score += teamBonuses;
+				processedTeams.add(player.team);
 			}
+		} else {
+			totalRonda += (s.details.canastasPuras || 0) * 200;
+			totalRonda += (s.details.canastasImpuras || 0) * 100;
+			if (s.details.isCerrar) totalRonda += 100;
+			if (s.details.tomoMuerto === false) totalRonda -= 100;
+			if (s.details.tomoMuerto === true) totalRonda += 100;
 
 			s.pointsAdded = totalRonda;
 			player.score += totalRonda;

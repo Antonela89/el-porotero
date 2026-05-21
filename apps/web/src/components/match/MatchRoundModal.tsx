@@ -41,6 +41,13 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit }: MatchRo
     const anyoneClosed = scores.some(s => s.details?.isCerrar || s.details?.isCorteMinus10);
     const isTeamGameActive = match.isTeamGame || match.players.some(p => p.team === 'A' || p.team === 'B');
 
+    const canTeamClose = (teamId: string) => {
+        const teamScores = scores.filter(s =>
+            match.players.find(p => p.name === s.playerName)?.team === teamId
+        );
+        return teamScores.some(s => (s.details.canastasPuras || 0) > 0 || (s.details.canastasImpuras || 0) > 0);
+    };
+
     const renderInput = (s: IRoundScore, idx: number) => {
         const player = match.players[idx];
         const onUpdateAction = (payload: Partial<IRoundScore & IRoundDetails>) => updateScore(idx, payload);
@@ -169,6 +176,7 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit }: MatchRo
                                                 <Button
                                                     variant={teamDetails?.isCerrar ? 'success' : 'ghost'}
                                                     className="btn-team-action"
+                                                    disabled={!canTeamClose(teamId)}
                                                     onClick={() => handleTeamUpdate(teamId, { isCerrar: !teamDetails?.isCerrar })}
                                                 >
                                                     {teamDetails?.isCerrar ? 'CERRÓ' : '¿CERRÓ?'}
