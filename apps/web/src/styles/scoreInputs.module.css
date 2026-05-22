@@ -8,7 +8,7 @@
 }
 
 .score-input-stack {
-    @apply flex flex-col gap-4 w-full;
+    @apply flex flex-col gap-4 w-full pb-3 border-b border-white/5;
 }
 
 .score-input-compact {
@@ -81,7 +81,7 @@
 
 /* --- Bársiga/Escoba Helpers --- */
 .counter-container-escoba {
-    @apply flex items-center justify-between bg-background/50 p-3 rounded-xl border border-white/5;
+    @apply flex items-center justify-between px-3 p-1 mt-2 rounded-xl border border-white/5;
 }
 
 /* Base para los botones de ítems de mesa (Oros, Cartas, Setenta) */

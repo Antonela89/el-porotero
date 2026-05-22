@@ -1,5 +1,5 @@
 import { IRoundScore, IRoundDetails } from '@el-porotero/shared';
-import { Minus, Plus, Coins, Trophy, Layers, Star } from 'lucide-react';
+import { Minus, Plus} from 'lucide-react';
 import { IconButton, Button } from '@/components';
 
 interface Props {
@@ -16,7 +16,6 @@ export const EscobaInputRow = ({ score, onUpdate, onToggleExclusive }: Props) =>
             {/* CONTADOR DE ESCOBAS */}
             <div className="counter-container-escoba">
                 <div className="flex items-center gap-2">
-                    <Star size={16} className="text-primary" />
                     <span className="label-mini mb-0!">Escobas</span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -42,11 +41,7 @@ export const EscobaInputRow = ({ score, onUpdate, onToggleExclusive }: Props) =>
             {/* ÍTEMS DE MESA (Oros, Cartas, Setenta) */}
             <div className="scoring-grid-3">
                 {(['hasOros', 'hasCartas', 'hasSetenta'] as const).map((key) => {
-                    const config = {
-                        hasOros: { label: 'Oros', icon: <Coins size={14} />, activeClass: 'active-oro' },
-                        hasCartas: { label: 'Cartas', icon: <Layers size={14} />, activeClass: 'active-cartas' },
-                        hasSetenta: { label: 'Setenta', icon: <Trophy size={14} />, activeClass: 'active-setenta' }
-                    }[key];
+                    const labels = { hasOros: 'Oros', hasCartas: 'Cartas', hasSetenta: '70' };
 
                     const isActive = !!d[key];
 
@@ -54,35 +49,31 @@ export const EscobaInputRow = ({ score, onUpdate, onToggleExclusive }: Props) =>
                         <Button
                             key={key}
                             onClick={() => onToggleExclusive(key)}
-                            className={`table-item-btn ${isActive ? config.activeClass : ''}`}
+                            className={`table-item-btn ${isActive ? `active-${key.replace('has', '').toLowerCase()}` : ''}`}
                         >
-                            {config.icon}
-                            <span className="text-[8px] font-bold uppercase">{config.label}</span>
+                            <span className="text-[8px] font-bold uppercase">{labels[key]}</span>
                         </Button>
                     );
                 })}
             </div>
 
             {/* LÓGICA DE VELOS (As, 7, 12) */}
-            <div className="velo-selection-area">
-                <span className="label-mini ml-1">Velos de Oro</span>
-                <div className="score-input-row">
-                    {['As', '7', '12'].map((card) => {
-                        const key = `hasVelo${card}` as keyof IRoundDetails;
-                        const isActive = !!d[key];
+            <div className="scoring-grid-3">
+                {['As', '7', '12'].map((card) => {
+                    const key = `hasVelo${card}` as keyof IRoundDetails;
+                    const isActive = !!d[key];
 
-                        return (
-                            <Button
-                                key={card}
-                                variant="ghost"
-                                className={`btn-velo-item ${isActive ? 'active-velo' : ''}`}
-                                onClick={() => onToggleExclusive(key)}
-                            >
-                                {card}
-                            </Button>
-                        );
-                    })}
-                </div>
+                    return (
+                        <Button
+                            key={card}
+                            variant="ghost"
+                            className={`btn-velo-item ${isActive ? 'active-velo' : ''}`}
+                            onClick={() => onToggleExclusive(key)}
+                        >
+                            {card}
+                        </Button>
+                    );
+                })}
             </div>
         </div>
     );

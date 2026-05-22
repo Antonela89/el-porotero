@@ -104,12 +104,14 @@ export const useMatchRoundForm = (
 				// Si es un punto exclusivo y lo estamos activando (true)
 				if (EXCLUSIVE_KEYS.includes(key) && value === true) {
 					// Limpiamos ese punto de TODOS los jugadores
-					next.forEach((s) => {
-						const d = s.details as Record<string, unknown>;
+					next.forEach((s, i) => {
+						if (i !== index) {
+							const d = s.details as Record<string, unknown>;
 
-						EXCLUSIVE_KEYS.forEach((k) => {
-							d[k as string] = false;
-						});
+							EXCLUSIVE_KEYS.forEach((k) => {
+								d[k as string] = false;
+							});
+						}
 					});
 				}
 
