@@ -46,7 +46,7 @@
 }
 
 /* --- LÓGICA RESPONSIVA PARA INDIVIDUAL --- */
-.mode-individual, 
+.mode-individual,
 .mode-responsive {
     grid-template-columns: 1fr;
     /* Por defecto: uno abajo del otro (Mobile) */
@@ -54,6 +54,7 @@
 
 /* Tablet / Desktop pequeño */
 @media (min-width: 600px) {
+
     .mode-individual,
     .mode-responsive {
         grid-template-columns: repeat(2, 1fr);
@@ -369,13 +370,30 @@
 }
 
 .card-container {
-    @apply min-h-[145px] flex 
+    @apply min-h-[145px] flex
 }
 
 .card-front,
 .card-back {
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
+}
+
+/*Sombrero*/
+.is-sombrero {
+    @apply opacity-40 grayscale-[0.5] border-dashed border-purple-500/20 !bg-slate-900/50 transition-all;
+}
+
+.sombrero-effect {
+    @apply scale-[0.98];
+}
+
+.sombrero-message {
+    @apply py-4 mx-4 text-center text-[10px] font-black uppercase text-purple-400/70 italic tracking-widest border border-dashed border-purple-500/10 rounded-xl mt-2;
+}
+
+.is-sombrero-row {
+    @apply py-4 border-purple-500/10 bg-purple-500/5;
 }
 
 /* Modal de Edición */

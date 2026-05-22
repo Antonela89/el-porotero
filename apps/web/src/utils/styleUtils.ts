@@ -58,11 +58,14 @@ export const getScoreStatus = (
 		Chinchon: 20,
 		Truco: 10,
 		Escoba: 5,
-		Mosca: 5,
+		Mosca: 3,
 		Barsiga: 10,
 	};
 	const threshold = thresholds[gameType] || 10;
-	const isCritical = remaining <= threshold && remaining > 0;
+	const isCritical =
+		gameType === 'Mosca'
+			? remaining <= 3 && remaining > 0
+			: remaining <= threshold && remaining > 0;
 
 	const color = isLoseOnLimit
 		? 'var(--color-warning)'
@@ -83,7 +86,7 @@ export const getScoreStatus = (
 		glowStyle: isCritical
 			? {
 					borderColor: color,
-					boxShadow: `0 0 20px ${color}44`, 
+					boxShadow: `0 0 20px ${color}44`,
 					borderWidth: '2px',
 				}
 			: {

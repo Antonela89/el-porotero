@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { IMatch, IRoundDetails, IRoundScore, TrucoFlowState } from '@el-porotero/shared';
-import { Save, AlertCircle, Minus, Plus, Crown } from 'lucide-react';
-import { useMatchActions, useMatchRoundForm } from '@/hooks';
+import { Save, AlertCircle, Minus, Plus, Crown, HatGlasses } from 'lucide-react';
+import { useMatchActions, useMatchRoundForm, useMoscaLogic } from '@/hooks';
 import { MesaPointsSelector, IconButton, BaseModal, MoscaInputRow, AccumulativeInputRow, BurakoPlayerInput, EscobaInputRow, TrucoInputRow, Button } from '@/components';
 
 interface MatchRoundModalProps {
@@ -16,6 +16,7 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit }: MatchRo
     const isEditMode = !!roundToEdit;
     const { scores, updateScore, isFormValid, handleTeamUpdate, updateScoreWithExclusivity } = useMatchRoundForm(match, roundToEdit);
     const { saveRound } = useMatchActions(match._id!);
+    const { sombreroIndex } = useMoscaLogic(match);
 
     const [flowState, setFlowState] = useState<TrucoFlowState>({
         envidoLevel: 0,
@@ -47,6 +48,8 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit }: MatchRo
         );
         return teamScores.some(s => (s.details.canastasPuras || 0) > 0 || (s.details.canastasImpuras || 0) > 0);
     };
+
+    const totalBazas = scores.reduce((acc, s) => acc + (s.details.bazas || 0), 0);
 
     const renderInput = (s: IRoundScore, idx: number) => {
         const player = match.players[idx];
@@ -111,9 +114,12 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit }: MatchRo
             {!isFormValid && (
                 <div className="form-error-banner">
                     <AlertCircle size={14} />
-                    {['Escoba', 'Barsiga'].includes(match.gameType)
-                        ? "Falta marcar quién se llevó los Velos (As, 7, 12)"
-                        : "Revisar datos de la ronda"}
+                    {match.gameType === 'Mosca'
+                        ? `Suman ${totalBazas} bazas. Deben sumar exactamente 5.`
+                        : match.gameType === 'Escoba' || match.gameType === 'Barsiga'
+                            ? "Falta marcar quién se llevó los Velos"
+                            : "Revisar datos de la ronda"
+                    }
                 </div>
             )}
             <Button
@@ -232,12 +238,20 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit }: MatchRo
                                         if (player.isOut && !isEditMode) return null;
 
                                         return (
-                                            <div key={player.name} className="player-input-card">
+                                            <div key={player.name} className={`player-input-card ${idx === sombreroIndex ? 'is-sombrero-row' : ''}`}>
                                                 <div className="player-input-name">
                                                     <p>{player.name}</p>
                                                     {idx === match.currentDealerIndex && <Crown size={14} className="text-primary" />}
+                                                    {idx === sombreroIndex && <HatGlasses size={14} className="text-purple-400" />}
                                                 </div>
-                                                {renderInput(s, idx)}
+                                                {/* LÓGICA DE RENDERIZADO PARA MOSCA */}
+                                                {game === 'Mosca' && idx === sombreroIndex ? (
+                                                    <div className="sombrero-message">
+                                                        Este jugador no participa en esta ronda
+                                                    </div>
+                                                ) : (
+                                                    renderInput(s, idx)
+                                                )}
                                             </div>
                                         );
                                     })}

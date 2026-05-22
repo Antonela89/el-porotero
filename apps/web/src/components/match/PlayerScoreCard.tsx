@@ -39,7 +39,7 @@ export const PlayerScoreCard = ({
         <div className="card-container" style={{ perspective: '1200px' }}>
 
             <MotionDiv
-                className="card-inner"
+                className={`card-inner ${isSombrero ? 'sombrero-effect' : ''}`}
                 initial={false}
                 animate={{ rotateY: isWinner ? 180 : 0 }}
                 transition={{ type: 'spring', stiffness: 260, damping: 20 }}
@@ -47,10 +47,10 @@ export const PlayerScoreCard = ({
             >
 
                 {/* LADO A: EL MARCADOR (Frente) */}
-                <article className={`player-card ${isOut ? 'is-out' : ''}`} style={{ backfaceVisibility: 'hidden' }}>
+                <article className={`player-card ${isOut ? 'is-out' : ''} ${isSombrero ? 'bg-slate-900/50 border-slate-800 ' : ''}`} style={{ backfaceVisibility: 'hidden' }}>
                     {/* Cabecera: Nombre e Iconos */}
                     <div className="player-card-header">
-                        <div className={`player-card-name ${isDealer ? 'text-primary' : ''}`}>
+                        <div className={`player-card-name ${isDealer ? 'text-primary' : isSombrero ? 'text-text-muted' : ''}`}>
                             {name}
                             {reengage > 0 && (
                                 <div className="flex -space-x-1.5">
@@ -82,9 +82,14 @@ export const PlayerScoreCard = ({
 
                     {/* Puntaje Principal */}
                     <div className="flex justify-between items-center gap-1">
-                        <span className={`player-card-score ${isOut ? 'text-slate-600' : 'text-white'}`}>
+                        <span className={`player-card-score ${isOut || isSombrero ? 'text-text-muted' : 'text-white'}`}>
                             {score}
                         </span>
+                        {isSombrero && (
+                            <div className="text-right opacity-30 italic text-[10px]">
+                                Esperando...
+                            </div>
+                        )}
                         {tempCantos > 0 && (
                             <MotionSpan
                                 initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
@@ -94,7 +99,7 @@ export const PlayerScoreCard = ({
                             </MotionSpan>
                         )}
 
-                        {match.config.limitScore > 0 && !isOut && (
+                        {match.config.limitScore > 0 && !isOut && !isSombrero && (
                             <div className={`flex flex-col items-end px-6 ${status.colorClass}`}>
                                 <div className='flex flex-col items-center gap-1'>
                                     <MotionDiv

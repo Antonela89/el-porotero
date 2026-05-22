@@ -1,5 +1,6 @@
 import { IRoundScore, IRoundDetails } from '@el-porotero/shared';
-import { Button, Input } from '@/components';
+import { Button, IconButton } from '@/components';
+import { Minus, Plus } from 'lucide-react';
 
 interface MoscaInputRowProps {
     score: IRoundScore;
@@ -10,23 +11,18 @@ interface MoscaInputRowProps {
 export const MoscaInputRow = ({ score, isDealer, onUpdateDetails }: MoscaInputRowProps) => {
     const hasPassed = !!score.details?.paso;
 
+    const bazas = score.details.bazas || 0;
+
     return (
         <div className="score-input-col">
             {/* INPUT DE BAZAS */}
             <div className="flex items-center gap-2 flex-1">
-                <label className="label-mini">Bazas</label>
-                <Input
-                    type="text"
-                    inputMode="numeric"
-                    placeholder="0"
-                    className="score-input-field w-full flex-1 py-2!"
-                    value={score.details?.bazas ?? ""}
-                    disabled={hasPassed}
-                    onChange={(e) => {
-                        const val = e.target.value.replace(/\D/g, "");
-                        onUpdateDetails({ bazas: parseInt(val) || 0 });
-                    }}
-                />
+                <span className="label-mini">Bazas</span>
+                <div className="counter-control">
+                    <IconButton title="Restar" icon={<Minus size={14} />} onClick={() => onUpdateDetails({ bazas: Math.max(0, bazas - 1), paso: false })} />
+                    <span className="counter-val">{bazas}</span>
+                    <IconButton title="Sumar" variant="primary" icon={<Plus size={14} />} onClick={() => onUpdateDetails({ bazas: bazas + 1, paso: false })} />
+                </div>
             </div>
 
             {/* BOTÓN DE PASO (Solo para no-repartidores) */}
