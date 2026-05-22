@@ -107,10 +107,7 @@ export const useMatchRoundForm = (
 					next.forEach((s, i) => {
 						if (i !== index) {
 							const d = s.details as Record<string, unknown>;
-
-							EXCLUSIVE_KEYS.forEach((k) => {
-								d[k as string] = false;
-							});
+							d[key as string] = false;
 						}
 					});
 				}
@@ -119,14 +116,13 @@ export const useMatchRoundForm = (
 				// Si es juego por equipos, se lo aplicamos a todo el bando
 				const currentPlayer = match.players[index];
 				next.forEach((s, i) => {
-					if (
+					const isSameTeam =
 						match.isTeamGame &&
 						match.players[i].team === currentPlayer.team &&
-						currentPlayer.team !== 'None'
-					) {
-						s.details = { ...s.details, ...payload };
-					} else if (i === index) {
-						s.details = { ...s.details, ...payload };
+						currentPlayer.team !== 'None';
+
+					if (isSameTeam || i === index) {
+						Object.assign(s.details, payload);
 					}
 				});
 

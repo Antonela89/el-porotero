@@ -1,5 +1,5 @@
 import { IRoundScore, IRoundDetails } from '@el-porotero/shared';
-import { Minus, Plus} from 'lucide-react';
+import { Minus, Plus } from 'lucide-react';
 import { IconButton, Button } from '@/components';
 
 interface Props {
@@ -47,6 +47,7 @@ export const EscobaInputRow = ({ score, onUpdate, onToggleExclusive }: Props) =>
 
                     return (
                         <Button
+                            variant='ghost'
                             key={key}
                             onClick={() => onToggleExclusive(key)}
                             className={`table-item-btn ${isActive ? `active-${key.replace('has', '').toLowerCase()}` : ''}`}
