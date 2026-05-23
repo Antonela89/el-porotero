@@ -7,13 +7,17 @@ export * from './match/AddCantoModal';
 export * from './match/MatchScoreboard';
 export * from './match/MatchHeader';
 export * from './match/TeamPlayerList';
-export * from './match/TrucoTotalCell';
 export * from './match/MesaPointsSelector';
 export * from './match/PlayerScoreCard';
 export * from './match/HistoryDrawer';
 export * from './match/TeamScoreCard';
 export * from './match/AddPointsFAB';
 export * from './match/ScoreProgressBar';
+export * from './match/GenericInputSwitcher';
+export * from './match/MatchRoundFooter';
+export * from './match/MatchRoundInputs';
+export * from './match/PlayerInputGroup';
+export * from './match/TeamInputGroup';
 
 // Componentes atómicos
 export * from './UI/IconButton';

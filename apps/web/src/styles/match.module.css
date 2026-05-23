@@ -200,7 +200,7 @@
 }
 
 .player-card-score {
-    @apply text-5xl font-display font-black leading-none text-text-main;
+    @apply flex gap-3 items-center text-5xl font-display font-black leading-none text-text-main;
 }
 
 /* Para asegurar que el nombre no empuje a los iconos */
@@ -333,6 +333,15 @@
 
 .player-input-name {
     @apply flex justify-between px-4;
+}
+
+.mode-banner-truco {
+    @apply mx-4 mt-2 py-1 px-4 bg-indigo-500/10 border border-indigo-500/20 rounded-full text-center text-[10px] uppercase tracking-widest text-indigo-300;
+}
+
+.team-score-big {
+    @apply flex gap-4 items-center;
+    text-shadow: 0 0 20px var(--status-color);
 }
 
 /* Winner */

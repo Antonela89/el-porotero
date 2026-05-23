@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { History, ChevronUp } from 'lucide-react';
 import { IMatch } from '@el-porotero/shared';
 import { PlayerScoreCard, HistoryDrawer, TeamScoreCard } from '@/components';
+import { useTrucoLogic } from '@/hooks';
 import confetti from 'canvas-confetti';
 
 interface MatchScoreboardProps {
@@ -15,6 +16,10 @@ interface MatchScoreboardProps {
 
 export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage, onCantar, onRematch }: MatchScoreboardProps) => {
     const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+    const { getStatus, currentMode } = useTrucoLogic(match);
+
+    const isTruco = match.gameType === 'Truco';
+    const isActuallyTeams = isTruco ? match.players.length > 2 : match.isTeamGame;
 
     // Usamos un Ref para no disparar el confeti múltiples veces si hay re-renders
     const hasCelebrated = useRef(false);
@@ -37,7 +42,7 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
                     origin: { y: 0.7 },
                     particleCount: Math.floor(200 * particleRatio),
                     zIndex: 9999,
-                    disableForReducedMotion: true 
+                    disableForReducedMotion: true
                 });
             };
 
@@ -59,7 +64,7 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
 
     const isLoseOnLimit = ['Loba', 'Chinchon', 'Uno'].includes(match.gameType);
     const isWinnerOnLimit = ['Barsiga', 'Escoba', 'Burako', 'Truco'].includes(match.gameType);
-    const isTeamLayout = match.isTeamGame || match.gameType === 'Truco';
+    const isTeamLayout = match.isTeamGame;
     const isMosca = match.gameType === 'Mosca';
 
     const allPlayerNames = match.players.map(p => p.name)
@@ -67,7 +72,7 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
     const sombreroIndex = (isMosca && match.players.length === 5)
         ? (match.currentDealerIndex + 1) % match.players.length : -1;
 
-    const gridClassName = isTeamLayout
+    const gridClassName = isActuallyTeams 
         ? "scoreboard-grid mode-teams"
         : "scoreboard-grid mode-individual";
 
@@ -88,9 +93,15 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
 
     return (
         <>
+            {/* Header de Modo (Solo si es Truco de 6) */}
+            {isTruco && match.players.length === 6 && (
+                <div className="mode-banner-truco">
+                    Modo: <strong>{currentMode}</strong>
+                </div>
+            )}
             {/* SECCIÓN DE PUNTAJES (Cards) */}
             <div className={gridClassName}>
-                {isTeamLayout ? (
+                {isActuallyTeams  ? (
                     // --- MODO EQUIPOS ---
                     ['A', 'B'].map(t => {
                         return (
@@ -102,6 +113,7 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
                                 isWinnerOnLimit={isWinnerOnLimit}
                                 onCantar={onCantar}
                                 onRematch={onRematch}
+                                trucoStatus={getStatus}
                             />
                         );
                     })
@@ -123,6 +135,7 @@ export const MatchScoreboard = ({ match, onEditRound, onDeleteRound, onReengage,
                             showCantar={match.gameType === 'Barsiga'}
                             onCantar={() => onCantar(p.name)}
                             onRematch={() => onRematch(match)}
+                            trucoStatus={getStatus}
                         />
                     ))
                 )}
