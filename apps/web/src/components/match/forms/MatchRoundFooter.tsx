@@ -1,4 +1,3 @@
-// src/components/match/MatchRoundFooter.tsx
 import { Save, AlertCircle } from 'lucide-react';
 import { Button } from '@/components';
 import { IMatch, IRoundScore } from '@el-porotero/shared';

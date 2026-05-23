@@ -1,4 +1,4 @@
-import { GenericInputSwitcher } from "./GenericInputSwitcher";
+import { GenericInputSwitcher } from "@/components";
 import { Crown, HatGlasses } from 'lucide-react';
 import { IMatch, IPlayer, IRoundScore, TrucoFlowState, IRoundDetails } from '@el-porotero/shared';
 
