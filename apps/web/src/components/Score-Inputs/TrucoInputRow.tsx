@@ -16,7 +16,7 @@ interface ITrucoAction {
 interface TrucoProps {
     match: IMatch;
     score: IRoundScore;
-    teamId: 'A' | 'B';
+    teamId?: 'A' | 'B';
     flowState: TrucoFlowState;
     onUpdate: (payload: Partial<IRoundScore & IRoundDetails>) => void;
     onFlowChange: (newFlow: Partial<TrucoFlowState>) => void;

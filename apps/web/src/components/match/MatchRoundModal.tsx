@@ -1,9 +1,7 @@
-
-import { IMatch } from '@el-porotero/shared';
+import { useState } from 'react';
+import { IMatch, TrucoFlowState } from '@el-porotero/shared';
 import { useMatchActions, useMatchRoundForm } from '@/hooks';
-import { BaseModal} from '@/components';
-import { MatchRoundInputs } from './MatchRoundInputs';
-import { MatchRoundFooter } from './MatchRoundFooter';
+import { BaseModal, MatchRoundInputs, MatchRoundFooter } from '@/components';
 
 interface MatchRoundModalProps {
     isOpen: boolean;
@@ -18,13 +16,21 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit }: MatchRo
     const formProps = useMatchRoundForm(match, roundToEdit);
     const { saveRound } = useMatchActions(match._id!);
 
+    const [flowState, setFlowState] = useState<TrucoFlowState>({
+        envidoLevel: 0,
+        trucoLevel: 0,
+        voice: null,
+        envidoClaimedBy: null,
+        trucoClaimedBy: null
+    });
+
     return (
         <BaseModal
             isOpen={isOpen}
             onClose={onClose}
             title={isEditMode ? `Editar Ronda ${roundToEdit}` : 'Anotar Ronda'}
             footer={
-                <MatchRoundFooter 
+                <MatchRoundFooter
                     match={match}
                     isFormValid={formProps.isFormValid}
                     saveRound={saveRound}
@@ -35,7 +41,12 @@ export const MatchRoundModal = ({ isOpen, onClose, match, roundToEdit }: MatchRo
                 />
             }
         >
-            <MatchRoundInputs {...formProps} match={match} isEditMode={isEditMode} />
+            <MatchRoundInputs
+                {...formProps} 
+                match={match} 
+                isEditMode={isEditMode} 
+                flowState={flowState}
+                onFlowChange={(newFlow: Partial<TrucoFlowState>) => setFlowState(prev => ({ ...prev, ...newFlow }))} />
         </BaseModal>
     );
 };

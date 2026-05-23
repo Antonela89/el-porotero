@@ -12,11 +12,12 @@ interface TeamScoreCardPromps {
     showCantar?: boolean;
     onCantar?: (name: string) => void;
     onRematch: (match: IMatch) => void;
+    trucoStatus: (score: number) => {label: string, val: number};
 }
 
 const MotionDiv = motion.create('div');
 
-export const TeamScoreCard = ({ teamId, match, winner, isWinnerOnLimit, onCantar, onRematch }: TeamScoreCardPromps) => {
+export const TeamScoreCard = ({ teamId, match, winner, isWinnerOnLimit, onCantar, onRematch, trucoStatus }: TeamScoreCardPromps) => {
     const isWinner = winner === teamId;
     const teamStyles = getTeamStyle(teamId);
 
@@ -25,6 +26,7 @@ export const TeamScoreCard = ({ teamId, match, winner, isWinnerOnLimit, onCantar
     const remaining = getPointsToLimit(score, match.config.limitScore, match.config.isDescending);
     const status = getScoreStatus(remaining, !isWinnerOnLimit, match.gameType);
     const tempCantos = getTeamTempCantosSum(match.tempCantos, match.players, teamId);
+    const { label, val } = trucoStatus ? trucoStatus(score) : { label: '', val: score };
 
     return (
         <div className="card-container" style={{ perspective: '1200px' }}>
@@ -34,7 +36,7 @@ export const TeamScoreCard = ({ teamId, match, winner, isWinnerOnLimit, onCantar
                 initial={false}
                 animate={{ rotateY: isWinner ? 180 : 0 }}
                 transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-                style={{...status.glowStyle,  borderRadius: '2rem', transformStyle: 'preserve-3d', position: 'relative', width: '100%', height: '100%' }}
+                style={{ ...status.glowStyle, borderRadius: '2rem', transformStyle: 'preserve-3d', position: 'relative', width: '100%', height: '100%' }}
             >
 
                 {/* LADO A: EL MARCADOR (Frente) */}
@@ -48,7 +50,12 @@ export const TeamScoreCard = ({ teamId, match, winner, isWinnerOnLimit, onCantar
                                 Equipo {teamId}
                             </span>
                             <span className="team-score-big">
-                                {score}
+                                {score || val}
+                                {match.gameType === 'Truco' && (
+                                    <span className={`text-[12px] font-black uppercase ${label === 'Buenas' ? 'text-emerald-400' : 'text-orange-400'}`}>
+                                        {label}
+                                    </span>
+                                )}
                             </span>
                             {tempCantos > 0 && (
                                 <div className="temp-canto-badge">+{tempCantos}</div>

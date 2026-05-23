@@ -22,11 +22,12 @@ interface PlayerScoreCardProps {
     onCantar?: () => void;
     showCantar?: boolean;
     onRematch?: () => void;
+    trucoStatus: (score: number) => { label: string, val: number };
 }
 
 export const PlayerScoreCard = ({
     name, score, winner, match, isDealer, isSombrero, isOut,
-    isLoseOnLimit, reengage, onReengage, onCantar, showCantar, onRematch
+    isLoseOnLimit, reengage, onReengage, onCantar, showCantar, onRematch, trucoStatus
 }: PlayerScoreCardProps) => {
 
     const isWinner = winner === name;
@@ -34,6 +35,7 @@ export const PlayerScoreCard = ({
     const status = getScoreStatus(remaining, isLoseOnLimit, match.gameType);
     const tempCantos = getTempCantosSum(match.tempCantos, name);
     const isUno = match.gameType === 'Uno';
+    const { label, val } = trucoStatus ? trucoStatus(score) : { label: '', val: score };
 
     return (
         <div className="card-container" style={{ perspective: '1200px' }}>
@@ -83,7 +85,12 @@ export const PlayerScoreCard = ({
                     {/* Puntaje Principal */}
                     <div className="flex justify-between items-center gap-1">
                         <span className={`player-card-score ${isOut || isSombrero ? 'text-text-muted' : 'text-white'}`}>
-                            {score}
+                            {score || val}
+                            {match.gameType === 'Truco' && (
+                                <span className={`text-[10px] font-black uppercase ${label === 'Buenas' ? 'text-emerald-400' : 'text-orange-400'}`}>
+                                    {label}
+                                </span>
+                            )}
                         </span>
                         {isSombrero && (
                             <div className="text-right opacity-30 italic text-[10px]">
