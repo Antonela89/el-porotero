@@ -129,7 +129,8 @@
 }
 
 .player-initials-circle.is-dealer {
-    @apply bg-amber-400 text-slate-900 border-amber-200 shadow-[0_0_10px_rgba(251,191,36,0.3)];
+    @apply bg-amber-400 text-slate-900 border-amber-200;
+    box-shadow: 0 0 10px rgba(251, 191, 36, 0.3)
 }
 
 .dealer-crown-abs {
@@ -435,4 +436,69 @@
 .select-custom {
     @apply w-full h-12 bg-background border border-white/10 text-text-main text-sm px-4 rounded-xl;
     appearance: none;
+}
+
+/*Punta y Hacha*/
+.matchup-duel-compact {
+    @apply flex flex-col p-3 bg-surface border border-white/5 rounded-2xl relative;
+}
+
+.duel-tag {
+    @apply absolute -top-2 left-4 bg-background border border-white/10 px-2 py-0.5 rounded-full text-[7px] font-black uppercase tracking-widest text-text-muted;
+}
+
+.duel-grid {
+    @apply flex items-center justify-between gap-2 mt-1;
+}
+
+.duel-side {
+    @apply flex flex-col gap-2 flex-1 min-w-0;
+}
+
+.duel-name {
+    @apply text-[10px] font-black uppercase truncate w-full;
+}
+
+.duel-controls {
+    @apply flex items-center gap-2;
+}
+
+/* LA BURBUJA: El corazón del diseño */
+.btn-ph-circle {
+    @apply w-12 h-12 rounded-full border-2 border-white/10 bg-background flex items-center justify-center font-display font-black text-lg text-text-main transition-all active:scale-90;
+}
+
+.btn-ph-circle.active-a {
+    @apply border-indigo-500 bg-indigo-500/20 text-indigo-200;
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+}
+
+.btn-ph-circle.active-b {
+    @apply border-rose-500 bg-rose-500/20 text-rose-200;
+    box-shadow: 0 0 15px rgba(244, 144, 182, 0.2);
+}
+
+.btn-ph-reset {
+    @apply w-6 h-6 rounded-full bg-white/30 flex items-center justify-center text-text-muted opacity-40 active:opacity-100;
+}
+
+.duel-vs-mini {
+    @apply text-[8px] font-black opacity-10 pt-4 self-center;
+}
+
+/* El Resumen de equipo estilo "Pills" */
+.summary-pills {
+    @apply flex gap-2;
+}
+
+.team-total-pill {
+    @apply flex-1 flex flex-col p-3 bg-white/5 rounded-xl border border-white/5;
+}
+
+.team-total-pill span {
+    @apply text-[8px] font-black opacity-50 mb-1;
+}
+
+.team-total-pill strong {
+    @apply text-2xl font-display font-black leading-none;
 }

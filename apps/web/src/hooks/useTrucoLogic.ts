@@ -32,15 +32,19 @@ export const useTrucoLogic = (match: IMatch | null) => {
 	const currentMode = useMemo(() => {
 		if (!match || match.players.length !== 6) return 'Redonda';
 
-		// Regla: Se juega P&H si alguien llegó a las 6 malas y hasta que alguien llegue a las 6 buenas (24 pts)
-		// Usamos (limit - 6) para que sea dinámico según el límite total
-		if (maxScore >= 6 && maxScore < limit - 6) {
-			// Alternamos: Rondas pares Redonda, impares P&H
-			return match.rounds.length % 2 === 0 ? 'Redonda' : 'Punta y Hacha';
+		const limit = match.config.limitScore;
+		const startPh = 6;
+		const endPh = limit - 6;
+
+		const isGameInPhRange = maxScore >= startPh && maxScore < endPh;
+
+		if (isGameInPhRange) {
+			return match.rounds.length % 2 !== 0 ? 'Punta y Hacha' : 'Redonda';
 		}
 
 		return 'Redonda';
-	}, [match, limit, maxScore]);
+
+	}, [match, maxScore]);
 
 	// Definir parejas para Punta y Hacha (Memoizado)
 	// Intercalado 1-3-5 (A) vs 2-4-6 (B) => Indices 0 vs 3, 1 vs 4, 2 vs 5
