@@ -6,7 +6,7 @@ import { IMatchConfig } from '@el-porotero/shared';
 export const createMatch = async (req: Request, res: Response) => {
 	try {
 		const { gameType, players, limitScore, isTeamGame } = req.body;
-		const adminId = req.user?.userId;
+		const adminId = req.user?._id;
 
 		// Lógica de configuración por defecto según el juego
 		let config: IMatchConfig = {

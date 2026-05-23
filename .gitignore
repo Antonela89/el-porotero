@@ -2,3 +2,7 @@ node_modules/
 dist/
 .env
 .DS_Store
+*.tsbuildinfo
+apps/web/dist
+apps/api/dist
+packages/shared/dist

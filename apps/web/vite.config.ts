@@ -10,6 +10,7 @@ export default defineConfig({
 		tailwindcss(),
 		VitePWA({
 			registerType: 'autoUpdate',
+			injectRegister: 'auto',
 			// Estrategia de cache para que funcione en el campo sin señal
 			workbox: {
 				globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
@@ -32,7 +33,7 @@ export default defineConfig({
 				short_name: 'Porotero',
 				description: 'Anotador profesional de cartas',
 				theme_color: '#121826',
-        background_color: '#121826',
+				background_color: '#121826',
 				icons: [
 					{
 						src: 'pwa-192x192.png',
@@ -43,7 +44,7 @@ export default defineConfig({
 						src: 'pwa-512x512.png',
 						sizes: '512x512',
 						type: 'image/png',
-						purpose: 'any maskable', 
+						purpose: 'any maskable',
 					},
 				],
 			},
@@ -52,10 +53,6 @@ export default defineConfig({
 	resolve: {
 		alias: {
 			'@': path.resolve(__dirname, './src'),
-			'@el-porotero/shared': path.resolve(
-				__dirname,
-				'../../packages/shared/index.ts',
-			),
 		},
 	},
 });
