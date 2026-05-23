@@ -36,6 +36,12 @@ export default defineConfig({
 				background_color: '#121826',
 				icons: [
 					{
+						src: 'favicon.svg',
+						sizes: 'any',
+						type: 'image/svg+xml',
+						purpose: 'any',
+					},
+					{
 						src: 'pwa-192x192.png',
 						sizes: '192x192',
 						type: 'image/png',
