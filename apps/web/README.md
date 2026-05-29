@@ -1,73 +1,79 @@
-# React + TypeScript + Vite
+# El Porotero Web (Frontend) 💻📱
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este directorio alberga la aplicación cliente de **El Porotero Online**, desarrollada como una Single Page Application (SPA) responsiva y una Progressive Web App (PWA) de alta performance. El cliente está construido con React 19, Vite 8, TypeScript y Tailwind CSS v4, y está completamente optimizado bajo un enfoque **Touch-First** para asegurar la mejor experiencia de anotación desde dispositivos táctiles durante las partidas.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Características Exclusivas del Frontend
 
-## React Compiler
+### 📱 Experiencia Táctil Nativa y "Standalone"
+*   **Diseño Touch-First**: Deshabilitación de estados `:hover` residuales mediante media-queries de hardware para evitar botones pegados, y animaciones `:active` de respuesta háptica visual rápida (100ms).
+*   **PWA Completa**: Registra Service Workers para habilitar funcionamiento offline y almacenamiento local caché, instalable como una app nativa en dispositivos iOS/Android con el icono del **Poroto Dorado 3D**.
+*   **Dynamic Viewport Height**: Garantiza mediante utilidades como `h-dvh` que los botones interactivos principales siempre queden en pantalla, previniendo que la barra de navegación del navegador o el teclado del sistema los cubran.
+*   **Escalado Extremo**: Layout flexible diseñado para ajustarse y verse perfectamente en resoluciones muy bajas (desde **320px** del iPhone SE) hasta pantallas 4K.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 🎨 Inyección Dinámica de Temas (*Style Engine*)
+La aplicación implementa un sistema de inyección dinámica de estilos basado en **Variables CSS del `:root`**. Dependiendo del juego que se esté jugando (Loba, Truco, Mosca, etc.), el sistema de diseño cambia de manera reactiva, tiñendo la interfaz con la paleta de colores del juego activo sin añadir código Tailwind repetitivo.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🏗️ Arquitectura de Componentes y Páginas
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Estructura de Vistas (`src/pages/`)
+1.  **`DashboardPage`**: Centro neurálgico del usuario, muestra su listado histórico de partidas activas o finalizadas ordenadas cronológicamente.
+2.  **`NewMatchPage`**: Interfaz interactiva de configuración para crear una mesa de juego. Permite seleccionar el juego, la cantidad de jugadores, el bando de equipos (para Truco/Burako) y los límites de puntos.
+3.  **`MatchDetailPage`**: La pantalla principal del juego de cartas (la mesa). Rinde el marcador en tiempo real y abre el modal correspondiente de anotador para registrar rondas.
+4.  **`StatsPage`**: Panel de control interactivo que grafica el desempeño histórico del jugador (win/loss ratio, win rate, y juego favorito).
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Estructura de Componentes (`src/components/`)
+La mesa de juego está modularizada en base a responsabilidades atómicas:
+```text
+src/components/match/
+├── board/                 # Renderiza la mesa de juego, tarjetas de puntajes individuales y barras de progreso.
+├── forms/                 # Los campos del anotador de puntos. Contiene formularios y validaciones complejas de entrada.
+├── modals/                # Modales secundarios para editar mesas, agregar cantos de Bársiga o re-engancharse.
+└── index.ts               # Barrel exports para limpieza y simplificación de importaciones.
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🛠️ Arquitectura de Custom Hooks
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Cada juego tradicional cuenta con su propio gancho personalizado de lógica (*Custom Hook*) para procesar de forma segura las complejidades del reglamento antes de que se envíen al servidor:
+
+*   **`useTrucoLogic.ts`**: Gestiona el flujo dinámico del Envido/Truco y alternancia a Punta y Hacha.
+*   **`useLobaLogic.ts`**: Controla el re-enganche de jugadores eliminados y penalizaciones por corte.
+*   **`useMoscaLogic.ts`**: Valida bazas, calcula disminuciones de puntaje y el estado de "Jugador Sombrero".
+*   **`useEscobaLogic.ts` y `useBarsigaLogic.ts`**: Gestionan la exclusividad de hitos (Oros, Cartas, Velos) y desgloses de cantos individuales para el equipo.
+
+---
+
+## ⚙️ Configuración y Variables de Entorno (.env)
+
+Debes crear el archivo `.env` dentro de `apps/web/` con la siguiente clave:
+
+```ini
+VITE_API_URL=http://localhost:3000/api
+```
+
+*   `VITE_API_URL`: Dirección base donde el cliente consumirá los endpoints del backend (Axios se inicializa con este prefijo).
+
+---
+
+## 🚀 Comandos de Desarrollo y Construcción
+
+Puedes interactuar con el cliente mediante `pnpm` desde la raíz o directamente dentro de `apps/web/`:
+
+```bash
+# Lanzar la aplicación web en modo de desarrollo local (Vite)
+pnpm dev
+
+# Compilar y generar el paquete estático optimizado para producción en dist/
+pnpm build
+
+# Previsualizar el bundle estático compilado en producción
+pnpm --filter web preview
+
+# Limpiar archivos compilados previos y directorios temporales
+pnpm clean
 ```

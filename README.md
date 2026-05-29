@@ -1,151 +1,177 @@
-# El Porotero - Sistema de Anotación de Juegos de Cartas
+# El Porotero Online v2.0 🫘🏆
 
-## Descripción General
+### Anotador Profesional de Cartas & PWA Standalone
 
-El Porotero es una aplicación web integral diseñada para la gestión y anotación de puntajes en juegos de cartas tradicionales. El sistema centraliza reglas complejas de múltiples disciplinas, permitiendo un seguimiento preciso de las partidas, historiales de usuarios y estadísticas de rendimiento en tiempo real.
+**El Porotero** es una aplicación web integral de alta performance diseñada para la gestión y anotación de puntajes en juegos de cartas tradicionales. En su versión 2.0, el sistema ha sido reconstruido bajo una arquitectura **Local-First** y una filosofía de diseño **Touch-First / Mobile-First**, garantizando un funcionamiento fluido en entornos sin conectividad (como asados, sótanos o zonas rurales) sin perder la sincronización automática con la nube al recuperar señal.
 
-## Arquitectura del Proyecto
+---
 
-Este repositorio utiliza una estructura de **Monorepo** gestionada a través de **npm workspaces**, lo que garantiza la coherencia de tipos y lógica de negocio entre el cliente y el servidor.
+## 🚀 Novedades de la Versión 2.0
+
+### 📱 Experiencia de Usuario "Premium Mobile"
+*   **Refactor de Layout**: Transición de tablas rígidas a un sistema de **Atomic Cards** dinámicas que priorizan la legibilidad en pantallas críticas desde **320px**.
+*   **Operación a una Mano**: Menús de tipo **Bottom Sheet** y botones de acción flotantes (**FAB**) ubicados estratégicamente al alcance del pulgar.
+*   **Visual Feedback**: Animaciones de **Card Flip 3D** para los ganadores, barras de progreso de juego en tiempo real y ráfagas de confeti con `canvas-confetti`.
+*   **Safe Area Ready**: Soporte nativo para muescas (notches) en iOS/Android y adaptabilidad total mediante *Dynamic Viewport Height* (`h-dvh`).
+
+### 🛠️ Infraestructura Senior
+*   **Migración a pnpm**: Gestión de dependencias ultra veloz y segura mediante **pnpm workspaces**, optimizando la compilación y previniendo el *hoisting*.
+*   **Arquitectura Local-First**: Sincronización asíncrona robusta con TanStack Query y persistencia local. Funciona offline y sincroniza con MongoDB Atlas automáticamente al reconectarse.
+*   **PWA Standalone**: Instalable como aplicación nativa en dispositivos móviles con el icono personalizado del **Poroto Dorado 3D**.
+*   **Style Engine Dinámico**: Sistema de temas inyectados dinámicamente mediante **Variables CSS heredadas del :root**, adaptando la estética visual al juego actual de manera limpia y modular.
+
+---
+
+## 🏗️ Arquitectura y Estructura del Monorepo
+
+El proyecto está estructurado como un **Monorepo** gestionado con `pnpm workspaces`, asegurando coherencia absoluta en los tipos TypeScript y validación de negocio tanto en el cliente como en el servidor.
 
 ### Estructura de Directorios
 
-- `apps/web`: Aplicación cliente desarrollada en React.
+- `apps/web`: Aplicación cliente SPA/PWA desarrollada en React.
 - `apps/api`: Servidor RESTful desarrollado en Node.js/Express.
-- `packages/shared`: Biblioteca central de interfaces TypeScript, esquemas de validación Zod y lógica de reglas de juego compartidas.
+- `packages/shared`: Biblioteca centralizada de interfaces TypeScript, esquemas de validación Zod y lógica de reglas de juego compartidas.
 
-## Stack Tecnológico
+### Componentes Críticos del Cliente
+```text
+apps/web/src/components/match/
+├── board/                 # La "Mesa": Scoreboard, Cards y Progresos de juego.
+├── forms/                 # El "Anotador": Lógica de carga, inputs y validadores.
+├── modals/                # Acciones secundarias y configuración de mesa.
+└── index.ts               # Barrel exports para limpieza de imports.
+```
+
+---
+
+## 🛠️ Stack Tecnológico
 
 ### Frontend
-
-- **React 19**: Biblioteca principal para la interfaz de usuario.
-- **Vite 8**: Herramienta de construcción y entorno de desarrollo.
-- **TypeScript (NodeNext)**: Tipado estático estricto.
+- **React 19**: Biblioteca principal de interfaz de usuario.
+- **Vite 8**: Herramienta de compilación ultrarrápida.
+- **TypeScript (NodeNext)**: Tipado estático estricto y seguro en todo el proyecto.
 - **Tailwind CSS v4**: Framework de diseño centrado en utilidades semánticas.
-- **TanStack Query (React Query)**: Gestión de estado del servidor y caché.
-- **Framer Motion**: Animaciones y transiciones de interfaz.
-- **Radix UI**: Componentes de accesibilidad (Primitivas de diálogo y selección).
+- **TanStack Query (React Query)**: Gestión del estado del servidor, caché y sincronización local-first con persisters.
+- **Framer Motion**: Animaciones fluidas de interfaz.
+- **Radix UI**: Primitivas de diálogo y selección accesibles.
 - **Sonner**: Sistema de notificaciones reactivas.
 
 ### Backend
+- **Node.js**: Entorno de ejecución de JS.
+- **Express**: Servidor HTTP para la API REST.
+- **MongoDB & Mongoose**: Base de datos NoSQL y modelado de datos.
+- **JWT (JSON Web Tokens)**: Autenticación segura sin estado.
+- **Zod**: Validación de esquemas y DTOs en tiempo de ejecución.
+- **Bcrypt**: Encriptación hash de contraseñas.
 
-- **Node.js**: Entorno de ejecución de JavaScript.
-- **Express**: Framework para la construcción de la API.
-- **MongoDB & Mongoose**: Base de datos NoSQL y modelado de objetos.
-- **JWT (JSON Web Tokens)**: Sistema de autenticación y autorización.
-- **Zod**: Validación de esquemas en tiempo de ejecución.
-- **Bcrypt**: Encriptación de credenciales de seguridad.
+---
 
-## Juegos Soportados y Reglas Implementadas
+## 🃏 Juegos Soportados & Reglas Blindadas
 
-- **Loba / Chinchón**: Sistema acumulativo con límites configurables (100/101), cierres exclusivos y lógica de re-enganche con penalización.
-- **Truco**: Tanteo dinámico por equipos, gestión de etapas (Malas/Buenas) y modo Punta y Hacha automático.
-- **Mosca**: Sistema descendente con regla del repartidor obligado y victoria instantánea por bazas.
+El sistema valida automáticamente reglas complejas en tiempo real para prevenir errores de anotación humanos:
+
+- **Loba / Chinchón**: Sistema acumulativo con límites configurables (100/101), cierres exclusivos, penalización automática por corte y lógica de re-enganche con penalización.
+- **Truco**: Tanteo dinámico por equipos, gestión de etapas (Malas/Buenas), alternación automática a modo **Punta y Hacha** (duelos cruzados 1vs1) según los puntos o modo **Redonda**.
+- **La Mosca**: Sistema descendente con regla del repartidor obligado, detección de "Sombrero" y victoria instantánea por bazas.
 - **Burako**: Integración de puntos por fichas, canastas puras/impuras, batida y gestión de muerto por equipos.
-- **Escoba de 15 / Bársiga**: Tanteo de mesa (Oros, Cartas, Setenta), velos de oro exclusivos y sistema de cantos dinámicos.
+- **Escoba de 15 / Bársiga**: Tanteo automático de mesa (Oros, Cartas, Setenta), velos de oro exclusivos y sistema de cantos individuales desglosados dentro del puntaje de equipo.
 
-## Experiencia de Usuario (Mobile-First)
+---
 
-"El Porotero" fue concebido bajo una filosofía de diseño **Touch-First**, reconociendo que el uso principal de un anotador de puntos ocurre en dispositivos móviles durante la partida.
+## 📱 Experiencia de Usuario Touch-First
 
-### Optimización de Interacción
-- **Adaptive Interaction**: Los estados de `hover` están restringidos mediante media queries de hardware (`@media (hover: hover)`), evitando el efecto de "botón pegado" en dispositivos táctiles.
-- **Haptic Feedback Visual**: Implementación de estados `:active` con escalas de 0.95x y transiciones rápidas (100ms) para simular la respuesta táctica de una aplicación nativa.
-- **Dynamic Viewport Height**: Uso de `h-dvh` para garantizar que los botones de acción (como "Confirmar Ronda") siempre estén visibles, independientemente de la barra de navegación del navegador o el teclado en pantalla.
-- **Pureza de Diseño**: Interfaz optimizada para una resolución base de 360px, con iniciales de jugadores calculadas dinámicamente (`getShortName`) para evitar el desbordamiento horizontal en mesas de hasta 6 integrantes.
+- **Adaptive Interaction**: Los estados `hover` están deshabilitados mediante media queries de hardware (`@media (hover: hover)`) para evitar el molesto efecto de "botón pegado" en dispositivos táctiles.
+- **Haptic Feedback Visual**: Estados `:active` con escala de 0.95x y transiciones rápidas (100ms) que simulan la respuesta táctil de una aplicación nativa.
+- **Dynamic Viewport Height**: Garantía de visibilidad mediante `h-dvh` para que los botones interactivos nunca queden cubiertos por el teclado virtual o la barra del navegador.
+- **Pureza de Diseño**: Interfaz optimizada para una resolución base de 360px (ej: iPhone SE), con iniciales calculadas dinámicamente (`getShortName`) para evitar el desbordamiento horizontal en mesas de hasta 6 integrantes.
 
-## Galería de Interfaz
+---
+
+## 🎨 Sistema de Diseño: *Bodegón Nocturno*
+
+*   **Fondo Principal**: `#121826` (Azul medianoche profundo para evitar fatiga visual).
+*   **Acento de Marca**: `#FACC15` (Amarillo Poroto elegante).
+*   **Tipografía**: *Space Grotesk* para titulares estilizados y *Inter* para el cuerpo de texto legible.
+*   **Semántica**: Verde Esmeralda para estados de victoria y Naranja Ámbar para alertas de eliminación.
+
+---
+
+## 🖼️ Galería de Interfaz
 
 | Acceso Seguro | Historial de Partidas | Nuevo Juego | Anotador de Uno |
 | :---: | :---: | :---: | :---: |
 | <img src="./docs/screenshots/login.png" width="200" /> | <img src="./docs/screenshots/dashboard.png" width="200" /> | <img src="./docs/screenshots/new-match.png" width="200" /> | <img src="./docs/screenshots/match.png" width="200" /> |
 
-### Detalles de Diseño
-- **Paleta de Colores**: Concepto *Bodegón Nocturno* (Oscuros profundos con acentos en Amarillo Poroto).
-- **Responsive Pro**: Optimizado específicamente para resoluciones de 320px (iPhone SE) hasta 4K.
-- **Micro-interacciones**: Feedback háptico visual mediante escalado de componentes en estados activos
+---
 
-## Instalación y Configuración
+## ⚙️ Instalación y Configuración
 
 ### Requisitos Previos
+- **Node.js v20** o superior.
+- **pnpm v9** o superior.
+- **MongoDB** (Local o instancia MongoDB Atlas en la nube).
 
-- Node.js v20 o superior.
-- MongoDB (Local o instancia en la nube).
-
-### Configuración del Entorno
-
-Clonar el repositorio y ejecutar la instalación de dependencias desde la raíz:
-
-```bash
-git clone https://github.com/usuario/el-porotero.git
-cd el-porotero
-npm install
-```
+### Pasos de Instalación
+1. Clonar el repositorio:
+   ```bash
+   git clone https://github.com/Antonela89/el-porotero.git
+   cd el-porotero
+   ```
+2. Instalar dependencias del monorepo mediante pnpm:
+   ```bash
+   pnpm install
+   ```
+3. Compilar la biblioteca de lógica compartida:
+   ```bash
+   pnpm --filter @el-porotero/shared build
+   ```
 
 ### Variables de Entorno
 
-Es necesario configurar los archivos `.env` tanto en `apps/api` como en `apps/web` basándose en los archivos de ejemplo proporcionados:
+Debes crear y configurar archivos `.env` en los directorios correspondientes basándote en los archivos de ejemplo provistos:
 
 **Backend (`apps/api/.env`):**
-
-- `PORT`: Puerto de ejecución (Default: 3000).
-- `MONGO_URI`: Cadena de conexión a MongoDB.
-- `JWT_SECRET`: Llave privada para la firma de tokens.
+*   `PORT`: Puerto de ejecución (Default: 3000).
+*   `MONGO_URI`: URI de conexión a tu base de datos de MongoDB.
+*   `JWT_SECRET`: Semilla secreta para la firma y autenticación de tokens JWT.
 
 **Frontend (`apps/web/.env`):**
-
-- `VITE_API_URL`: URL base de la API.
-
-### Entorno de Desarrollo
-Para iniciar simultáneamente el servidor de la API y el cliente de Vite, el proyecto utiliza 
-la herramienta concurrently, permitiendo monitorear ambos servicios desde una única terminal:
-
-```bash
-npm run dev
-```
-
-### Scripts Disponibles
-
-Todos los comandos pueden ejecutarse desde la raíz del monorepo:
-
-- `npm run dev`: Inicia tanto el backend como el frontend en modo desarrollo.
-- `npm run build`: Compila todos los paquetes y aplicaciones para producción.
-- `npm run build:api`: Compila el paquete compartido y el servidor.
-- `npm run build:web`: Compila el paquete compartido y genera el bundle estático del frontend.
-- `npm run lint`: Ejecuta el análisis estático de código con ESLint.
-- `npm run test`: Ejecuta las pruebas unitarias y de integración.
-
-## Pruebas y QA (Postman)
-
-El proyecto incluye una suite de pruebas automatizadas para garantizar la integridad de las reglas de los juegos y la seguridad de los datos.
-
-### Instrucciones de uso:
-1. Navega a la carpeta `docs/postman/`.
-2. Importa el archivo `el-porotero-v1.json` en tu Postman.
-3. Importa el ambiente `local-env.json` y asegúrate de tener seleccionada la variable `base_url`.
-4. **Flujo Automatizado**: 
-   - Ejecuta la petición `01. Auth / Login`. El script guardará el token JWT automáticamente.
-   - Ya puedes ejecutar cualquier petición de `Matches` o `Stats` sin configurar nada más.
-
-### Cobertura de Tests:
-- **Contratos de API**: Validación de esquemas JSON para coincidir con el paquete `shared`.
-- **Reglas de Juego**: Verificación de cálculos para Loba (acumulativo) y Mosca (descendente).
-- **Seguridad**: Verificación de middleware de protección en todas las rutas privadas.
-
-[Ejecutar en Postman](https://martian-eclipse-514495.postman.co/workspace/Team-Workspace~f2d65b89-0cb6-4194-8df8-5f8f94fde9ff/collection/27770697-40942fec-8cd9-466c-b149-905baa6270d0?action=share&source=copy-link&creator=27770697)
-[Documentacion On-Line](https://martian-eclipse-514495.docs.buildwithfern.com/el-porotero/auth/login)
-
-## Seguridad
-
-- Implementación de **CORS** para control de dominios permitidos.
-- Protección de rutas mediante middleware de verificación de JWT.
-- Validación de datos entrantes mediante **Zod** para prevenir inyecciones de datos no estructurados.
-- Limitación de peticiones (Rate Limiting) para prevenir ataques de fuerza bruta en los endpoints de autenticación.
-
-## Despliegue
-
-La aplicación está preparada para ser desplegada en arquitecturas modernas (Docker, Vercel/Railway). 
+*   `VITE_API_URL`: URL base donde corre tu API (ej: `http://localhost:3000/api` o URL de producción).
 
 ---
 
-© 2026 El Porotero - Documentación técnica oficial - Antonela Borgogno.
+## 💻 Scripts de Desarrollo (pnpm)
+
+Todos los scripts deben ser ejecutados desde la raíz del monorepo:
+
+-   `pnpm dev`: Inicia el backend (`api`) y el frontend (`web`) simultáneamente en modo desarrollo con logs en paralelo de colores.
+-   `pnpm -r build`: Compila el paquete compartido (`shared`), la API y la aplicación web en el orden correcto de dependencias.
+-   `pnpm clean`: Limpieza profunda y remoción de directorios `node_modules`, `dist` y caches de Vite.
+-   `pnpm --filter web preview`: Previsualiza la aplicación web compilada en producción localmente.
+
+---
+
+## 🔒 Seguridad
+
+- **CORS Estricto**: Control de acceso granular para dominios permitidos.
+- **Verificación de JWT**: Middleware de seguridad en rutas privadas.
+- **Validación con Zod**: Filtrado y tipado de payloads entrantes para mitigar inyecciones de datos corruptos.
+- **Rate Limiting**: Limitador de solicitudes en endpoints de autenticación para mitigar ataques de fuerza bruta.
+
+---
+
+## 🧪 Pruebas y QA (Postman)
+
+El monorepo cuenta con una colección completa de Postman para probar el comportamiento de los endpoints e integrar QA.
+
+### Instrucciones de Uso:
+1. Navega a `docs/postman/`.
+2. Importa el archivo `el-porotero.postman_collection.json` en Postman.
+3. Importa el entorno `local-env.json` y activa la variable `base_url`.
+4. **Flujo Automatizado**: Ejecuta la petición `01. Auth / Login`. El script de Postman extraerá y guardará el token JWT automáticamente en las variables del entorno, permitiendo interactuar con el resto de endpoints protegidos sin configuraciones manuales adicionales.
+
+[Ejecutar en Postman](https://martian-eclipse-514495.postman.co/workspace/Team-Workspace~f2d65b89-0cb6-4194-8df8-5f8f94fde9ff/collection/27770697-40942fec-8cd9-466c-b149-905baa6270d0?action=share&source=copy-link&creator=27770697) | [Documentación On-Line](https://martian-eclipse-514495.docs.buildwithfern.com/el-porotero/auth/login)
+
+---
+
+© 2026 El Porotero - Desarrollado por **Antonela Borgogno**.
+*Documentación actualizada en Mayo de 2026.*
