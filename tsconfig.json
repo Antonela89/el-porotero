@@ -9,28 +9,12 @@
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "declaration": true,
-        "composite": true,
-        "paths": {
-            "@/*": [
-                "./apps/api/src/*",
-                "./apps/web/src/*"
-            ],
-            "@el-porotero/shared": [
-                "./packages/shared/index.ts"
-            ]
-        }
+        "composite": true
     },
-    "files": [], // El archivo raíz no tiene código propio
+    "files": [], 
     "references": [
-        {
-            "path": "./apps/api"
-        },
-        {
-            "path": "./packages/shared"
-        }
-    ],
-    "exclude": [
-        "node_modules",
-        "dist"
+        { "path": "./packages/shared" },
+        { "path": "./apps/api" },
+        { "path": "./apps/web" }
     ]
 }

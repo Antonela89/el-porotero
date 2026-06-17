@@ -5,16 +5,21 @@
         "rootDir": "./src",
         "module": "NodeNext",
         "moduleResolution": "NodeNext",
+        "typeRoots": [
+            "./node_modules/@types",
+            "src/custom_types"
+        ],
         "paths": {
             "@/*": [
                 "./src/*"
             ],
             "@shared/*": [
-                "../../packages/shared/*"
+                "../../packages/shared/"
             ]
         },
     },
     "include": [
-        "src/**/*"
+        "src/**/*",
+        "src/custom_types/express.d.ts"
     ]
 }

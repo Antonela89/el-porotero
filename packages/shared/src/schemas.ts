@@ -2,10 +2,11 @@ import { z } from 'zod';
 // --- Esquemas ---
 // --- USUARIO ---
 export const UserZodSchema = z.object({
+	_id: z.string().optional(),
 	username: z.string().min(3, 'Mínimo 3 caracteres'),
 	email: z.email('Email inválido'),
 	password: z.string().min(6, 'Mínimo 6 caracteres'),
-	avatar: z.string().optional(),
+	avatar: z.string().optional()
 });
 
 export type UserDTO = z.infer<typeof UserZodSchema>;
