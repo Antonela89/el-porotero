@@ -68,15 +68,15 @@
         grid-template-columns: repeat(3, 1fr);
         /* Tres columnas */
     }
-}
 
-/* --- LÓGICA PARA EQUIPOS --- */
-.mode-teams {
-    grid-template-columns: 1fr;
-    /* Siempre uno abajo del otro para mantener la jerarquía de bando */
-    max-width: 500px;
-    /* Evitamos que la card de equipo sea gigante en desktop */
-    margin-inline: auto;
+    /* --- LÓGICA PARA EQUIPOS --- */
+    .mode-teams {
+        grid-template-columns: 1fr;
+        /* Siempre uno abajo del otro para mantener la jerarquía de bando */
+        max-width: 500px;
+        /* Evitamos que la card de equipo sea gigante en desktop */
+        margin-inline: auto;
+    }
 }
 
 /* En tablets dos equipos uno al lado del otro */
@@ -90,16 +90,16 @@
 /* TeamScoreCard.tsx - Tarjeta para equipos */
 /* --- CARDS DE EQUIPO --- */
 .team-card {
-    @apply bg-surface border-l-4 rounded-[2rem] overflow-hidden flex flex-col;
+    @apply bg-surface border-l-4 rounded-[2rem] overflow-hidden flex flex-col box-border;
     border-color: var(--team-accent);
 }
 
 .team-card-header {
-    @apply px-5 py-3 flex justify-between items-center bg-white/[0.02] border-b border-white/5;
+    @apply px-4 py-3 flex justify-between items-center bg-white/[0.02] border-b border-white/5;
 }
 
 .team-info {
-    @apply w-full flex flex-col;
+    @apply min-w-0 flex-1 flex flex-col;
 }
 
 .team-label {
@@ -108,7 +108,17 @@
 }
 
 .team-score-big {
-    @apply text-5xl font-display font-black leading-none text-text-main;
+    @apply text-4xl font-display font-black leading-none text-text-main;
+}
+
+@media (max-width: 340px) {
+    .team-score-big {
+        font-size: 1.8rem;
+    }
+
+    .team-card-header {
+        @apply p-3;
+    }
 }
 
 .team-players-footer {

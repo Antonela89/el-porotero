@@ -20,6 +20,7 @@ export const NewMatchPage = () => {
     const [playerName, setPlayerName] = useState('');
     const [editingIndex, setEditingIndex] = useState<number | null>(null);
     const [tempEditName, setTempEditName] = useState('');
+    const initialDealerFromState = state?.initialDealerIndex ?? 0;
 
     const {
         gameType, players, isTeamGame, limitScore, currentGame, canAddMore,
@@ -174,7 +175,7 @@ export const NewMatchPage = () => {
                     )}
 
                     <Button
-                        onClick={() => createMatch({ gameType, players: players.map((p, i) => ({ ...p, position: i })), limitScore, isTeamGame })}
+                        onClick={() => createMatch({ gameType, players: players.map((p, i) => ({ ...p, position: i })), limitScore, isTeamGame, initialDealerIndex: initialDealerFromState })}
                         disabled={!isPlayerCountValid || isPending}
                         loading={isPending}
                         className="flex-1 font-black uppercase py-4"

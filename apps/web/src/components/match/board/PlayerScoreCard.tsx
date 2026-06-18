@@ -131,7 +131,7 @@ export const PlayerScoreCard = ({
                                         <ScoreProgressBar
                                             current={score}
                                             limit={match.config.limitScore}
-                                            isLoseOnLimit={isLoseOnLimit}
+                                            statusColor={status.colorClass ? `var(--color-${status.colorClass})` : ''}
                                         />
                                     </div>
                                 </div>

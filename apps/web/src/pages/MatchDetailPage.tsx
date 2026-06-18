@@ -26,8 +26,19 @@ export const MatchDetailPage = () => {
     if (!match) return <div className="p-20 text-center">Partida no encontrada.</div>;
 
     const handleRevancha = (m: IMatch) => {
+        let winnerIndex: number;
+        if (m.isTeamGame) {
+            winnerIndex = m.players.findIndex(p => p.team === m.winner);
+        } else {
+            winnerIndex = m.players.findIndex(p => p.name === m.winner);
+        }
+
         navigate('/new-match', {
-            state: { gameType: m.gameType, players: m.players.map(p => ({ name: p.name, team: p.team })) }
+            state: { 
+                gameType: m.gameType, 
+                players: m.players.map(p => ({ name: p.name, team: p.team })), 
+                initialDealerIndex: winnerIndex >= 0 ? winnerIndex : 0 
+            }
         });
     };
 

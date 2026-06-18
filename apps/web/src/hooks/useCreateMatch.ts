@@ -6,9 +6,10 @@ import { IMatch } from '@el-porotero/shared';
 
 type CreateMatchPayload = Pick<
 	IMatch,
-	'gameType' | 'players' | 'isTeamGame'
+	'gameType' | 'players' | 'isTeamGame' 
 > & {
 	limitScore: number;
+	initialDealerIndex: number;
 };
 
 export const useCreateMatch = () => {

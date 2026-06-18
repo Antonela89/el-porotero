@@ -87,7 +87,7 @@ export const TeamScoreCard = ({ teamId, match, winner, isWinnerOnLimit, onCantar
                                         <ScoreProgressBar
                                             current={score}
                                             limit={match.config.limitScore}
-                                            isLoseOnLimit={isWinnerOnLimit}
+                                            statusColor={status.colorClass ? `var(--color-${status.colorClass})` : ''}
                                         />
                                     </div>
                                 </div>

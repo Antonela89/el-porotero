@@ -5,16 +5,11 @@ const MotionDiv = motion.create('div');
 interface Props {
     current: number;
     limit: number;
-    isLoseOnLimit: boolean;
+    statusColor?: string;
 }
 
-export const ScoreProgressBar = ({ current, limit, isLoseOnLimit }: Props) => {
+export const ScoreProgressBar = ({ current, limit, statusColor }: Props) => {
     const percentage = Math.min(Math.max((current / limit) * 100, 0), 100);
-
-    const getBarColor = () => {
-        if (percentage > 80) return isLoseOnLimit ? 'var(--color-warning)' : 'var(--color-success)';
-        return 'var(--color-primary)';
-    };
 
     return (
         <div className='progress-container'>
@@ -23,9 +18,10 @@ export const ScoreProgressBar = ({ current, limit, isLoseOnLimit }: Props) => {
                 initial={{ width: 0 }}
                 animate={{
                     width: `${percentage}%`,
-                    backgroundColor: getBarColor()
+                    backgroundColor: statusColor,
                 }}
                 transition={{ type: 'spring', stiffness: 100, damping: 20 }}
+                style={{ boxShadow: `0 0 10px ${statusColor}` }}
             />
         </div>
     );
